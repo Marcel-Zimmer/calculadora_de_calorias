@@ -24,7 +24,5 @@ namespace CalculadoraCalorias.Application.Features
             var resposta = _mapperUsuario.EntidadeParaResponse(usuario);
             return resposta;
         }
-
-
     }
 }
