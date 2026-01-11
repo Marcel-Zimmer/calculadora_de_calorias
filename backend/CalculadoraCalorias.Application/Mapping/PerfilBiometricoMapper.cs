@@ -6,11 +6,10 @@
     using Riok.Mapperly.Abstractions;
 
     [Mapper]
-    public partial class UsuarioMapper
+    public partial class PerfilBiometricoMapper
     {
-        public partial CriarUsuarioResponse EntidadeParaResponse(Usuario usuario);
+        public partial CriarPerfilBiometricoResponse EntidadeParaResponse(PerfilBiometrico usuario);
 
-        public partial Usuario RequestParaEntity(CriarUsuarioRequest request);
-
+        public partial PerfilBiometrico RequestToEntity(CriarPerfilBiometricoRequest request);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.Interfaces;
-using CalculadoraCalorias.Core.Domain.ExcecoesPersonalizadas;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCalorias.Api.Controllers
