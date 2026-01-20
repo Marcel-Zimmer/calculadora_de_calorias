@@ -21,16 +21,40 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             Objetivo = objetivo;
         }
 
-        public long Id { get; set; }
-        public long UsuarioId { get; set; }
-        public DateTime DataNascimento {  get; set; }
-        public GeneroEnum Genero { get; set; }
-        public int AlturaCm { get; set; }
-        public NivelAtividadeEnum NivelAtividade { get; set; }
-        public ObjetivoEnum Objetivo { get; set; }
-        public virtual Usuario Usuario { get; set; }
+        public long Id { get; private set; }
+        public long UsuarioId { get; private set; }
+        public DateTime DataNascimento {  get; private set; }
+        public GeneroEnum Genero { get; private set; }
+        public int AlturaCm { get; private set; }
+        public NivelAtividadeEnum NivelAtividade { get; private set; }
+        public ObjetivoEnum Objetivo { get; private set; }
+        public virtual Usuario? Usuario { get; private set; }
 
+        public int ObterIdade() {
 
+            var dataAtual = DateTime.UtcNow;
+            int idadeAnos = dataAtual.Year - DataNascimento.Year;
+
+            if (dataAtual.Month < DataNascimento.Month ||
+                (dataAtual.Month == DataNascimento.Month && dataAtual.Day < DataNascimento.Day))
+            {
+                idadeAnos--;
+            }
+
+            return idadeAnos;
+        }
+        public decimal ObterFatorAtividade()
+        {
+            return NivelAtividade switch
+            {
+                NivelAtividadeEnum.Sedentario => 1.2m,
+                NivelAtividadeEnum.LevementeAtivo => 1.375m,
+                NivelAtividadeEnum.ModeradamenteAtivo => 1.55m,
+                NivelAtividadeEnum.MuitoAtivo => 1.725m,
+                NivelAtividadeEnum.ExtremamenteAtivo => 1.9m,
+                _ => 1.0m
+            };
+        }
     }
 
 

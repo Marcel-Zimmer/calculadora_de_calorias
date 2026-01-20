@@ -16,5 +16,13 @@ namespace CalculadoraCalorias.Infrastructure.Repository
             return perfilBiometrico;
         }
 
+        public async Task<PerfilBiometrico> ObterPorCodigoUsuario(long codigoUsuario)
+        {
+            return await _context.PerfilBiometrico
+                .AsNoTracking()
+                .Include(x => x.Usuario)
+                .Where(x => x.UsuarioId == codigoUsuario)
+                .FirstOrDefaultAsync();
+        }
     }
 }

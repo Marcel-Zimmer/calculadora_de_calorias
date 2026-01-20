@@ -10,6 +10,7 @@ namespace CalculadoraCalorias.Core
         {
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IPerfilBiometricoService, PerfilBiometricoService>();
+            services.AddScoped<IRegistroFisicoService, RegistroFisicoService>();
             return services;
         }
     }
