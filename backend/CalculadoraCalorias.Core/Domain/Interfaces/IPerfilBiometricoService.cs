@@ -12,6 +12,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
                                             NivelAtividadeEnum nivelAtividade, 
                                             ObjetivoEnum objetivo);
 
-        public Task<PerfilBiometrico> ObterPorCodigoUsuario(long codigoUsuario);
+        public Task<PerfilBiometrico?> ObterPorCodigoUsuario(long codigoUsuario);
     }
 }

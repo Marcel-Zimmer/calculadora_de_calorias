@@ -15,7 +15,7 @@ namespace CalculadoraCalorias.Application.Features
         private readonly IRegistroFisicoService _registroFisicoService = registroFisicoService;
         private readonly RegistroFisicoMapper _mapperRegistroFisico = registroFisicoMapper;
 
-        public async Task<Resultado> Criar(CriarRegistroFisicoRequest requisicao)
+        public async Task<Resultado<CriarRegistroFisicoResponse>> Criar(CriarRegistroFisicoRequest requisicao)
         {
             var registroFisico = await _registroFisicoService.Criar(requisicao.UsuarioId,
                                                            requisicao.PerfilBiometricoId,
