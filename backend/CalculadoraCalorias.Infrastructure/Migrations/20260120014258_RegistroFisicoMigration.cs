@@ -24,7 +24,7 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                     PesoKg = table.Column<decimal>(type: "numeric", nullable: false),
                     ImcCalculado = table.Column<decimal>(type: "numeric", nullable: false),
                     TaxaMetabolicaBasal = table.Column<decimal>(type: "numeric", nullable: false),
-                    MetaCaloricaDiaria = table.Column<decimal>(type: "numeric", nullable: false)
+                    MetaCaloricaDiaria = table.Column<decimal>(type: "numeric", nullable: true)
                 },
                 constraints: table =>
                 {
