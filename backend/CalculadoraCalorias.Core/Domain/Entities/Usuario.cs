@@ -23,6 +23,8 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         public string Email { get; private set; }
         public RoleEnum Role { get; private set; }
         public string Senha { get; private set; }
+        public virtual ICollection<RegistroFisico>  RegistroFisico { get; private set; }
+        public virtual PerfilBiometrico PerfilBiometrico { get; private set; }
         public Boolean Ativo { private get; set; }
 
         protected void Inativar() {
