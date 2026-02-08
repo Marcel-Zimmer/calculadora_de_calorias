@@ -7,8 +7,12 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IAtividadeFisicaAppService
     {
-        public Task<Resultado<CriarAtividadeFisicaResponse>> Simular(SimularGastoCaloricoRequest requisicao);
+        public Task<Resultado<AtividadeFisicaResponse>> Simular(CriarAtividadeFisicaRequest requisicao);
 
-        public Task<Resultado<CriarAtividadeFisicaResponse>> Adicionar(SimularGastoCaloricoRequest requisicao);
+        public Task<Resultado<AtividadeFisicaResponse>> Adicionar(CriarAtividadeFisicaRequest requisicao);
+        Task<Resultado<List<AtividadeFisicaResponse>>> ObterTodosPorId(int idUsuario);
+        Task<Resultado> Excluir(int id);
+        Task<Resultado<AtividadeFisicaResponse>> ObterPorID(int id);
+        Task<Resultado<object>> Atualizar(AtualizarAtividadeFisicaRequest requisicao);
     }
 }

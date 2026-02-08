@@ -28,7 +28,32 @@ namespace CalculadoraCalorias.Infrastructure.Repository
 
         public async Task<T?> ObterPorId(long id)
         {
+            var keyType = _context.Model.FindEntityType(typeof(T))?
+                                  .FindPrimaryKey()?
+                                  .Properties
+                                  .FirstOrDefault()?
+                                  .ClrType;
+
+            if (keyType == typeof(int))
+            {
+                if (id > int.MaxValue) return null;
+
+                return await _dbSet
+                    .FindAsync((int)id);
+            }
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<bool> Excluir(long id)
+        {
+            var entidade = await ObterPorId(id);
+
+            if (entidade != null)
+            {
+                _dbSet.Remove(entidade);
+                return true;
+            }
+            return false;
         }
     }
 }

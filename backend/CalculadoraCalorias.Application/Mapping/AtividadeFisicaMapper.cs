@@ -9,7 +9,8 @@
     public partial class AtividadeFisicaMapper
 
     {
-        public partial CriarAtividadeFisicaResponse EntidadeParaResponse(AtividadeFisica usuario);
+        public partial AtividadeFisicaResponse EntidadeParaResponse(AtividadeFisica usuario);
+        public partial List<AtividadeFisicaResponse> EntidadesParaResponse(List<AtividadeFisica> atividades);
 
         //public partial AtividadeFisica RequestToEntity(CriarPerfilBiometricoRequest request);
     }

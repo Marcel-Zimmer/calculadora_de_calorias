@@ -19,7 +19,6 @@ namespace CalculadoraCalorias.Application.Features
         public async Task<Resultado<CriarRegistroFisicoResponse>> Adicionar(CriarRegistroFisicoRequest requisicao)
         {
             var registroFisico = await _registroFisicoService.Adicionar(requisicao.UsuarioId,
-                                                                       requisicao.PerfilBiometricoId,
                                                                        requisicao.PesoKg,
                                                                        requisicao.MetaCaloricaDiaria);
 

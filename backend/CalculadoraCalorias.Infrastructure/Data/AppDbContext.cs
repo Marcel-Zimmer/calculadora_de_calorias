@@ -42,10 +42,6 @@ public class AppDbContext : DbContext
                   .HasForeignKey(r => r.UsuarioId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(r => r.PerfilBiometrico)
-                  .WithMany() 
-                  .HasForeignKey(r => r.PerfilBiometricoId)
-                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

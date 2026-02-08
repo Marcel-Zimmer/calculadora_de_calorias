@@ -1,5 +1,4 @@
-﻿using CalculadoraCalorias.Core.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CalculadoraCalorias.Application.DTOs.Requests
 {
@@ -8,10 +7,6 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
         [Range(1, long.MaxValue, ErrorMessage = "ID do usuário inválido.")]
         public long UsuarioId { get; set; }
-
-        [Required(ErrorMessage = "O ID do perfil biometrico é obrigatório.")]
-        [Range(1, long.MaxValue, ErrorMessage = "ID do perfil biometrico inválido.")]
-        public long PerfilBiometricoId { get; set; }
 
         [Required(ErrorMessage = "O peso é obrigatório.")]
         [Range(20, 450, ErrorMessage = "O peso deve estar entre 20kg e 450kg.")]

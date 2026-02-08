@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CalculadoraCalorias.Application.DTOs.Requests
 {
-    public class SimularGastoCaloricoRequest
+    public class AtualizarAtividadeFisicaRequest
     {
-        [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
-        [Range(1, long.MaxValue, ErrorMessage = "ID do usuário inválido.")]
-        public long UsuarioId { get; set; }
+        [Required(ErrorMessage = "O ID é obrigatório.")]
+        [Range(1, long.MaxValue, ErrorMessage = "ID inválido.")]
+        public long Id { get; set; }
 
         public int KilometragemPercorrida { get; set; }
 

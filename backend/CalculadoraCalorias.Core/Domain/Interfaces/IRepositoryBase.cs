@@ -5,5 +5,6 @@
         Task<T> Adicionar(T entidade);
         Task AdicionarLote(IEnumerable<T> entidades);
         Task<T?> ObterPorId(long id);
+        Task<bool> Excluir(long id);
     }
 }

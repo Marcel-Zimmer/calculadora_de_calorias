@@ -1,6 +1,6 @@
 ﻿namespace CalculadoraCalorias.Application.DTOs.Responses
 {
-    public class CriarAtividadeFisicaResponse
+    public class AtividadeFisicaResponse
     {   
         public long Id { get; set; }
         public long UsuarioId { get; set; }

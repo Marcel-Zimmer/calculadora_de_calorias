@@ -16,7 +16,7 @@ public class RegistroFisicoService : IRegistroFisicoService
     }
 
 
-    public async Task<RegistroFisico?> Adicionar(long usuarioId, long perfilBiometricoId, decimal pesoKg, decimal? metaCaloricaDiaria)
+    public async Task<RegistroFisico?> Adicionar(long usuarioId, decimal pesoKg, decimal? metaCaloricaDiaria)
     {
         var perfilBiometrico = await _perfilBiometricoService.ObterPorCodigoUsuario(usuarioId);
         var imcCalculado = CalcularImc(perfilBiometrico?.AlturaCm, pesoKg);
@@ -26,7 +26,7 @@ public class RegistroFisicoService : IRegistroFisicoService
         {
             return null;
         }
-        var registroFisico = new RegistroFisico(usuarioId, perfilBiometricoId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica);
+        var registroFisico = new RegistroFisico(usuarioId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica);
 
         if (metaCaloricaDiaria != null && metaCaloricaDiaria != 0m) {
             registroFisico.AdicionarMetaCalorica((decimal)metaCaloricaDiaria);

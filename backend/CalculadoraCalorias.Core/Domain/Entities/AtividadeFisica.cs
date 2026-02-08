@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CalculadoraCalorias.Core.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -57,6 +58,14 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         {
             decimal metCalculado = ObterMetPelaVelocidade();
             return metCalculado * PesoSnapshot * (decimal)TempoExercicio.TotalHours;
+        }
+
+        public void Atualizar(int tipo, int kilometragemPercorrida, TimeSpan tempoDeExercicio)
+        {
+            TipoAtividadeId = tipo;
+            DataExercicio = DateTime.UtcNow;
+            VelocidadeMedia = CalcularVelocidade(kilometragemPercorrida, tempoDeExercicio);
+            CaloriasCalculadas = CalcularCalorias();
         }
     }
     
