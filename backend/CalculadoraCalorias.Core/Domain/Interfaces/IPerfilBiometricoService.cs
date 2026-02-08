@@ -1,0 +1,15 @@
+﻿using CalculadoraCalorias.Core.Domain.Entities;
+using CalculadoraCalorias.Core.Domain.Enums;
+
+namespace CalculadoraCalorias.Core.Domain.Interfaces
+{
+    public interface IPerfilBiometricoService
+    {
+        public Task<PerfilBiometrico> Criar(long usuarioId, 
+                                            DateTime dataNascimento, 
+                                            GeneroEnum genero, 
+                                            int alturaCm, 
+                                            NivelAtividadeEnum nivelAtividade, 
+                                            ObjetivoEnum objetivo);
+    }
+}

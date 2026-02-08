@@ -16,6 +16,7 @@
                 options.UseNpgsql(connectionString));
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IPerfilBiometricoRepository, PerfilBiometricoRepository>();
 
             return services;
         }

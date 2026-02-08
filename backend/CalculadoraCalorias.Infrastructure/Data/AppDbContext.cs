@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     {
     }
     public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<PerfilBiometrico> PerfilBiometrico { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -21,6 +22,14 @@ public class AppDbContext : DbContext
 
             entity.HasIndex(u => u.Email)
                   .IsUnique();
+        });
+
+        modelBuilder.Entity<PerfilBiometrico>(entity =>
+        {
+            entity.HasOne(p => p.Usuario)      
+                  .WithOne()                  
+                  .HasForeignKey<PerfilBiometrico>(p => p.UsuarioId) 
+                  .OnDelete(DeleteBehavior.Cascade); 
         });
     }
 }

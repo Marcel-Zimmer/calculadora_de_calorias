@@ -1,0 +1,20 @@
+﻿using CalculadoraCalorias.Application.DTOs.Requests;
+using CalculadoraCalorias.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CalculadoraCalorias.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PerfilBiometricoController(IPerfilBiometricoAppService perfilBiometricoAppService) : ControllerBase
+    {
+        private readonly IPerfilBiometricoAppService _perfilBiometricoAppService = perfilBiometricoAppService;
+
+        [HttpPost]
+        public async Task<IActionResult> Criar([FromBody] CriarPerfilBiometricoRequest requisicao)
+        {
+            var perfil = await _perfilBiometricoAppService.Criar(requisicao);
+            return Ok(perfil);
+        }
+    }
+}

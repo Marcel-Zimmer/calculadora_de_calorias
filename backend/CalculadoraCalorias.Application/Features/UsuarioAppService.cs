@@ -21,8 +21,7 @@ namespace CalculadoraCalorias.Application.Features
             }
             var senhaHash = BCrypt.Net.BCrypt.HashPassword(requisicao.Senha);
             var usuario = await _usuarioService.CriarUsuario(requisicao.Nome, requisicao.Email, senhaHash, requisicao.Role);
-            var resposta = _mapperUsuario.EntidadeParaResponse(usuario);
-            return resposta;
+            return _mapperUsuario.EntidadeParaResponse(usuario);
         }
     }
 }
