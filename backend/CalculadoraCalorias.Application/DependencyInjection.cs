@@ -15,6 +15,8 @@ namespace CalculadoraCalorias.Application
             services.AddScoped<PerfilBiometricoMapper>();
             services.AddScoped<IRegistroFisicoAppService, RegistroFisicoAppService>();
             services.AddScoped<RegistroFisicoMapper>();
+            services.AddScoped<IAtividadeFisicaAppService, AtividadeFisicaAppService>();
+            services.AddScoped<AtividadeFisicaMapper>();
             return services;
         }
     }

@@ -2,6 +2,7 @@
 
 {
     using CalculadoraCalorias.Core.Domain.Interfaces;
+    using CalculadoraCalorias.Core.Domain.Services;
     using CalculadoraCalorias.Infrastructure.Data;
     using CalculadoraCalorias.Infrastructure.Repository;
     using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,8 @@
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IPerfilBiometricoRepository, PerfilBiometricoRepository>();
             services.AddScoped<IRegistroFisicoRepository, RegistroFisicoRepository>();
+            services.AddScoped<IAtividadeFisicaRepository, AtividadeFisicaRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             return services;
