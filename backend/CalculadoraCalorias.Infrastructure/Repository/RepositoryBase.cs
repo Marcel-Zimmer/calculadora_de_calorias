@@ -18,14 +18,12 @@ namespace CalculadoraCalorias.Infrastructure.Repository
         public async Task<T> Adicionar(T entidade)
         {
             await _dbSet.AddAsync(entidade);
-            await _context.SaveChangesAsync();
             return entidade;
         }
 
         public async Task AdicionarLote(IEnumerable<T> entidades)
         {
             await _dbSet.AddRangeAsync(entidades);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<T?> ObterPorId(long id)
