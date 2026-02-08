@@ -20,8 +20,8 @@ namespace CalculadoraCalorias.Api.Middlewares
         {
             var code = exception switch
             {
-                InformacaoDuplicada => HttpStatusCode.Conflict,  // 409
-                ArgumentException => HttpStatusCode.BadRequest,  // 400
+                //InformacaoDuplicada => HttpStatusCode.Conflict,  // 409
+                //ArgumentException => HttpStatusCode.BadRequest,  // 400
                 _ => HttpStatusCode.InternalServerError          // 500
             };
 
