@@ -3,6 +3,7 @@ using System;
 using CalculadoraCalorias.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CalculadoraCalorias.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260203020053_AtividadeFisicaMigration")]
+    partial class AtividadeFisicaMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,24 +39,24 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                     b.Property<DateTime>("DataExercicio")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("DuracaoMinutos")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("PesoSnapshot")
                         .HasColumnType("numeric");
-
-                    b.Property<TimeSpan>("TempoExercicio")
-                        .HasColumnType("interval");
 
                     b.Property<int>("TipoAtividadeId")
                         .HasColumnType("integer");
 
-                    b.Property<long>("UsuarioId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
 
-                    b.Property<double>("VelocidadeMedia")
-                        .HasColumnType("double precision");
+                    b.Property<long?>("UsuarioId1")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("AtividadeFisica");
                 });
@@ -84,9 +87,15 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                     b.Property<long>("UsuarioId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("UsuarioId1")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UsuarioId")
+                        .IsUnique();
+
+                    b.HasIndex("UsuarioId1")
                         .IsUnique();
 
                     b.ToTable("PerfilBiometrico");
@@ -121,11 +130,17 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                     b.Property<long>("UsuarioId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("UsuarioId1")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PerfilBiometricoId");
 
                     b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioId1")
+                        .IsUnique();
 
                     b.ToTable("RegistroFisico");
                 });
@@ -166,9 +181,7 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                 {
                     b.HasOne("CalculadoraCalorias.Core.Domain.Entities.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioId1");
 
                     b.Navigation("Usuario");
                 });
@@ -176,10 +189,14 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
             modelBuilder.Entity("CalculadoraCalorias.Core.Domain.Entities.PerfilBiometrico", b =>
                 {
                     b.HasOne("CalculadoraCalorias.Core.Domain.Entities.Usuario", "Usuario")
-                        .WithOne("PerfilBiometrico")
+                        .WithOne()
                         .HasForeignKey("CalculadoraCalorias.Core.Domain.Entities.PerfilBiometrico", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("CalculadoraCalorias.Core.Domain.Entities.Usuario", null)
+                        .WithOne("PerfilBiometrico")
+                        .HasForeignKey("CalculadoraCalorias.Core.Domain.Entities.PerfilBiometrico", "UsuarioId1");
 
                     b.Navigation("Usuario");
                 });
@@ -193,10 +210,14 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CalculadoraCalorias.Core.Domain.Entities.Usuario", "Usuario")
-                        .WithMany("RegistroFisico")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("CalculadoraCalorias.Core.Domain.Entities.Usuario", null)
+                        .WithOne("RegistroFisico")
+                        .HasForeignKey("CalculadoraCalorias.Core.Domain.Entities.RegistroFisico", "UsuarioId1");
 
                     b.Navigation("PerfilBiometrico");
 
@@ -208,7 +229,8 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                     b.Navigation("PerfilBiometrico")
                         .IsRequired();
 
-                    b.Navigation("RegistroFisico");
+                    b.Navigation("RegistroFisico")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
