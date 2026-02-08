@@ -15,9 +15,9 @@ namespace CalculadoraCalorias.Application.Features
         private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
         private readonly PerfilBiometricoMapper _mapperPerfilBiometrico = perfilBiometrico;
 
-        public async Task<Resultado> Criar(CriarPerfilBiometricoRequest requisicao)
+        public async Task<Resultado<CriarPerfilBiometricoResponse>> Criar(CriarPerfilBiometricoRequest requisicao)
         {
-            var perfil =await _perfilBiometricoService.Criar(requisicao.UsuarioId, 
+            var perfil = await _perfilBiometricoService.Criar(requisicao.UsuarioId, 
                                                              requisicao.DataNascimento, 
                                                              requisicao.Genero, 
                                                              requisicao.AlturaCm, 

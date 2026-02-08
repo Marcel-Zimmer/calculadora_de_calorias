@@ -2,8 +2,7 @@
 
 namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
-    public interface IRegistroFisicoRepository
-    {
-        Task <RegistroFisico> Adicionar(RegistroFisico registroFisico);
+    public interface IRegistroFisicoRepository : IRepositoryBase<RegistroFisico>
+    { 
     }
 }

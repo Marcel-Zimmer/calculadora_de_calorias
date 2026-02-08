@@ -7,6 +7,6 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IPerfilBiometricoAppService
     {
-        public Task<Resultado> Criar(CriarPerfilBiometricoRequest requisicao);
+        public Task<Resultado<CriarPerfilBiometricoResponse>> Criar(CriarPerfilBiometricoRequest requisicao);
     }
 }

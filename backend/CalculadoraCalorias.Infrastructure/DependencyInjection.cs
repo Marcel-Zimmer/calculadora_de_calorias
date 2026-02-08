@@ -18,6 +18,7 @@
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IPerfilBiometricoRepository, PerfilBiometricoRepository>();
             services.AddScoped<IRegistroFisicoRepository, RegistroFisicoRepository>();
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             return services;
         }

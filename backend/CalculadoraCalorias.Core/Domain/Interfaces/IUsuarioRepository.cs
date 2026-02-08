@@ -2,9 +2,8 @@
 
 namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
-    public interface IUsuarioRepository
+    public interface IUsuarioRepository : IRepositoryBase<Usuario>
     {
-        Task <Usuario> Adicionar(Usuario usuario);
         Task<bool> VerficarSeEmailEstaEmUso(string email);
     }
 }
