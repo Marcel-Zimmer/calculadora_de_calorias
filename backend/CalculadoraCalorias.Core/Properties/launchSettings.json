@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "CalculadoraCalorias.Core": {
+      "commandName": "Project"
+    },
+    "Perfil 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Marcel\\Documents\\calculadora_de_calorias\\backend\\CalculadoraCalorias.Api\\Program.cs"
+    }
+  }
+}
