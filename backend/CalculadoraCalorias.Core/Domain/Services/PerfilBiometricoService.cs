@@ -18,5 +18,9 @@ public class PerfilBiometricoService(IPerfilBiometricoRepository perfilBiometric
         return await perfilBiometricoRepository.Adicionar(new PerfilBiometrico(usuarioId, dataNascimento, genero, alturaCm, nivelAtividade, objetivo));
     }
 
+    public async Task<PerfilBiometrico> ObterPorCodigoUsuario(long codigoUsuario)
+    {
+        return await perfilBiometricoRepository.ObterPorCodigoUsuario(codigoUsuario);
+    }
 }
 

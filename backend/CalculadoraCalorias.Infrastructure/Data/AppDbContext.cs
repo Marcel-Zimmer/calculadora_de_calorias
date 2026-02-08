@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<PerfilBiometrico> PerfilBiometrico { get; set; }
+    public DbSet<RegistroFisico> RegistroFisico { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -30,6 +31,19 @@ public class AppDbContext : DbContext
                   .WithOne()                  
                   .HasForeignKey<PerfilBiometrico>(p => p.UsuarioId) 
                   .OnDelete(DeleteBehavior.Cascade); 
+        });
+
+        modelBuilder.Entity<RegistroFisico>(entity =>
+        {
+            entity.HasOne(r => r.Usuario)
+                  .WithMany() 
+                  .HasForeignKey(r => r.UsuarioId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(r => r.PerfilBiometrico)
+                  .WithMany()
+                  .HasForeignKey(r => r.PerfilBiometricoId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
