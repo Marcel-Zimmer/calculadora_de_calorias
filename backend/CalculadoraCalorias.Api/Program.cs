@@ -1,11 +1,12 @@
 
+using CalculadoraCalorias.Api.Middlewares;
 using CalculadoraCalorias.Application;
 using CalculadoraCalorias.Core;
+using CalculadoraCalorias.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CalculadoraCalorias.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,7 @@ if (app.Environment.IsDevelopment())
 {
 
 }
-
+app.UseMiddleware<ExecaoMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 

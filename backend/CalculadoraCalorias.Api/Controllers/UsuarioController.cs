@@ -1,5 +1,6 @@
 ﻿using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.Interfaces;
+using CalculadoraCalorias.Core.Domain.ExcecoesPersonalizadas;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCalorias.Api.Controllers
@@ -13,15 +14,8 @@ namespace CalculadoraCalorias.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Criar([FromBody] CriarUsuarioRequest requisicao)
         {
-            try
-            {
-                var usuario = await _usuarioAppService.CriarUsuario(requisicao);
-                return Ok(usuario);
-            }
-            catch (Exception ex) { 
-                return BadRequest(ex.Message);
-            }
-
+            var usuario = await _usuarioAppService.CriarUsuario(requisicao);
+            return Ok(usuario);
         }
     }
 }
