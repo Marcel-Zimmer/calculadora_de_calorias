@@ -5,7 +5,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
     public interface IPerfilBiometricoService
     {
-        public Task<PerfilBiometrico> Criar(long usuarioId, 
+        public Task<PerfilBiometrico> Adicionar(long usuarioId, 
                                             DateTime dataNascimento, 
                                             GeneroEnum genero, 
                                             int alturaCm, 

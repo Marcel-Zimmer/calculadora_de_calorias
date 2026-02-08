@@ -10,20 +10,22 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
 {
-    public class PerfilBiometricoAppService(IPerfilBiometricoService perfilBiometricoService, PerfilBiometricoMapper perfilBiometrico) : IPerfilBiometricoAppService
+    public class PerfilBiometricoAppService(IPerfilBiometricoService perfilBiometricoService, PerfilBiometricoMapper perfilBiometrico, IUnitOfWork unitOfWork) : IPerfilBiometricoAppService
     {
         private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
         private readonly PerfilBiometricoMapper _mapperPerfilBiometrico = perfilBiometrico;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<Resultado<CriarPerfilBiometricoResponse>> Criar(CriarPerfilBiometricoRequest requisicao)
+        public async Task<Resultado<CriarPerfilBiometricoResponse>> Adicionar(CriarPerfilBiometricoRequest requisicao)
         {
-            var perfil = await _perfilBiometricoService.Criar(requisicao.UsuarioId, 
-                                                             requisicao.DataNascimento, 
-                                                             requisicao.Genero, 
-                                                             requisicao.AlturaCm, 
-                                                             requisicao.NivelAtividade, 
-                                                             requisicao.Objetivo); 
+            var perfil = await _perfilBiometricoService.Adicionar(requisicao.UsuarioId, 
+                                                                     requisicao.DataNascimento, 
+                                                                     requisicao.Genero, 
+                                                                     requisicao.AlturaCm, 
+                                                                     requisicao.NivelAtividade, 
+                                                                     requisicao.Objetivo);
 
+            await _unitOfWork.CommitAsync();
             return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
         }
     }

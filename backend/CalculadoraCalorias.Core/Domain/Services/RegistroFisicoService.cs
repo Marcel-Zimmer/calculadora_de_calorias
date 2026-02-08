@@ -16,11 +16,16 @@ public class RegistroFisicoService : IRegistroFisicoService
     }
 
 
-    public async Task<RegistroFisico> Criar(long usuarioId, long perfilBiometricoId, decimal pesoKg, decimal? metaCaloricaDiaria)
+    public async Task<RegistroFisico?> Adicionar(long usuarioId, long perfilBiometricoId, decimal pesoKg, decimal? metaCaloricaDiaria)
     {
         var perfilBiometrico = await _perfilBiometricoService.ObterPorCodigoUsuario(usuarioId);
-        var imcCalculado = CalcularImc(perfilBiometrico.AlturaCm, pesoKg);
+        var imcCalculado = CalcularImc(perfilBiometrico?.AlturaCm, pesoKg);
         var taxaMetabolica = CalcularTaxaMetabolicaBasal(perfilBiometrico, pesoKg);
+
+        if(imcCalculado == 0 || taxaMetabolica == 0) 
+        {
+            return null;
+        }
         var registroFisico = new RegistroFisico(usuarioId, perfilBiometricoId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica);
 
         if (metaCaloricaDiaria != null && metaCaloricaDiaria != 0m) {
@@ -30,17 +35,19 @@ public class RegistroFisicoService : IRegistroFisicoService
         return registroFisico;
     }
 
-    private static decimal CalcularImc(int altura, decimal pesoKg)
+    private static decimal CalcularImc(int? altura, decimal pesoKg)
     {
-        if (altura <= 0) return 0;
+        if (altura == null || altura <= 0) return 0;
 
-        decimal alturaMetros = altura / 100m;
+        decimal alturaMetros = (int)altura / 100m;
         return pesoKg / (alturaMetros * alturaMetros);
 
     }
 
-    private static decimal CalcularTaxaMetabolicaBasal(PerfilBiometrico perfil, decimal pesoKg)
+    private static decimal CalcularTaxaMetabolicaBasal(PerfilBiometrico? perfil, decimal pesoKg)
     {
+        if(perfil == null) return 0;
+
         decimal tmbCalculado;
         int idade = perfil.ObterIdade();
 

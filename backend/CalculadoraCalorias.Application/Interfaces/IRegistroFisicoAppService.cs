@@ -7,6 +7,6 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IRegistroFisicoAppService
     {
-        public Task<Resultado<CriarRegistroFisicoResponse>> Criar(CriarRegistroFisicoRequest requisicao);
+        public Task<Resultado<CriarRegistroFisicoResponse>> Adicionar(CriarRegistroFisicoRequest requisicao);
     }
 }

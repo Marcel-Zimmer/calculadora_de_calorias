@@ -7,6 +7,6 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IUsuarioAppService
     {
-        public Task<Resultado<CriarUsuarioResponse>> CriarUsuario(CriarUsuarioRequest requisicao);
+        public Task<Resultado<CriarUsuarioResponse>> Adicionar(CriarUsuarioRequest requisicao);
     }
 }

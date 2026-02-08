@@ -8,7 +8,7 @@ public class PerfilBiometricoService(IPerfilBiometricoRepository perfilBiometric
 {
     private readonly IPerfilBiometricoRepository perfilBiometricoRepository = perfilBiometricoRepository;
 
-    public async Task<PerfilBiometrico> Criar(long usuarioId,
+    public async Task<PerfilBiometrico> Adicionar(long usuarioId,
                                                 DateTime dataNascimento,
                                                 GeneroEnum genero,
                                                 int alturaCm,
