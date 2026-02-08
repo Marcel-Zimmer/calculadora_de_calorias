@@ -30,7 +30,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         public decimal PesoKg { get; private set; }
         public decimal ImcCalculado { get; private set; }
         public decimal TaxaMetabolicaBasal {  get; private set; }
-        public decimal MetaCaloricaDiaria { get; private set; }
+        public decimal? MetaCaloricaDiaria { get; private set; }
         public virtual Usuario? Usuario { get; private set; }
         public virtual PerfilBiometrico? PerfilBiometrico { get; private set; }
 
