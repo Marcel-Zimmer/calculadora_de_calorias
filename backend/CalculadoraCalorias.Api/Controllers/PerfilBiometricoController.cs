@@ -6,15 +6,15 @@ namespace CalculadoraCalorias.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PerfilBiometricoController(IPerfilBiometricoAppService perfilBiometricoAppService) : ControllerBase
+    public class PerfilBiometricoController(IPerfilBiometricoAppService perfilBiometricoAppService) : ApiBaseController
     {
         private readonly IPerfilBiometricoAppService _perfilBiometricoAppService = perfilBiometricoAppService;
 
         [HttpPost]
         public async Task<IActionResult> Criar([FromBody] CriarPerfilBiometricoRequest requisicao)
         {
-            var perfil = await _perfilBiometricoAppService.Criar(requisicao);
-            return Ok(perfil);
+            return ProcessarResultado(await _perfilBiometricoAppService.Criar(requisicao));
+
         }
     }
 }

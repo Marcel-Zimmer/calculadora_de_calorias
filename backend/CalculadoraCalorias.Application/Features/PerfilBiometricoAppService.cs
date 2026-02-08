@@ -3,6 +3,7 @@ using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.DTOs.Responses;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Application.Mapping;
+using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.ExcecoesPersonalizadas;
 using CalculadoraCalorias.Core.Domain.Interfaces;
@@ -14,7 +15,7 @@ namespace CalculadoraCalorias.Application.Features
         private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
         private readonly PerfilBiometricoMapper _mapperPerfilBiometrico = perfilBiometrico;
 
-        public async Task<CriarPerfilBiometricoResponse> Criar(CriarPerfilBiometricoRequest requisicao)
+        public async Task<Resultado> Criar(CriarPerfilBiometricoRequest requisicao)
         {
             var perfil =await _perfilBiometricoService.Criar(requisicao.UsuarioId, 
                                                              requisicao.DataNascimento, 
@@ -23,7 +24,7 @@ namespace CalculadoraCalorias.Application.Features
                                                              requisicao.NivelAtividade, 
                                                              requisicao.Objetivo); 
 
-            return _mapperPerfilBiometrico.EntidadeParaResponse(perfil);
+            return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
         }
     }
 }

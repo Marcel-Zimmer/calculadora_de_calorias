@@ -1,11 +1,12 @@
 ﻿using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.DTOs.Responses;
+using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
 
 namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IUsuarioAppService
     {
-        public Task<CriarUsuarioResponse> CriarUsuario(CriarUsuarioRequest requisicao);
+        public Task<Resultado<CriarUsuarioResponse>> CriarUsuario(CriarUsuarioRequest requisicao);
     }
 }
