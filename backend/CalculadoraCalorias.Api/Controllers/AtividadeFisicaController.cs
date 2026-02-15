@@ -49,5 +49,6 @@ namespace CalculadoraCalorias.Api.Controllers
         {
             return ProcessarResultado(await _atividadeFisicaAppService.Atualizar(requisicao));
         }
+
     }
 }

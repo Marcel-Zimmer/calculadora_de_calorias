@@ -4,6 +4,7 @@ using CalculadoraCalorias.Application.DTOs.Responses;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Application.Mapping;
 using CalculadoraCalorias.Core.Domain.Common;
+using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
@@ -12,11 +13,11 @@ namespace CalculadoraCalorias.Application.Features
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
         private readonly UsuarioMapper _mapperUsuario = usuarioMapper;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;  
-
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<Resultado<CriarUsuarioResponse>> Adicionar(CriarUsuarioRequest requisicao)
         {
-            if (await _usuarioService.VerificarSeEmailEstaEmUso(requisicao.Email)) {
+            if (await _usuarioService.VerificarSeEmailEstaEmUso(requisicao.Email))
+            {
                 return Resultado<CriarUsuarioResponse>.Failure(TipoDeErro.Conflict, "Email informado já está em uso");
             }
 
