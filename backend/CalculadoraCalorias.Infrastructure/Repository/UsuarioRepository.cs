@@ -16,6 +16,13 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<bool> ValidarExistencia(long usuarioId)
+        {
+            return await _dbSet
+                .Where(x => x.Id == usuarioId)
+                .AnyAsync();
+        }
+
         public async Task<bool> VerficarSeEmailEstaEmUso(string email)
         {
             return await _dbSet

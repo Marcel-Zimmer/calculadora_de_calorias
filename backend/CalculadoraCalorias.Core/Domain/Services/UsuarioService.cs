@@ -19,5 +19,10 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
     {
         return await _usuarioRepository.VerficarSeEmailEstaEmUso(email);
     }
+
+    public async Task<bool> ValidarExistencia(long usuarioId)
+    {
+        return await _usuarioRepository.ValidarExistencia(usuarioId);
+    }
 }
 

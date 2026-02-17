@@ -10,14 +10,21 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         [Range(1, long.MaxValue, ErrorMessage = "ID do usuário inválido.")]
         public long UsuarioId { get; set; }
 
-        public int Peso { get; set; }
+        [MaxLength(100, ErrorMessage = "O apelido deve ter no máximo 100 caracteres.")]
+        public string? Apelido { get; set; } 
 
-        [Required(ErrorMessage = "O tipo de refeicao deve ser informado.")]
-        [EnumDataType(typeof(TipoRefeicaoEnum), ErrorMessage = "Tipo inválido.")]
+        [Required(ErrorMessage = "O peso em gramas deve ser informado.")]
+        [Range(1, 10000, ErrorMessage = "O peso deve estar entre 1g e 10kg.")]
+        public int PesoEmGramas { get; set; }
+
+        [Required(ErrorMessage = "O tipo de refeição deve ser informado.")]
+        [EnumDataType(typeof(TipoRefeicaoEnum), ErrorMessage = "Tipo de refeição inválido.")]
         public TipoRefeicaoEnum Tipo { get; set; }
 
-        [Required(ErrorMessage = "A Imagem deve ser informada.")]
+        [Required(ErrorMessage = "A data da refeição deve ser informada.")]
+        public DateOnly Data { get; set; }
+
+        [Required(ErrorMessage = "A imagem deve ser informada.")]
         public required IFormFile Imagem { get; set; }
-        public required DateOnly Data { get; set; }
     }
 }

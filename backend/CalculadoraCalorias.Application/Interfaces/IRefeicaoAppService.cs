@@ -7,6 +7,6 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IRefeicaoAppService
     {
-        public Task<Resultado<Refeicao>> Simular(CriarRefeicaoRequest requisicao);
+        public Task<Resultado<Refeicao>> Adicionar(CriarRefeicaoRequest requisicao);
     }
 }

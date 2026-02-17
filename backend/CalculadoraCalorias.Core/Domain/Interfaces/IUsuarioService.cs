@@ -8,5 +8,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         public Task<bool> VerificarSeEmailEstaEmUso(string email);
 
         public Task<Usuario> CriarUsuario(string nome, string email, string senha, RoleEnum? role);
+
+        public Task<bool> ValidarExistencia(long usuarioId);
     }
 }

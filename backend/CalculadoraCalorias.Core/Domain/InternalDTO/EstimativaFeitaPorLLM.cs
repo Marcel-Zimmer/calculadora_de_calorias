@@ -8,5 +8,7 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         public double Proteinas { get; set; }
         public double Carboidratos { get; set; }
         public double Gorduras { get; set; }
+        public double Fibras { get; set; }
+        public double Acucares { get; set; }
     }
 }
