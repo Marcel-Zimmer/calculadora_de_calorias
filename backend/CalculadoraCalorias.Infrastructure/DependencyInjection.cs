@@ -22,6 +22,7 @@
             services.AddScoped<IAtividadeFisicaRepository, AtividadeFisicaRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddScoped<IRefeicaoRepository, RefeicaoRepository>();
 
             return services;
         }

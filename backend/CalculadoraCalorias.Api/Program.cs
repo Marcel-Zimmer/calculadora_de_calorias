@@ -1,4 +1,5 @@
 
+using CalculadoraCalorias.Api.BackgroundServices;
 using CalculadoraCalorias.Api.Middlewares;
 using CalculadoraCalorias.Application;
 using CalculadoraCalorias.Core;
@@ -24,6 +25,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
  
 builder.Services.AddInfrastructure(connectionString);
+builder.Services.AddHostedService<WorkerEstimativaIa>();
 
 var app = builder.Build();
 

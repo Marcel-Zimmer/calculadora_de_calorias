@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<PerfilBiometrico> PerfilBiometrico { get; set; }
     public DbSet<RegistroFisico> RegistroFisico { get; set; }
     public DbSet<AtividadeFisica> AtividadeFisica { get; set; }
+    public DbSet<Refeicao> Refeicao { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -1,4 +1,5 @@
 ﻿using CalculadoraCalorias.Application.Features;
+using CalculadoraCalorias.Application.Filas;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Application.Mapping;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ namespace CalculadoraCalorias.Application
             services.AddScoped<IAtividadeFisicaAppService, AtividadeFisicaAppService>();
             services.AddScoped<AtividadeFisicaMapper>();
             services.AddScoped<IRefeicaoAppService, RefeicaoAppService>();
+            services.AddSingleton<FilaEstimativaIa>();
             return services;
         }
     }

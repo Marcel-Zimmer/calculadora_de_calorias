@@ -7,11 +7,16 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Core.Domain.Services;
 
-public class RefeicaoService() : IRefeicaoService
+public class RefeicaoService(IRefeicaoRepository refeicaoRepository) : IRefeicaoService
 {
-    public async Task<Refeicao> Adicionar(long usuarioId, string? apelido, int peso, TipoRefeicaoEnum tipo, DateOnly data, EstimativaFeitaPorLLM estimativa)
+    private readonly IRefeicaoRepository _refeicaoRepository = refeicaoRepository;
+
+    public async Task<Refeicao> Adicionar(long usuarioId, string? apelido, int peso, TipoRefeicaoEnum tipo, DateOnly data, Guid guidArquivo)
     {
-        return new Refeicao(usuarioId, apelido,peso, tipo, data, estimativa.Alimento, estimativa.Calorias, estimativa.Proteinas, estimativa.Carboidratos, estimativa.Gorduras,estimativa.Acucares, estimativa.Fibras, false, null);
+        var refeicao =  new Refeicao(usuarioId, apelido,peso, tipo, data, guidArquivo);
+        await _refeicaoRepository.Adicionar(refeicao);
+        return refeicao;
+
     }
 }
 

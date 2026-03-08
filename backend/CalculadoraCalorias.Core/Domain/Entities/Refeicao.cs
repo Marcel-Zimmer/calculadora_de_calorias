@@ -11,21 +11,48 @@ namespace CalculadoraCalorias.Core.Domain.Entities
                         int peso, 
                         TipoRefeicaoEnum tipo, 
                         DateOnly data, 
-                        string alimento, 
-                        double calorias, 
-                        double proteinas, 
-                        double carboidratos, 
-                        double gorduras, 
-                        double acucares, 
-                        double fibras, 
-                        bool? utilizadoRefeicaoModelo, 
-                        long? codigoRefeicaoModelo)
+                        Guid guidArquivo)
         {
             UsuarioId = usuarioId;
             Apelido = apelido;
             Peso = peso;
             Tipo = tipo;
             Data = data;
+            GuidArquivo = guidArquivo;
+
+            StatusProcessamento = StatusProcessamentoEnum.EnviadoParaFila;
+        }
+
+        public long Id { get; private set; }
+        public long UsuarioId { get; private set; }
+        public string? Apelido { get; private set; }
+        public int Peso {  get; private set; }
+        public TipoRefeicaoEnum Tipo {  get; private set; }
+        public DateOnly Data {  get; private set; }
+        public Guid GuidArquivo { get; private set; }
+        public StatusProcessamentoEnum StatusProcessamento { get; private set; }    
+        public string? Alimento { get; private set; }
+        public double? Calorias { get; private set; }
+        public double? Proteinas { get; private set; }
+        public double? Carboidratos { get; private set; }
+        public double? Gorduras { get; private set; }
+        public double? Acucares { get; private set; }
+        public double? Fibras { get; private set; }
+
+        public bool? UtilizadoRefeicaoModelo { get; private set; } = false;
+        public long? CodigoRefeicaoModelo { get; private set; }
+
+        public virtual Usuario? Usuario { get; private set; }
+        public virtual Refeicao? RefeicaoModelo { get; private set; }
+
+        public void AtualizarEstimativa(string? alimento,
+                                            double calorias,
+                                            double proteinas,
+                                            double carboidratos,
+                                            double gorduras,
+                                            double acucares,
+                                            double fibras)
+        { 
             Alimento = alimento;
             Calorias = calorias;
             Proteinas = proteinas;
@@ -33,30 +60,11 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             Gorduras = gorduras;
             Acucares = acucares;
             Fibras = fibras;
-            UtilizadoRefeicaoModelo = utilizadoRefeicaoModelo;
-            CodigoRefeicaoModelo = codigoRefeicaoModelo;
+            StatusProcessamento = StatusProcessamentoEnum.Concluido;
+
         }
-
-        public long Id { get; private set; }
-        public long UsuarioId { get; private set; }
-        public string? Apelido { get; private set; } = string.Empty;
-        public int Peso {  get; private set; }
-        public TipoRefeicaoEnum Tipo {  get; private set; }
-        public DateOnly Data {  get; private set; }
-        public string Alimento { get; private set; } = string.Empty;
-        public double Calorias { get; private set; }
-        public double Proteinas { get; private set; }
-        public double Carboidratos { get; private set; }
-        public double Gorduras { get; private set; }
-        public double Acucares { get; private set; }
-        public double Fibras { get; private set; }
-
-        public bool? UtilizadoRefeicaoModelo { get; private set; } = false;
-        public long? CodigoRefeicaoModelo { get; private set; }
-
-        public virtual Usuario? Usuario { get; private set; }
-        public virtual Refeicao? RefeicaoModelo { get; private set; }
     }
+
 
 
 }
