@@ -15,5 +15,13 @@ namespace CalculadoraCalorias.Api.Controllers
         {
             return ProcessarResultado(await _usuarioAppService.Adicionar(requisicao));
         }
+
+        [HttpPost]
+        [Route ("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUsuarioRequest requisicao) { 
+
+            return ProcessarResultado(await _usuarioAppService.Login(requisicao));
+        
+        }
     }
 }

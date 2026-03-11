@@ -8,9 +8,10 @@
     [Mapper]
     public partial class UsuarioMapper
     {
-        public partial CriarUsuarioResponse EntidadeParaResponse(Usuario usuario);
+        public partial CriarUsuarioResponse CriarUsuarioParaRespose(Usuario usuario);
+        public partial LoginUsarioResponse LoginUsuarioParaResponse(Usuario usuario);
 
-        public partial Usuario RequestParaEntity(CriarUsuarioRequest request);
+        //public partial Usuario RequestParaEntity(LoginRequest request);
 
     }
 }

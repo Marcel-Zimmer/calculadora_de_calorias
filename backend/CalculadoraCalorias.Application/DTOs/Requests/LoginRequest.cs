@@ -19,4 +19,15 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         public RoleEnum? Role { get; set; }
 
     }
+
+    public class LoginUsuarioRequest
+    {
+        [Required(ErrorMessage = "O e-mail é obrigatório.")]
+        [EmailAddress(ErrorMessage = "Formato de e-mail inválido.")]
+        public required string Email { get; set; }
+
+        [Required]
+        [MinLength(6, ErrorMessage = "A senha deve ter no mínimo 6 caracteres.")]
+        public required string Senha { get; set; }
+    }
 }

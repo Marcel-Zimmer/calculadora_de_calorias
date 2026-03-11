@@ -24,5 +24,10 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
     {
         return await _usuarioRepository.ValidarExistencia(usuarioId);
     }
+
+    public async Task<Usuario?> ObterPorEmail(string email)
+    {
+        return await _usuarioRepository.ObterPorEmail(email);
+    }
 }
 

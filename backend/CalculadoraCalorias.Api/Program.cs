@@ -11,6 +11,16 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()  
+              .AllowAnyMethod(); 
+    });
+});
+
 // 1. Serviços
 builder.Services.AddControllers();
 builder.Services.AddApplication();
@@ -40,6 +50,7 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.UseCors("PermitirFrontend");
 
 app.UseAuthorization();
 
