@@ -1,0 +1,13 @@
+<app-carregamento></app-carregamento>
+
+@if (autenticacao.logado()) { 
+    <app-menu></app-menu> 
+}
+
+<main 
+    [class.lg:ml-72]="autenticacao.logado()" 
+    class="min-h-screen bg-slate-50 transition-all duration-300">
+    
+    <router-outlet></router-outlet>
+    
+</main>
