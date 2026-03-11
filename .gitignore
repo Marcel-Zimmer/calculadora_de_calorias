@@ -54,3 +54,28 @@ TestResult.xml
 nunit-*.xml
 /.vs
 /backend/.vs
+
+
+# =========================
+# BACKEND (.NET)
+# =========================
+backend/**/bin/
+backend/**/obj/
+backend/**/.vs/
+backend/**/*.user
+backend/appsettings.Development.json
+
+# =========================
+# FRONTEND (Angular/Node)
+# =========================
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+
+# =========================
+# GERAIS (Sistemas Operacionais)
+# =========================
+.DS_Store
+Thumbs.db
+
