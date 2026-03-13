@@ -8,19 +8,18 @@ using CalculadoraCalorias.Application.Mapping;
 using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Interfaces;
+using CalculadoraCalorias.Core.Domain.InternalDTO;
 using Microsoft.AspNetCore.Http;
 
 namespace CalculadoraCalorias.Application.Features
 {
-    public class RefeicaoAppService(IUsuarioService usuarioService, ILlmService llmService, IRefeicaoService refeicaoService, AtividadeFisicaMapper atividadeFisicaMapper, IUnitOfWork unitOfWork, FilaEstimativaIa filaEstimativaIa) : IRefeicaoAppService
+    public class RefeicaoAppService(
+        IUsuarioService _usuarioService, 
+        IRefeicaoService _refeicaoService, 
+        IRegistroFisicoService _registroFisicoService,
+        IUnitOfWork _unitOfWork, 
+        FilaEstimativaIa _filaEstimativaIa) : IRefeicaoAppService
     {
-        private readonly ILlmService _llmService = llmService;
-        private readonly IRefeicaoService _refeicaoService=refeicaoService;
-        private readonly IUsuarioService _usuarioService = usuarioService;
-        private readonly AtividadeFisicaMapper _atividadeFisicaMapper = atividadeFisicaMapper;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly FilaEstimativaIa _filaIa = filaEstimativaIa;
-
         public async Task<Resultado<Refeicao>> Adicionar(CriarRefeicaoRequest requisicao)
         {
             if(!await _usuarioService.ValidarExistencia(requisicao.UsuarioId)) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
@@ -44,16 +43,38 @@ namespace CalculadoraCalorias.Application.Features
             await _unitOfWork.CommitAsync();
 
             var requestFila = new EstimativaIaRequest(refeicao.Id, guidArquivo);
-            await _filaIa.EnviarParaFilaAsync(requestFila);
+            await _filaEstimativaIa.EnviarParaFilaAsync(requestFila);
 
             return Resultado<Refeicao>.Success(refeicao);
         }
 
-        private static async Task<byte[]> ConverterFileEmArrayByte(IFormFile imagem) 
+        public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId)
         {
-            using var ms = new MemoryStream();
-            await imagem.CopyToAsync(ms);
-            return ms.ToArray();
+            if(usuarioId == 0) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
+
+            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            if (registroFisico == null) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
+
+            var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId);
+
+            var informacoesDiarias = new RefeicaoGraficoDiarioResponse
+            {
+                MetaCaloricaDiaria = registroFisico.MetaCaloricaDiaria ?? 0,
+                TotalCaloriasConsumidas = refeicoes?.Sum(x => x.Calorias) ?? 0,
+                Refeicoes = refeicoes ?? [], 
+            };
+
+            return Resultado<RefeicaoGraficoDiarioResponse>.Success(informacoesDiarias);
+        }
+
+        public Task<Resultado<object>> GraficoMensal(long idUsuario)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Resultado<object>> GraficoSemanal(long idUsuario)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace CalculadoraCalorias.Application.DTOs.Requests
 {
-    public class EstimativaFeitaPorLLM
+    public class EstimativaFeitaPorLlmDTO
     {
         public string Alimento { get; set; } = string.Empty;
         public double Calorias { get; set; }

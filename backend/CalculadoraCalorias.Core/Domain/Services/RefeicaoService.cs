@@ -4,6 +4,7 @@ using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.Interfaces;
+using CalculadoraCalorias.Core.Domain.InternalDTO;
 
 namespace CalculadoraCalorias.Core.Domain.Services;
 
@@ -17,6 +18,11 @@ public class RefeicaoService(IRefeicaoRepository refeicaoRepository) : IRefeicao
         await _refeicaoRepository.Adicionar(refeicao);
         return refeicao;
 
+    }
+
+    public async Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId)
+    {
+        return await _refeicaoRepository.ObterDiariasPorUsuarioId(usuarioId);
     }
 }
 

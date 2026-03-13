@@ -7,6 +7,12 @@ namespace CalculadoraCalorias.Infrastructure.Repository
 {
     public class PerfilBiometricoRepository(AppDbContext context) : RepositoryBase<PerfilBiometrico>(context), IPerfilBiometricoRepository
     {
-
+        public async Task<PerfilBiometrico?> ObterPorIdUsuario(long codigoUsuario)
+        {
+            return await _dbSet
+                 .AsNoTracking()
+                 .Where(x => x.UsuarioId == codigoUsuario)
+                 .FirstOrDefaultAsync();
+        }
     }
 }

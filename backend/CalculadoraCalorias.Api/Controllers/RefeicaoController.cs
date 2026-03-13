@@ -17,8 +17,32 @@ namespace CalculadoraCalorias.Api.Controllers
             return ProcessarResultado(await _refeicaoAppService.Adicionar(requisicao));
         }
 
+        [HttpGet]
+        [Route("grafico/diario/{usuarioId:long}")]
+        public async Task<IActionResult> GraficoDiario(long usuarioId)
+        {
+            return ProcessarResultado(await _refeicaoAppService.GraficoDiario(usuarioId));
+        }
 
+        [HttpGet]
+        [Route("grafico/semanal/{usuarioId:long}")]
+        public async Task<IActionResult> GraficoSemanal(long usuarioId)
+        {
+            return ProcessarResultado(await _refeicaoAppService.GraficoSemanal(usuarioId));
+        }
+
+        [HttpGet]
+        [Route("grafico/mensal/{usuarioId:long}")]
+        public async Task<IActionResult> GraficoMensal(long usuarioId)
+        {
+            return ProcessarResultado(await _refeicaoAppService.GraficoMensal(usuarioId));
+        }
+        
     }
+
+
+
+}
 
     //metodos de crud basicos 
         //ajustar secrets do gemini
@@ -33,4 +57,3 @@ namespace CalculadoraCalorias.Api.Controllers
         //nesse caso, preciso calcular as calorias com base na "refeição modelo"
     //fazer endpoins para subir configurações, por exemplo quantidade gasta por cada range de exercio, se ainda não estiver cadastrado posso pedir para uma llm fazer uma media e deixar como padrão
         //quero fazer o mesmo para gorduras, proteina e etc, fazer um grafico de um minimo/maximo que devo ingerir e quanto estou ingerindo 
-}

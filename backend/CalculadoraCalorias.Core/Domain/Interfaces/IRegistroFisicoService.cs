@@ -8,6 +8,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         public Task<RegistroFisico?> Adicionar(long usuarioId,
                                             decimal pesoKg,
                                             decimal? MetaCaloricaDiaria);
-
+        Task<RegistroFisico?> ObterPorIdUsuario(long idUsuario);
     }
 }

@@ -3,6 +3,7 @@
 namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
     public interface IRegistroFisicoRepository : IRepositoryBase<RegistroFisico>
-    { 
+    {
+        Task<RegistroFisico?> ObterPorIdUsuario(long idUsuario);
     }
 }

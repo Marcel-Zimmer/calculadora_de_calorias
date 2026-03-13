@@ -7,6 +7,12 @@ namespace CalculadoraCalorias.Infrastructure.Repository
 {
     public class RegistroFisicoRepository(AppDbContext context) : RepositoryBase<RegistroFisico>(context), IRegistroFisicoRepository
     {
-
+        public async Task<RegistroFisico?> ObterPorIdUsuario(long idUsuario)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(x => x.UsuarioId == idUsuario)
+                .FirstOrDefaultAsync();
+        }
     }
 }
