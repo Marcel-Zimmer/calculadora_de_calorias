@@ -7,6 +7,7 @@ import { CarragamentoService } from '../../core/services/carregamento.service';
   templateUrl: './carregamento.html',
   styleUrl: './carregamento.css',
 })
+
 export class Carregamento {
   loading = inject(CarragamentoService);
 }

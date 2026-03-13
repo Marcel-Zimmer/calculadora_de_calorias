@@ -1,0 +1,21 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { UsuarioLogin } from '../models/usuario.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RefeicaoService {
+  http = inject(HttpClient); 
+  
+  baseUrl = 'https://localhost:52732/api/Refeicao'; 
+
+  adicionar(refeicao: FormData) {
+    return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
+  }
+
+  obterGraficoDiario(usuarioId:number){
+    return this.http.get(`${this.baseUrl}/grafico/diario/`+ usuarioId);
+  }
+
+}

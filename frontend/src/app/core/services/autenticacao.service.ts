@@ -4,17 +4,23 @@ import { Injectable, signal, computed } from '@angular/core';
   providedIn: 'root'
 })
 export class AutenticacaoService {
-  usuarioId = signal<string | null>(localStorage.getItem('meu_app_user_id'));
+  private stringId = localStorage.getItem('meu_app_user_id') ?? null;
+  usuarioId = signal<number>(this.stringId ? Number(this.stringId) : 0);
 
   logado = computed(() => this.usuarioId() !== null);
 
-  salvarSessao(id: string) {
-    localStorage.setItem('meu_app_user_id', id); 
+  salvarSessao(id: number) {
+    localStorage.setItem('meu_app_user_id', id.toString()); 
     this.usuarioId.set(id); 
   }
 
   fazerLogout() {
     localStorage.removeItem('meu_app_user_id'); 
-    this.usuarioId.set(null); 
+    this.usuarioId.set(-1); 
+  }
+
+  obterId(){
+    this.stringId = localStorage.getItem('meu_app_user_id') ?? null;
+    return this.stringId ? Number(this.stringId) : 0; 
   }
 }

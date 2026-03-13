@@ -21,19 +21,33 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) =>
     });
   }
 
-  return next(requestClonada).pipe(
+return next(requestClonada)
+  .pipe(
     catchError((erro: HttpErrorResponse) => {
-      if (erro.status === 401) {
-        console.error('Não autorizado! O token expirou ou é inválido.');
+      let mensagemErro = 'Ocorreu um erro inesperado.';
+
+      if (erro.status === 0) {
+        mensagemErro = 'Não foi possível conectar ao servidor. Verifique sua internet.';
+      } 
+      else if (erro.status === 400 && erro.error?.errors) { 
+        const validacoes = erro.error.errors;
+        const primeiroErro = Object.values(validacoes)[0] as string[];
+        mensagemErro = primeiroErro[0];
+      } 
+      else if (erro.status === 401) {
+        mensagemErro = 'Sua sessão expirou. Faça login novamente.';
       } else if (erro.status === 403) {
-        console.error('Sem permissão para acessar este recurso.');
-      } else if (erro.status >= 500) {
-        console.error('Erro interno no servidor (.NET chorou).');
+        mensagemErro = 'Você não tem permissão para acessar este recurso.';
+      } 
+      else if (erro.status >= 500) {
+        mensagemErro = 'Backend quebrou.';
+      }
+      else if (erro.error && typeof erro.error === 'string') {
+        mensagemErro = erro.error;
       }
 
-      return throwError(() => erro); 
+      return throwError(() => mensagemErro); 
     }),
-
     finalize(() => {
       carregamentoService.esconder();
     })
