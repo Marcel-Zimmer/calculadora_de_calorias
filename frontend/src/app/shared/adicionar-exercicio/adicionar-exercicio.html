@@ -1,0 +1,68 @@
+@if(mostrarModal()){
+<div class="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm animate-fade-in flex items-end sm:items-center justify-center p-4">
+
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md p-8 shadow-2xl relative animate-fade-in">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="text-2xl font-black text-slate-800">Novo Treino</h3>
+            <button (click)="fecharModal()" class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold hover:bg-slate-200 transition-colors">✕</button>
+        </div>
+
+        <div class="space-y-6">
+            
+            <div [ngClass]="exercicioSelecionado().cor.split(' ')[0] + ' ' + exercicioSelecionado().border" class="p-6 rounded-3xl flex items-center space-x-4 border transition-colors">
+                <span class="text-4xl">{{ exercicioSelecionado().icone }}</span>
+                <div>
+                    <h4 [ngClass]="exercicioSelecionado().text" class="font-black italic text-lg transition-colors">
+                        {{ exercicioSelecionado().nome }}
+                    </h4>
+                    <p [ngClass]="exercicioSelecionado().cor.split(' ')[1]" class="text-[10px] font-bold uppercase tracking-widest transition-colors">
+                        Registro Manual
+                    </p>
+                </div>
+            </div>
+
+            <div class="space-y-6 pt-2">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="relative">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1 absolute -top-5 left-2">Modalidade</label>
+                        <select [(ngModel)]="tipoExercicio" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 text-sm outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="1">Ciclismo</option>
+                            <option value="2">Boxe</option>
+                            <option value="3">Musculação</option>
+                            <option value="4">Corrida</option>
+                            <option value="5">Natação</option>
+                        </select>
+                    </div>
+
+                    <div class="relative">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1 absolute -top-5 left-2">Data</label>
+                        <input type="date" [(ngModel)]="dataExercicio" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 text-sm outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    
+                    <div class="relative">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1 absolute -top-5 left-2">Duração</label>
+                        <input type="time" [(ngModel)]="tempoExercicio" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 text-sm outline-none focus:ring-2 focus:ring-orange-500">
+                    </div>
+
+                    <div class="relative">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1 absolute -top-5 left-2">Gasto Estimado</label>
+                        <input type="number" [(ngModel)]="calorias" placeholder="Ex: 400" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 text-sm outline-none focus:ring-2 focus:ring-orange-500">
+                        <span class="absolute right-4 top-4 text-slate-400 font-black text-xs">KCAL</span>
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <button (click)="salvarExercicio()" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-orange-100 transition-all active:scale-[0.98] mt-4">
+                Registrar Treino
+            </button>
+        </div>
+    </div>
+
+</div>
+}

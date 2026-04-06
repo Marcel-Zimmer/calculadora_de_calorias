@@ -5,7 +5,7 @@ import { Injectable, signal, computed } from '@angular/core';
 })
 export class AutenticacaoService {
   private stringId = localStorage.getItem('meu_app_user_id') ?? null;
-  usuarioId = signal<number>(this.stringId ? Number(this.stringId) : 0);
+  usuarioId = signal<number | null>(this.stringId ? Number(this.stringId) : 0);
 
   logado = computed(() => this.usuarioId() !== null);
 
@@ -16,7 +16,7 @@ export class AutenticacaoService {
 
   fazerLogout() {
     localStorage.removeItem('meu_app_user_id'); 
-    this.usuarioId.set(-1); 
+    this.usuarioId.set(null); 
   }
 
   obterId(){

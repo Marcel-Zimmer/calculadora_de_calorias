@@ -6,22 +6,28 @@ import { Carregamento } from '../../shared/carregamento/carregamento';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
 import { RefeicaoService } from '../../core/services/refeicao.service';
 import { FormsModule } from '@angular/forms';
+import { GraficoService } from '../../core/services/grafico.service';
+import { AdicionarRefeicao } from '../../shared/adicionar-refeicao/adicionar-refeicao';
+import { AdicionarExercicio } from "../../shared/adicionar-exercicio/adicionar-exercicio";
+import { GraficoDiario } from "../../shared/grafico-diario/grafico-diario";
+import { GraficoSemanal } from "../../shared/grafico-semanal/grafico-semanal";
+import { GraficoMensal } from "../../shared/grafico-mensal/grafico-mensal";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 
 export class Dashboard implements OnInit {
   refeicaoService = inject(RefeicaoService);
+  graficoService = inject(GraficoService)
   ngOnInit(): void {
     this.obterGraficoDiario();
   }
-
   autenticacao = inject(AutenticacaoService);
   abaMenu = signal<'dashboard' | 'estatisticas' | 'perfil'>('dashboard');
   menuAberto = signal<boolean>(false);
@@ -37,13 +43,23 @@ export class Dashboard implements OnInit {
   caloriasConsumidas = signal<number>(0);
   caloriasQueimadas = signal<number>(0);
   refeicoesDeHoje = signal<any[]>([]);
+  exerciciosDeHoje = signal<any[]>([]);
 
   mapaRefeicoes: Record<number, any> = {
     1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
     2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },
     3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
     4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' }
-  };  
+  }; 
+
+  mapaExercicios: Record<number, any> = {
+      1: { nome: 'Ciclismo',   icone: '🚴', cor: 'bg-sky-100 text-sky-600' },
+      2: { nome: 'Boxe',       icone: '🥊', cor: 'bg-red-100 text-red-600' },
+      3: { nome: 'Musculação', icone: '🏋️', cor: 'bg-slate-100 text-slate-600' },
+      4: { nome: 'Corrida',    icone: '🏃', cor: 'bg-amber-100 text-amber-600' },
+      5: { nome: 'Natação',    icone: '🏊', cor: 'bg-cyan-100 text-cyan-600' }
+  };
+
   averageConsumed = computed(() => this.graficoDashboard() === 'semanal' ? 0 : 0);
   averageBurned = computed(() => this.graficoDashboard() === 'semanal' ? 0 : 0);
 
@@ -108,7 +124,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoDiario(){
-    this.refeicaoService.obterGraficoDiario(this.autenticacao.obterId())
+    this.graficoService.obterGraficoDiario(this.autenticacao.obterId())
       .subscribe({
         next: (resposta: any) => {
           console.log('grafico obtido com sucesso', resposta);
@@ -120,10 +136,12 @@ export class Dashboard implements OnInit {
       });
   }
   receberGraficoDiario(resposta:any){
+      console.log(resposta)
       this.metaCalorias.set(resposta.metaCaloricaDiaria);
       this.caloriasConsumidas.set(resposta.totalCaloriasConsumidas);
       this.refeicoesDeHoje.set(resposta.refeicoes)
-      //this.caloriasQueimadas.set(300);
+      this.caloriasQueimadas.set(resposta.totalCaloriasGastas);
+      this.exerciciosDeHoje.set(resposta.exercicios)
   }
 
   limparEFecharModal() {
@@ -134,4 +152,31 @@ export class Dashboard implements OnInit {
     this.fotoReal.set(null);
     this.closeMealModal();
   }
+
+  formatarTempo(tempo: string | null | undefined): string {
+    if (!tempo) return 'Tempo não registrado';
+
+    const partes = tempo.split(':');
+    if (partes.length < 2) return tempo;
+
+    const horas = parseInt(partes[0], 10);
+    const minutos = parseInt(partes[1], 10);
+
+    let texto = 'Tempo:';
+
+    if (horas > 0) {
+      texto += `${horas} hora${horas > 1 ? 's' : ''}`;
+    }
+
+    if (minutos > 0) {
+      if (horas > 0) texto += ' e ';
+      texto += `${minutos} min`;
+    }
+
+    if (horas === 0 && minutos === 0) {
+      return 'Tempo: Menos de 1 min';
+    }
+
+    return texto;
+  }  
 }

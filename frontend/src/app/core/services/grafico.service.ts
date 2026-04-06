@@ -5,12 +5,13 @@ import { UsuarioLogin } from '../models/usuario.model';
 @Injectable({
   providedIn: 'root',
 })
-export class RefeicaoService {
+export class GraficoService {
   http = inject(HttpClient); 
   
-  baseUrl = 'https://localhost:52732/api/Refeicao'; 
+  baseUrl = 'https://localhost:52732/api/Grafico'; 
 
-  adicionar(refeicao: FormData) {
-    return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
+  obterGraficoDiario(usuarioId:number){
+    return this.http.get(`${this.baseUrl}/dashboard-diario/`+ usuarioId);
   }
+
 }
