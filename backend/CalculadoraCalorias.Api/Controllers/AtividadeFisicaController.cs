@@ -1,4 +1,5 @@
 ﻿using CalculadoraCalorias.Application.DTOs.Requests;
+using CalculadoraCalorias.Application.Features;
 using CalculadoraCalorias.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +13,23 @@ namespace CalculadoraCalorias.Api.Controllers
 
         [HttpPost]
         [Route("simular")]
-        public async Task<IActionResult> SimularAtividade([FromBody] CriarAtividadeFisicaRequest requisicao)
+        public async Task<IActionResult> SimularAtividade([FromBody] CriarEstimativaAtividadeFisicaRequest requisicao)
         {
             return ProcessarResultado(await _atividadeFisicaAppService.Simular(requisicao));
         }
 
         [HttpPost]
+        [Route("estimar-gasto-calorico")]
+        public async Task<IActionResult> EstimarGastoCalorico([FromBody] CriarEstimativaAtividadeFisicaRequest requisicao)
+        {
+            return ProcessarResultado(await _atividadeFisicaAppService.EstimarGastoCalorico(requisicao));
+        }
+        [HttpPost]
         public async Task<IActionResult> Adicionar([FromBody] CriarAtividadeFisicaRequest requisicao)
         {
             return ProcessarResultado(await _atividadeFisicaAppService.Adicionar(requisicao));
         }
-        
+
         [HttpGet]
         [Route("obter-todos/{idUsuario}")]
         public async Task<IActionResult> ObterTodosPorId([FromRoute] int idUsuario)
@@ -49,6 +56,5 @@ namespace CalculadoraCalorias.Api.Controllers
         {
             return ProcessarResultado(await _atividadeFisicaAppService.Atualizar(requisicao));
         }
-
     }
 }

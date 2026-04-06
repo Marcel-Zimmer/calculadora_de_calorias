@@ -20,6 +20,7 @@ namespace CalculadoraCalorias.Application
             services.AddScoped<AtividadeFisicaMapper>();
             services.AddScoped<IRefeicaoAppService, RefeicaoAppService>();
             services.AddSingleton<FilaEstimativaIa>();
+            services.AddScoped<IGraficoAppService, GraficoAppService>();
             return services;
         }
     }

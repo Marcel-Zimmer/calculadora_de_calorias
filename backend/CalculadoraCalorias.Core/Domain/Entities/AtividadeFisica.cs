@@ -8,25 +8,33 @@ namespace CalculadoraCalorias.Core.Domain.Entities
     public class AtividadeFisica
     {
         protected AtividadeFisica() { }
-
+        public AtividadeFisica(long usuarioId, int tipoAtividadeId, TimeSpan tempoExercicio, DateOnly dataExercicio, decimal caloriasEstimadas)
+        {
+            UsuarioId = usuarioId;
+            TipoAtividadeId = tipoAtividadeId;
+            TempoExercicio = tempoExercicio;
+            DataExercicio = dataExercicio;
+            CaloriasEstimadas = caloriasEstimadas;
+        }
         public AtividadeFisica(long usuarioId, int tipoAtividadeId, decimal pesoSnapshot, TimeSpan tempoExercicio, int kilometragem)
         {
             UsuarioId = usuarioId;
             TipoAtividadeId = tipoAtividadeId;
             PesoSnapshot = pesoSnapshot;
             TempoExercicio = tempoExercicio;
-            DataExercicio = DateTime.UtcNow;
             VelocidadeMedia = CalcularVelocidade(kilometragem, tempoExercicio);
-            CaloriasCalculadas = CalcularCalorias();
+            CaloriasEstimadas = CalcularCalorias();
         }
+
+
 
         public int Id {  get; private set; }
         public long UsuarioId {  get; private set; }
         public int TipoAtividadeId {  get; private set; }
-        public decimal PesoSnapshot {  get; private set; }
-        public decimal CaloriasCalculadas {  get; private set; }
-        public double VelocidadeMedia { get; private set; }
-        public DateTime DataExercicio {  get; private set; }
+        public decimal? PesoSnapshot {  get; private set; }
+        public decimal CaloriasEstimadas {  get; private set; }
+        public double? VelocidadeMedia { get; private set; }
+        public DateOnly DataExercicio {  get; private set; }
         public TimeSpan TempoExercicio {  get; private set; }
         public virtual Usuario? Usuario {  get; private set; }
 
@@ -57,17 +65,14 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         private decimal CalcularCalorias()
         {
             decimal metCalculado = ObterMetPelaVelocidade();
-            return metCalculado * PesoSnapshot * (decimal)TempoExercicio.TotalHours;
+            return metCalculado * (decimal)PesoSnapshot * (decimal)TempoExercicio.TotalHours;
         }
 
         public void Atualizar(int tipo, int kilometragemPercorrida, TimeSpan tempoDeExercicio)
         {
             TipoAtividadeId = tipo;
-            DataExercicio = DateTime.UtcNow;
             VelocidadeMedia = CalcularVelocidade(kilometragemPercorrida, tempoDeExercicio);
-            CaloriasCalculadas = CalcularCalorias();
+            CaloriasEstimadas = CalcularCalorias();
         }
     }
-    
-
 }

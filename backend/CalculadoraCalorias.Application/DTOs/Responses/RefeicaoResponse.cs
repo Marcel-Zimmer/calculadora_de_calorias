@@ -8,7 +8,9 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
     {   
         public decimal MetaCaloricaDiaria { get; set; }
         public double TotalCaloriasConsumidas { get; set; }
+        public decimal TotalCaloriasGastas {  get; set; }
         public List<RefeicaoDTO> Refeicoes {  get; set; } = [];
+        public List<ExercicioDTO> Exercicios { get; set; } = [];
     }
 
 }

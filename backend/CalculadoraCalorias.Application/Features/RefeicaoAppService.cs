@@ -1,22 +1,18 @@
 ﻿
+
 using CalculadoraCalorias.Application.DTOs.Records;
 using CalculadoraCalorias.Application.DTOs.Requests;
-using CalculadoraCalorias.Application.DTOs.Responses;
 using CalculadoraCalorias.Application.Filas;
 using CalculadoraCalorias.Application.Interfaces;
-using CalculadoraCalorias.Application.Mapping;
 using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Interfaces;
-using CalculadoraCalorias.Core.Domain.InternalDTO;
-using Microsoft.AspNetCore.Http;
 
 namespace CalculadoraCalorias.Application.Features
 {
     public class RefeicaoAppService(
         IUsuarioService _usuarioService, 
         IRefeicaoService _refeicaoService, 
-        IRegistroFisicoService _registroFisicoService,
         IUnitOfWork _unitOfWork, 
         FilaEstimativaIa _filaEstimativaIa) : IRefeicaoAppService
     {
@@ -46,35 +42,6 @@ namespace CalculadoraCalorias.Application.Features
             await _filaEstimativaIa.EnviarParaFilaAsync(requestFila);
 
             return Resultado<Refeicao>.Success(refeicao);
-        }
-
-        public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId)
-        {
-            if(usuarioId == 0) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
-
-            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
-            if (registroFisico == null) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
-
-            var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId);
-
-            var informacoesDiarias = new RefeicaoGraficoDiarioResponse
-            {
-                MetaCaloricaDiaria = registroFisico.MetaCaloricaDiaria ?? 0,
-                TotalCaloriasConsumidas = refeicoes?.Sum(x => x.Calorias) ?? 0,
-                Refeicoes = refeicoes ?? [], 
-            };
-
-            return Resultado<RefeicaoGraficoDiarioResponse>.Success(informacoesDiarias);
-        }
-
-        public Task<Resultado<object>> GraficoMensal(long idUsuario)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Resultado<object>> GraficoSemanal(long idUsuario)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,24 +1,35 @@
-﻿using CalculadoraCalorias.Application.DTOs.Requests;
-using CalculadoraCalorias.Application.Interfaces;
+﻿using CalculadoraCalorias.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCalorias.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RefeicaoController(IRefeicaoAppService refeicaoAppService) : ApiBaseController
+    public class GraficoController(
+        IGraficoAppService _graficoAppService) : ApiBaseController
     {
-        private readonly IRefeicaoAppService _refeicaoAppService = refeicaoAppService;
 
-        [HttpPost]
-        [Route("adicionar")]
-        public async Task<IActionResult> Adicionar([FromForm] CriarRefeicaoRequest requisicao)
+        [HttpGet]
+        [Route("dashboard-diario/{usuarioId:long}")]
+        public async Task<IActionResult> GraficoDiario(long usuarioId)
         {
-            return ProcessarResultado(await _refeicaoAppService.Adicionar(requisicao));
+            return ProcessarResultado(await _graficoAppService.GraficoDiario(usuarioId));
         }
-        
-    }
 
+        [HttpGet]
+        [Route("dashboard-semanal/{usuarioId:long}")]
+        public async Task<IActionResult> GraficoSemanal(long usuarioId)
+        {
+            return ProcessarResultado(await _graficoAppService.GraficoSemanal(usuarioId));
+        }
+
+        [HttpGet]
+        [Route("dashboard-mensal/{usuarioId:long}")]
+        public async Task<IActionResult> GraficoMensal(long usuarioId)
+        {
+            return ProcessarResultado(await _graficoAppService.GraficoMensal(usuarioId));
+        }
+    }
 }
 
     //metodos de crud basicos 
