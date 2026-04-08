@@ -1,5 +1,6 @@
 ﻿using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCalorias.Api.Controllers
@@ -11,6 +12,7 @@ namespace CalculadoraCalorias.Api.Controllers
         private readonly IUsuarioAppService _usuarioAppService = usuarioAppService;
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Adicionar([FromBody] CriarUsuarioRequest requisicao)
         {
             return ProcessarResultado(await _usuarioAppService.Adicionar(requisicao));
@@ -18,6 +20,7 @@ namespace CalculadoraCalorias.Api.Controllers
 
         [HttpPost]
         [Route ("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginUsuarioRequest requisicao) { 
 
             return ProcessarResultado(await _usuarioAppService.Login(requisicao));

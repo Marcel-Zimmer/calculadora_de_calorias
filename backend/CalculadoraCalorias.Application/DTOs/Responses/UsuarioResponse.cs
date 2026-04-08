@@ -16,5 +16,6 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public string? Nome { get;  set; }
         public string? Email { get;  set; }
         public RoleEnum Role { get;  set; }
+        public string? Token { get; set; }
     }
 }

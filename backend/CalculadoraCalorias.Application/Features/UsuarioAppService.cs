@@ -9,11 +9,13 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
 {
-    public class UsuarioAppService(IUsuarioService usuarioService, UsuarioMapper usuarioMapper, IUnitOfWork unitOfWork) : IUsuarioAppService
+    public class UsuarioAppService(IUsuarioService usuarioService, UsuarioMapper usuarioMapper, IUnitOfWork unitOfWork, ITokenService tokenService) : IUsuarioAppService
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
         private readonly UsuarioMapper _mapperUsuario = usuarioMapper;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ITokenService _tokenService = tokenService;
+
         public async Task<Resultado<CriarUsuarioResponse>> Adicionar(CriarUsuarioRequest requisicao)
         {
             if (await _usuarioService.VerificarSeEmailEstaEmUso(requisicao.Email))
@@ -39,7 +41,10 @@ namespace CalculadoraCalorias.Application.Features
                 return Resultado<LoginUsarioResponse>.Failure(TipoDeErro.Unauthorized, "login ou senha incorreto");
             }
 
-            return Resultado<LoginUsarioResponse>.Success(_mapperUsuario.LoginUsuarioParaResponse(usuario));
+            var response = _mapperUsuario.LoginUsuarioParaResponse(usuario);
+            response.Token = _tokenService.GerarToken(usuario);
+
+            return Resultado<LoginUsarioResponse>.Success(response);
 
         }
     }

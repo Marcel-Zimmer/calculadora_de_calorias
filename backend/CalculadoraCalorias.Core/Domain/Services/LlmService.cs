@@ -8,10 +8,10 @@ namespace CalculadoraCalorias.Core.Domain.Services
 {
     public  class LlmService : ILlmService
     {
-        public async Task<EstimativaFeitaPorLLM?> SimularCaloriasRefeicao(byte[] imagemBase64, int pesoEmGramas)
+        public async Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(byte[] imagemBase64, int pesoEmGramas)
         {
 
-            var client = new Client(apiKey:"");
+            var client = new Client(apiKey: "AIzaSyB4H1iq81WL9zJCY27UJ9KcMXrS19YU9e4");
 
             var response = await client.Models.GenerateContentAsync(
                 model: "gemini-3-flash-preview",
@@ -28,7 +28,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
             }
 
             var opcoes = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            return JsonSerializer.Deserialize<EstimativaFeitaPorLLM>(jsonResposta, opcoes);
+            return JsonSerializer.Deserialize<EstimativaFeitaPorLlmDTO>(jsonResposta, opcoes);
 
         }
 

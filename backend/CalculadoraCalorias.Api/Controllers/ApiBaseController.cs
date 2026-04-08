@@ -1,10 +1,15 @@
 ﻿using CalculadoraCalorias.Core.Domain.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CalculadoraCalorias.Api.Controllers
 {
+    [Authorize]
     public class ApiBaseController : ControllerBase
     {
+        protected long UsuarioId => long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
         protected IActionResult ProcessarResultado<T>(Resultado<T> result)
         {
             if (result.Sucesso)
