@@ -1,0 +1,34 @@
+services:
+  # Banco de Dados
+  db:
+    image: postgres:16-alpine
+    container_name: contador-calorias-db
+    restart: always
+    environment:
+      POSTGRES_DB: CalculadoraCaloriasDb
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: Senha123@
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: contador-calorias-api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CalculadoraCaloriasDb;Username=usuario;Password=Senha123@;
+    ports:
+      - "5000:8080"
+    volumes:
+      - ./backend/CalculadoraCalorias.Api/wwwroot/uploads:/app/wwwroot/uploads
+
+volumes:
+  db-data:
