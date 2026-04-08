@@ -5,6 +5,7 @@
     using CalculadoraCalorias.Core.Domain.Services;
     using CalculadoraCalorias.Infrastructure.Data;
     using CalculadoraCalorias.Infrastructure.Repository;
+    using CalculadoraCalorias.Infrastructure.Services;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +24,7 @@
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IRefeicaoRepository, RefeicaoRepository>();
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }

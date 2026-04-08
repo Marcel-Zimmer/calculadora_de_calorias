@@ -2,16 +2,29 @@
 using CalculadoraCalorias.Core.Domain.Interfaces;
 using Google.GenAI;
 using Google.GenAI.Types;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
 namespace CalculadoraCalorias.Core.Domain.Services
 {
     public  class LlmService : ILlmService
     {
+        private readonly IConfiguration _configuration;
+
+        public LlmService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public async Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(byte[] imagemBase64, int pesoEmGramas)
         {
+            var apiKey = _configuration["Gemini:ApiKey"];
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                throw new InvalidOperationException("A chave de API do Gemini não foi configurada no appsettings.json.");
+            }
 
-            var client = new Client(apiKey: "AIzaSyB4H1iq81WL9zJCY27UJ9KcMXrS19YU9e4");
+            var client = new Client(apiKey: apiKey);
 
             var response = await client.Models.GenerateContentAsync(
                 model: "gemini-3-flash-preview",
