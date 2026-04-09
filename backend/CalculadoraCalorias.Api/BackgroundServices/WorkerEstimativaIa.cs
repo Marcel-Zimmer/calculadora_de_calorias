@@ -45,6 +45,10 @@ namespace CalculadoraCalorias.Api.BackgroundServices
                     }
 
                     var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
+                    if (!Directory.Exists(caminhoBase))
+                    {
+                        Directory.CreateDirectory(caminhoBase);
+                    }
                     var padraoDeBusca = $"{request.GuidArquivo}.*";
                     var arquivosEncontrados = Directory.GetFiles(caminhoBase, padraoDeBusca);
 
