@@ -29,6 +29,17 @@ services:
       - "5000:8080"
     volumes:
       - ./backend/CalculadoraCalorias.Api/wwwroot/uploads:/app/wwwroot/uploads
-
+      
+  #frontend  
+  frontend:
+      build:
+        context: ./frontend
+        dockerfile: Dockerfile
+      container_name: contador-calorias-front
+      restart: always
+      depends_on:
+        - backend
+      ports:
+        - "80:80"
 volumes:
   db-data:
