@@ -28,7 +28,6 @@ namespace CalculadoraCalorias.Api.BackgroundServices
                 try
                 {
                     Console.WriteLine($"Iniciando processamento da Refeição ID: {request.RefeicaoId}");
-
                     using var scope = _scopeFactory.CreateScope();
 
                     var dbContext = scope.ServiceProvider.GetRequiredService<IRefeicaoRepository>();
@@ -67,6 +66,19 @@ namespace CalculadoraCalorias.Api.BackgroundServices
                     Console.WriteLine(json);
 
                     await unitOfWork.CommitAsync();
+                    try
+                    {
+                        if (File.Exists(caminhoFisicoCompleto))
+                        {
+                            File.Delete(caminhoFisicoCompleto);
+                            _logger.LogInformation($"Imagem deletada com sucesso: {caminhoFisicoCompleto}");
+                        }
+                    }
+                    catch (Exception exFile)
+                    {
+                        _logger.LogWarning(exFile, $"Falha ao deletar a imagem no disco (ela ficará órfã): {caminhoFisicoCompleto}");
+                    }
+
 
                 }
                 catch (Exception ex)
