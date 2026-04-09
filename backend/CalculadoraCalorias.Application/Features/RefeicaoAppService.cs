@@ -21,6 +21,10 @@ namespace CalculadoraCalorias.Application.Features
             if(!await _usuarioService.ValidarExistencia(requisicao.UsuarioId)) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
 
             var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
+            if (!Directory.Exists(caminhoBase))
+            {
+                Directory.CreateDirectory(caminhoBase);
+            }
             var extensao = Path.GetExtension(requisicao.Imagem.FileName);
             var guidArquivo = Guid.NewGuid();
             var nomeArquivo = $"{guidArquivo}{extensao}";
