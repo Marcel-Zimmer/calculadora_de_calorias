@@ -1,4 +1,4 @@
-FROM node:22-alpine AS build
+FROM node:18-alpine AS build
 WORKDIR /app
 
 # Copia e instala dependências primeiro (otimiza o cache do Docker)
