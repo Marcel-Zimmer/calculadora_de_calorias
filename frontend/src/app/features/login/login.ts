@@ -34,9 +34,12 @@ export class Login {
     this.usuarioService.fazerLogin(objeto)
       .subscribe({
         next: (resposta: any) => {
-          this.autenticacaoService.salvarSessao(resposta.id);
+          this.autenticacaoService.salvarSessao(
+            resposta.id, 
+            resposta.accessToken, 
+            resposta.refreshToken
+          );
           this.router.navigate(['/dashboard']);
-
         },
         error: (erro) => {
           console.error('Falha no login', erro);

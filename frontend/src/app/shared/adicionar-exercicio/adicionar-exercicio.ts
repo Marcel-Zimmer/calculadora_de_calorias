@@ -2,7 +2,7 @@ import { Component, inject, model, signal, output, computed } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
-// import { AtividadeFisicaService } from '../../core/services/atividade-fisica.service';
+import { AtividadeFisicaService } from '../../core/services/atividade-fisica.service';
 
 @Component({
   selector: 'app-adicionar-exercicio',
@@ -17,6 +17,7 @@ export class AdicionarExercicio {
   exercicioAdicionado = output<void>();
 
   autenticacao = inject(AutenticacaoService);
+  atividadeFisicaService = inject(AtividadeFisicaService);
 
   todayDate = new Date().toISOString().split('T')[0];
   
@@ -41,28 +42,26 @@ export class AdicionarExercicio {
   }
 
   salvarExercicio() {
-    // // Pega o "HH:mm" do input e adiciona os segundos para o C# aceitar como TimeSpan
-    // const tempoReal = this.tempoExercicio();
-    // const tempoFormatado = tempoReal ? `${tempoReal}:00` : '00:00:00';
+    const tempoReal = this.tempoExercicio();
+    const tempoFormatado = tempoReal ? `${tempoReal}:00` : '00:00:00';
 
-    // const request = {
-    //   UsuarioId: this.autenticacao.obterId(),
-    //   Tipo: Number(this.tipoExercicio()),
-    //   DataDoExercicio: this.dataExercicio(),
-    //   TempoDeExercicio: tempoFormatado,
-    //   Calorias: this.calorias() || 0
-    // };
+    const request = {
+      UsuarioId: this.autenticacao.obterId(),
+      Tipo: Number(this.tipoExercicio()),
+      DataDoExercicio: this.dataExercicio(),
+      TempoDeExercicio: tempoFormatado,
+      CaloriasEstimadas: this.calorias() || 0
+    };
 
-    // this.atividadeFisicaService.adicionar(request).subscribe({
-    //   next: (resposta: any) => {
-    //     console.log('Treino registrado!', resposta);
-    //     this.exercicioAdicionado.emit();
-    //     this.limparEFecharModal();
-    //   },
-    //   error: (erro: any) => {
-    //     console.error('Erro ao salvar o treino', erro);
-    //   }
-    // });
+    this.atividadeFisicaService.adicionar(request).subscribe({
+      next: (resposta: any) => {
+        this.exercicioAdicionado.emit();
+        this.limparEFecharModal();
+      },
+      error: (erro: any) => {
+        console.error('Erro ao salvar o treino', erro);
+      }
+    });
     this.limparEFecharModal();
   }
 

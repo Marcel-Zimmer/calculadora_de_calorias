@@ -6,13 +6,14 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class UsuarioService {
+export class AtividadeFisicaService {
+
   http = inject(HttpClient); 
   
-  private readonly baseUrl = `${environment.apiUrl}/Usuario`; 
-
-  fazerLogin(usuario: UsuarioLogin) {
-    return this.http.post(`${this.baseUrl}/login`, usuario);
-  }
+  private readonly baseUrl = `${environment.apiUrl}/AtividadeFisica`; 
+  
+  adicionar(atividade: any) {
+    return this.http.post(`${this.baseUrl}`, atividade);
+  }  
 
 }

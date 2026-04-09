@@ -136,7 +136,6 @@ export class Dashboard implements OnInit {
       });
   }
   receberGraficoDiario(resposta:any){
-      console.log(resposta)
       this.metaCalorias.set(resposta.metaCaloricaDiaria);
       this.caloriasConsumidas.set(resposta.totalCaloriasConsumidas);
       this.refeicoesDeHoje.set(resposta.refeicoes)
