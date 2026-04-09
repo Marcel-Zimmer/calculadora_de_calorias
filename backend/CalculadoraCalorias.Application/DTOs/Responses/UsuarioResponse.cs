@@ -1,4 +1,4 @@
-﻿using CalculadoraCalorias.Core.Domain.Entities;
+using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Enums;
 
 namespace CalculadoraCalorias.Application.DTOs.Responses
@@ -16,6 +16,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public string? Nome { get;  set; }
         public string? Email { get;  set; }
         public RoleEnum Role { get;  set; }
-        public string? Token { get; set; }
+        public string? AccessToken { get; set; }
+        public string? RefreshToken { get; set; }
     }
 }

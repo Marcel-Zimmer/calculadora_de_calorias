@@ -25,6 +25,7 @@
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IRefeicaoRepository, RefeicaoRepository>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             return services;
         }

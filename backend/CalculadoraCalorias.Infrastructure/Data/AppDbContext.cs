@@ -13,9 +13,18 @@ public class AppDbContext : DbContext
     public DbSet<RegistroFisico> RegistroFisico { get; set; }
     public DbSet<AtividadeFisica> AtividadeFisica { get; set; }
     public DbSet<Refeicao> Refeicao { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(d => d.Usuario)
+                .WithMany()
+                .HasForeignKey(d => d.UsuarioId);
+        });
 
         modelBuilder.Entity<Usuario>(entity =>
         {

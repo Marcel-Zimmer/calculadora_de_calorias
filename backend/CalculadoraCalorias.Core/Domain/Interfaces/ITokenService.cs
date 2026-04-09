@@ -1,9 +1,12 @@
 using CalculadoraCalorias.Core.Domain.Entities;
+using System.Security.Claims;
 
 namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
-    public interface ITokenService
+    public interface ITokenService 
     {
-        string GerarToken(Usuario usuario);
+        TokenResponse GerarTokens(Usuario usuario);
+        TokenResponse GerarTokens(IEnumerable<Claim> claims);
+        string GerarRefreshToken();
     }
 }

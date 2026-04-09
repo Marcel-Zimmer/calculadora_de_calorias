@@ -14,6 +14,7 @@ namespace CalculadoraCalorias.Core
             services.AddScoped<IAtividadeFisicaService, AtividadeFisicaService>();
             services.AddScoped<ILlmService, LlmService>();
             services.AddScoped<IRefeicaoService, RefeicaoService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             return services;
         }
     }
