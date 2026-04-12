@@ -20,9 +20,9 @@
             <p class="text-slate-500 text-sm italic">Aqui está o seu resumo de saúde.</p>
           </div>
           <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
-            <button (click)="graficoDashboard.set('diario')" [class]="graficoDashboard() === 'diario' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Diário</button>
-            <button (click)="graficoDashboard.set('semanal')" [class]="graficoDashboard() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Semanal</button>
-            <button (click)="graficoDashboard.set('mensal')" [class]="graficoDashboard() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Mensal</button>
+            <button (click)="alterarAbaGrafico('diario')" [class]="graficoDashboard() === 'diario' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Diário</button>
+            <button (click)="alterarAbaGrafico('semanal')" [class]="graficoDashboard() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Semanal</button>
+            <button (click)="alterarAbaGrafico('mensal')" [class]="graficoDashboard() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Mensal</button>
           </div>
         </div>
 
@@ -75,14 +75,14 @@
                 @case ('semanal') {
                     <app-grafico-semanal 
                         [meta]="metaCalorias()" 
-                        [dados]="weeklyChartData">
+                        [dados]="dadosGraficoSemanal()">
                     </app-grafico-semanal>
                 }
                 
                 @case ('mensal') {
                     <app-grafico-mensal 
                         [meta]="metaCalorias()" 
-                        [dados]="monthlyChartData">
+                        [dados]="dadosGraficoMensal()">
                     </app-grafico-mensal>
                 }
             }

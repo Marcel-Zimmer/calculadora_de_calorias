@@ -14,4 +14,12 @@ export class GraficoService {
     return this.http.get(`${this.baseUrl}/dashboard-diario/`+ usuarioId);
   }
 
+  obterGraficoSemanal(usuarioId:number){
+    return this.http.get(`${this.baseUrl}/dashboard-semanal/`+ usuarioId);
+  }
+
+  obterGraficoMensal(usuarioId:number){
+    return this.http.get(`${this.baseUrl}/dashboard-mensal/`+ usuarioId);
+  }
+
 }

@@ -45,6 +45,42 @@ export class Dashboard implements OnInit {
   refeicoesDeHoje = signal<any[]>([]);
   exerciciosDeHoje = signal<any[]>([]);
 
+  dadosGraficoSemanal = signal<any[]>([]);
+  dadosGraficoMensal = signal<any[]>([]);
+
+  alterarAbaGrafico(aba: 'diario' | 'semanal' | 'mensal') {
+    this.graficoDashboard.set(aba);
+    if (aba === 'semanal') {
+      this.obterGraficoSemanal();
+    } else if (aba === 'mensal') {
+      this.obterGraficoMensal();
+    } else {
+      this.obterGraficoDiario();
+    }
+  }
+
+  obterGraficoSemanal() {
+    this.graficoService.obterGraficoSemanal(this.autenticacao.obterId())
+      .subscribe({
+        next: (resposta: any) => {
+          this.dadosGraficoSemanal.set(resposta.pontos);
+          this.metaCalorias.set(resposta.metaCaloricaDiaria);
+        },
+        error: (erro) => console.error('Falha ao obter gráfico semanal', erro)
+      });
+  }
+
+  obterGraficoMensal() {
+    this.graficoService.obterGraficoMensal(this.autenticacao.obterId())
+      .subscribe({
+        next: (resposta: any) => {
+          this.dadosGraficoMensal.set(resposta.pontos);
+          this.metaCalorias.set(resposta.metaCaloricaDiaria);
+        },
+        error: (erro) => console.error('Falha ao obter gráfico mensal', erro)
+      });
+  }
+
   mapaRefeicoes: Record<number, any> = {
     1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
     2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },

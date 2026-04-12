@@ -7,15 +7,15 @@
         </div>
     </div>
     <div class="max-h-96 overflow-y-auto pr-4 space-y-4 custom-scrollbar">
-        @for (day of dados(); track day.label) {
+        @for (day of dados(); track day.data) {
         <div class="flex items-center space-x-4">
-            <span class="w-12 text-slate-400 font-bold text-[10px]">DIA {{ day.label }}</span>
+            <span class="w-12 text-slate-400 font-bold text-[10px]">DIA {{ day.legenda }}</span>
             <div class="flex-1 bg-slate-100 rounded-full h-3 overflow-hidden">
                 <div class="h-full rounded-full transition-all duration-500"
-                     [class]="day.kcal > meta() ? 'bg-rose-400' : 'bg-emerald-400'"
-                     [style.width]="(day.kcal / 3000 * 100) + '%'"></div>
+                     [class]="day.caloriasConsumidas > meta() ? 'bg-rose-400' : 'bg-emerald-400'"
+                     [style.width]="(day.caloriasConsumidas / 3000 * 100) + '%'"></div>
             </div>
-            <span class="w-16 text-right font-black text-slate-700 text-xs">{{ day.kcal }} <span class="text-[8px] text-slate-400">kcal</span></span>
+            <span class="w-16 text-right font-black text-slate-700 text-xs">{{ day.caloriasConsumidas }} <span class="text-[8px] text-slate-400">kcal</span></span>
         </div>
         }
     </div>

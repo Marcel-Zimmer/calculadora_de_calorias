@@ -7,14 +7,16 @@
         </div>
     </div>
     <div class="flex items-end justify-between h-56 px-2 space-x-4 border-b border-slate-100 pb-4">
-        @for (day of dados(); track day.label) {
+        @for (day of dados(); track day.data) {
         <div class="flex-1 flex flex-col items-center group relative h-full justify-end">
+            <span class="text-[9px] font-black text-slate-400 mb-1">{{ day.caloriasConsumidas > 0 ? day.caloriasConsumidas : '' }}</span>
             <div class="w-full rounded-t-xl transition-all duration-300 hover:scale-x-105"
-                 [class]="day.kcal > meta() ? 'bg-rose-400' : 'bg-emerald-400'"
-                 [style.height]="day.kcal === 0 ? '4px' : (day.kcal / 3000 * 100) + '%'">
+                 [class]="day.caloriasConsumidas > meta() ? 'bg-rose-400' : 'bg-emerald-400'"
+                 [style.height]="day.caloriasConsumidas === 0 ? '4px' : (day.caloriasConsumidas / 3000 * 100) + '%'">
             </div>
-            <span class="absolute -bottom-7 text-[10px] font-bold text-slate-400 uppercase">{{ day.label }}</span>
+            <span class="absolute -bottom-7 text-[10px] font-bold text-slate-400 uppercase">{{ day.legenda.substring(0,3) }}</span>
         </div>
         }
     </div>
+
 </div>
