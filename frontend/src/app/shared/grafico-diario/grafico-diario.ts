@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,6 +12,17 @@ export class GraficoDiario {
   exercicios = input<any[]>([]);
   mapaRefeicoes = input<Record<number, any>>({});
   mapaExercicios = input<Record<number, any>>({});
+
+  onExcluirRefeicao = output<number>();
+  onExcluirExercicio = output<number>();
+
+  excluirRefeicao(id: number) {
+    this.onExcluirRefeicao.emit(id);
+  }
+
+  excluirExercicio(id: number) {
+    this.onExcluirExercicio.emit(id);
+  }
 
   formatarTempo(tempo: string | null | undefined): string {
     if (!tempo) return 'Tempo não registrado';

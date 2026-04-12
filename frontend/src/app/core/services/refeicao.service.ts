@@ -13,4 +13,8 @@ export class RefeicaoService {
   adicionar(refeicao: FormData) {
     return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
   }
+
+  excluir(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 }

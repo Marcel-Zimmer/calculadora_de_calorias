@@ -5,19 +5,24 @@
         </h3>
         <div class="space-y-4">
             @for (refeicao of refeicoes(); track refeicao.id) {
-            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100 group">
+            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100">
                 <div class="flex items-center space-x-4">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" [ngClass]="mapaRefeicoes()[refeicao.tipoRefeicao]?.cor">
+                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" [class]="mapaRefeicoes()[refeicao.tipoRefeicao]?.cor">
                         {{ mapaRefeicoes()[refeicao.tipoRefeicao]?.icone }}
                     </div>
                     <div>
                         <h4 class="font-bold text-slate-800 text-sm italic">{{ mapaRefeicoes()[refeicao.tipoRefeicao]?.nome }}</h4>
                     </div>
                 </div>
-                <span class="font-black text-slate-800 text-lg">
-                    {{ refeicao.calorias ?? "Calculando calorias..." }}
-                    <span class="text-[10px] text-slate-400">{{ refeicao.calorias ? "KCAL" : ""}}</span>
-                </span>
+                <div class="flex items-center space-x-4">
+                    <span class="font-black text-slate-800 text-lg">
+                        {{ refeicao.calorias ?? "Calculando calorias..." }}
+                        <span class="text-[10px] text-slate-400">{{ refeicao.calorias ? "KCAL" : ""}}</span>
+                    </span>
+                    <button (click)="excluirRefeicao(refeicao.id)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all" title="Excluir">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
             </div>
             } @empty {
             <div class="p-6 text-center text-slate-500 text-lg border-2 border-dashed border-slate-100 rounded-2xl">
@@ -35,7 +40,7 @@
             @for (exercicio of exercicios(); track exercicio.id) {
             <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100">
                 <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-                    <div class="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl" [ngClass]="mapaExercicios()[exercicio.tipoExercicio]?.cor">
+                    <div class="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl" [class]="mapaExercicios()[exercicio.tipoExercicio]?.cor">
                         {{ mapaExercicios()[exercicio.tipoExercicio]?.icone }}
                     </div>
                     <div class="flex flex-col justify-center min-w-0">
@@ -43,9 +48,14 @@
                         <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 truncate">{{ formatarTempo(exercicio.tempoDeExercicio) }}</p>
                     </div>
                 </div>
-                <div class="font-black text-slate-800 text-lg whitespace-nowrap flex-shrink-0 ml-3">
-                    {{ exercicio.caloriasEstimadas }}
-                    <span class="text-[10px] text-slate-400">{{ exercicio.caloriasEstimadas ? "KCAL" : "" }}</span>
+                <div class="flex items-center space-x-4">
+                    <div class="font-black text-slate-800 text-lg whitespace-nowrap flex-shrink-0">
+                        {{ exercicio.caloriasEstimadas }}
+                        <span class="text-[10px] text-slate-400">{{ exercicio.caloriasEstimadas ? "KCAL" : "" }}</span>
+                    </div>
+                    <button (click)="excluirExercicio(exercicio.id)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all" title="Excluir">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
                 </div>
             </div>
             } @empty {

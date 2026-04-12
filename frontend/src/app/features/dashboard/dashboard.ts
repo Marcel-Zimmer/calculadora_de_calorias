@@ -14,6 +14,11 @@ import { GraficoSemanal } from "../../shared/grafico-semanal/grafico-semanal";
 import { GraficoMensal } from "../../shared/grafico-mensal/grafico-mensal";
 
 
+import { AtividadeFisicaService } from '../../core/services/atividade-fisica.service';
+
+
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,6 +29,7 @@ import { GraficoMensal } from "../../shared/grafico-mensal/grafico-mensal";
 
 export class Dashboard implements OnInit {
   refeicaoService = inject(RefeicaoService);
+  atividadeFisicaService = inject(AtividadeFisicaService);
   graficoService = inject(GraficoService)
   ngOnInit(): void {
     this.obterGraficoDiario();
@@ -214,4 +220,76 @@ export class Dashboard implements OnInit {
 
     return texto;
   }  
-}
+
+  excluirRefeicao(id: number) {
+    Swal.fire({
+      title: 'Excluir Refeição?',
+      text: "Esta ação não pode ser revertida!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#f43f5e',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.refeicaoService.excluir(id).subscribe({
+          next: () => {
+            this.obterGraficoDiario();
+            Swal.fire({
+              title: 'Excluído!',
+              text: 'Sua refeição foi removida.',
+              icon: 'success',
+              confirmButtonColor: '#10b981'
+            });
+          },
+          error: (erro) => {
+            console.error('Falha ao excluir refeição', erro);
+            Swal.fire({
+              title: 'Erro!',
+              text: 'Não foi possível excluir a refeição.',
+              icon: 'error',
+              confirmButtonColor: '#10b981'
+            });
+          }
+        });
+      }
+    });
+  }
+
+  excluirExercicio(id: number) {
+    Swal.fire({
+      title: 'Excluir Exercício?',
+      text: "Esta ação não pode ser revertida!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#f43f5e',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.atividadeFisicaService.excluir(id).subscribe({
+          next: () => {
+            this.obterGraficoDiario();
+            Swal.fire({
+              title: 'Excluído!',
+              text: 'Seu exercício foi removido.',
+              icon: 'success',
+              confirmButtonColor: '#10b981'
+            });
+          },
+          error: (erro) => {
+            console.error('Falha ao excluir exercício', erro);
+            Swal.fire({
+              title: 'Erro!',
+              text: 'Não foi possível excluir o exercício.',
+              icon: 'error',
+              confirmButtonColor: '#10b981'
+            });
+          }
+        });
+      }
+    });
+  }
+  }

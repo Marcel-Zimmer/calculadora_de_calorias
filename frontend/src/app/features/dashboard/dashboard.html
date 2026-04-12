@@ -68,7 +68,9 @@
                         [refeicoes]="refeicoesDeHoje()"
                         [exercicios]="exerciciosDeHoje()"
                         [mapaRefeicoes]="mapaRefeicoes"
-                        [mapaExercicios]="mapaExercicios">
+                        [mapaExercicios]="mapaExercicios"
+                        (onExcluirRefeicao)="excluirRefeicao($event)"
+                        (onExcluirExercicio)="excluirExercicio($event)">
                     </app-grafico-diario>
                 }
                 

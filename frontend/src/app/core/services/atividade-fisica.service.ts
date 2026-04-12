@@ -14,6 +14,10 @@ export class AtividadeFisicaService {
   
   adicionar(atividade: any) {
     return this.http.post(`${this.baseUrl}`, atividade);
-  }  
+  }
+
+  excluir(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 
 }
