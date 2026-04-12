@@ -29,5 +29,10 @@ public class RefeicaoService(IRefeicaoRepository refeicaoRepository) : IRefeicao
     {
         return await _refeicaoRepository.ObterPorPeriodo(usuarioId, inicio, fim);
     }
+
+    public async Task<bool> Excluir(long id)
+    {
+        return await _refeicaoRepository.Excluir(id);
+    }
 }
 

@@ -10,5 +10,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         public Task<Refeicao> Adicionar(long usuarioId, string? apelido, int pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data, Guid guidArquivo);
         Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId);
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
+        Task<bool> Excluir(long id);
     }
 }

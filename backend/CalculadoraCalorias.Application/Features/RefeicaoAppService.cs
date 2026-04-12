@@ -47,5 +47,14 @@ namespace CalculadoraCalorias.Application.Features
 
             return Resultado<Refeicao>.Success(refeicao);
         }
+
+        public async Task<Resultado<bool>> Excluir(long id)
+        {
+            var deletado = await _refeicaoService.Excluir(id);
+            if (!deletado) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Refeição não encontrada");
+
+            await _unitOfWork.CommitAsync();
+            return Resultado<bool>.Success(true);
+        }
     }
 }
