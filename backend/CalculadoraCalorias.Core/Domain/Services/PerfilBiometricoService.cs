@@ -22,5 +22,14 @@ public class PerfilBiometricoService(IPerfilBiometricoRepository perfilBiometric
     {
         return await perfilBiometricoRepository.ObterPorIdUsuario(codigoUsuario);
     }
+
+    public async Task<PerfilBiometrico?> Atualizar(long usuarioId, DateTime dataNascimento, GeneroEnum genero, int alturaCm, NivelAtividadeEnum nivelAtividade, ObjetivoEnum objetivo)
+    {
+        var perfil = await perfilBiometricoRepository.ObterPorIdUsuario(usuarioId);
+        if (perfil == null) return null;
+
+        perfil.Atualizar(dataNascimento, genero, alturaCm, nivelAtividade, objetivo);
+        return perfil;
+    }
 }
 

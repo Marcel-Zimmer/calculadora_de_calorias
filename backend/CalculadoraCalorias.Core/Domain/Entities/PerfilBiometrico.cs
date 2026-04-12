@@ -55,8 +55,14 @@ namespace CalculadoraCalorias.Core.Domain.Entities
                 _ => 1.0m
             };
         }
+
+        public void Atualizar(DateTime dataNascimento, GeneroEnum genero, int alturaCm, NivelAtividadeEnum nivelAtividade, ObjetivoEnum objetivo)
+        {
+            DataNascimento = DateTime.SpecifyKind(dataNascimento, DateTimeKind.Utc);
+            Genero = genero;
+            AlturaCm = alturaCm;
+            NivelAtividade = nivelAtividade;
+            Objetivo = objetivo;
+        }
     }
-
-
-
 }

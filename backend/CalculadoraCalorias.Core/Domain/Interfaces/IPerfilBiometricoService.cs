@@ -13,5 +13,11 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
                                             ObjetivoEnum objetivo);
 
         public Task<PerfilBiometrico?> ObterPorIdUsuario(long codigoUsuario);
+        public Task<PerfilBiometrico?> Atualizar(long usuarioId, 
+                                            DateTime dataNascimento, 
+                                            GeneroEnum genero, 
+                                            int alturaCm, 
+                                            NivelAtividadeEnum nivelAtividade, 
+                                            ObjetivoEnum objetivo);
     }
 }

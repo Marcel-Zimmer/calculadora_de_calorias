@@ -10,7 +10,6 @@ namespace CalculadoraCalorias.Infrastructure.Repository
         public async Task<PerfilBiometrico?> ObterPorIdUsuario(long codigoUsuario)
         {
             return await _dbSet
-                 .AsNoTracking()
                  .Where(x => x.UsuarioId == codigoUsuario)
                  .FirstOrDefaultAsync();
         }

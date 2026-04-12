@@ -28,5 +28,28 @@ namespace CalculadoraCalorias.Application.Features
             await _unitOfWork.CommitAsync();
             return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
         }
+
+        public async Task<Resultado<CriarPerfilBiometricoResponse>> Atualizar(long usuarioId, CriarPerfilBiometricoRequest requisicao)
+        {
+            var perfil = await _perfilBiometricoService.Atualizar(usuarioId,
+                                                                 requisicao.DataNascimento,
+                                                                 requisicao.Genero,
+                                                                 requisicao.AlturaCm,
+                                                                 requisicao.NivelAtividade,
+                                                                 requisicao.Objetivo);
+
+            if (perfil == null) return Resultado<CriarPerfilBiometricoResponse>.Failure(TipoDeErro.NotFound, "Perfil não encontrado");
+
+            await _unitOfWork.CommitAsync();
+            return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
+        }
+
+        public async Task<Resultado<CriarPerfilBiometricoResponse>> ObterPorUsuarioId(long usuarioId)
+        {
+            var perfil = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
+            if (perfil == null) return Resultado<CriarPerfilBiometricoResponse>.Failure(TipoDeErro.NotFound, "Perfil não encontrado");
+
+            return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
+        }
     }
 }
