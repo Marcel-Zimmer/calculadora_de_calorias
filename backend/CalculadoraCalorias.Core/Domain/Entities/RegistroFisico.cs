@@ -30,5 +30,14 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         public void AdicionarMetaCalorica(decimal meta) { 
             MetaCaloricaDiaria = meta;
         }
+
+        public void Atualizar(decimal pesoKg, decimal imcCalculado, decimal taxaMetabolicaBasal, decimal? metaCaloricaDiaria)
+        {
+            PesoKg = pesoKg;
+            ImcCalculado = imcCalculado;
+            TaxaMetabolicaBasal = taxaMetabolicaBasal;
+            MetaCaloricaDiaria = metaCaloricaDiaria;
+            DataRegistro = DateTime.UtcNow;
+        }
     }
 }

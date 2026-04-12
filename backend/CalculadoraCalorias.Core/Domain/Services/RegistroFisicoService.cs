@@ -67,5 +67,18 @@ public class RegistroFisicoService : IRegistroFisicoService
     {
         return await _registroFisicoRepository.ObterPorIdUsuario(idUsuario);
     }
+
+    public async Task<RegistroFisico?> Atualizar(long usuarioId, decimal pesoKg, decimal? metaCaloricaDiaria)
+    {
+        var registro = await _registroFisicoRepository.ObterPorIdUsuario(usuarioId);
+        if (registro == null) return null;
+
+        var perfilBiometrico = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
+        var imcCalculado = CalcularImc(perfilBiometrico?.AlturaCm, pesoKg);
+        var taxaMetabolica = CalcularTaxaMetabolicaBasal(perfilBiometrico, pesoKg);
+
+        registro.Atualizar(pesoKg, imcCalculado, taxaMetabolica, metaCaloricaDiaria);
+        return registro;
+    }
 }
 

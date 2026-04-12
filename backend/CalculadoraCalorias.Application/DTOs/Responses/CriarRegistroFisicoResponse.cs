@@ -10,6 +10,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public long PerfilBiometricoId { get; set; }
         public decimal ImcCalculado { get; set; }
         public decimal TaxaMetabolicaBasal {  get; set; }
-
+        public decimal PesoKg { get; set; }
+        public decimal? MetaCaloricaDiaria { get; set; }
     }
 }

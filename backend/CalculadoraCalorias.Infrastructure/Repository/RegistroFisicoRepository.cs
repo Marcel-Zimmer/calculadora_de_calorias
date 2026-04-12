@@ -10,8 +10,8 @@ namespace CalculadoraCalorias.Infrastructure.Repository
         public async Task<RegistroFisico?> ObterPorIdUsuario(long idUsuario)
         {
             return await _dbSet
-                .AsNoTracking()
                 .Where(x => x.UsuarioId == idUsuario)
+                .OrderByDescending(x => x.DataRegistro)
                 .FirstOrDefaultAsync();
         }
     }

@@ -32,6 +32,21 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registroFisico));
         }
 
+        public async Task<Resultado<CriarRegistroFisicoResponse>> Atualizar(long usuarioId, CriarRegistroFisicoRequest requisicao)
+        {
+            var registro = await _registroFisicoService.Atualizar(usuarioId, requisicao.PesoKg, requisicao.MetaCaloricaDiaria);
+            if (registro == null) return Resultado<CriarRegistroFisicoResponse>.Failure(TipoDeErro.NotFound, "Registro físico não encontrado");
 
+            await _unitOfWork.CommitAsync();
+            return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registro));
+        }
+
+        public async Task<Resultado<CriarRegistroFisicoResponse>> ObterUltimoPorUsuarioId(long usuarioId)
+        {
+            var registro = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            if (registro == null) return Resultado<CriarRegistroFisicoResponse>.Failure(TipoDeErro.NotFound, "Registro físico não encontrado");
+
+            return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registro));
+        }
     }
 }
