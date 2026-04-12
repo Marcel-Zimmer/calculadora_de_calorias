@@ -24,5 +24,10 @@ public class RefeicaoService(IRefeicaoRepository refeicaoRepository) : IRefeicao
     {
         return await _refeicaoRepository.ObterDiariasPorUsuarioId(usuarioId);
     }
+
+    public async Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim)
+    {
+        return await _refeicaoRepository.ObterPorPeriodo(usuarioId, inicio, fim);
+    }
 }
 

@@ -10,6 +10,6 @@ namespace CalculadoraCalorias.Core.Domain.InternalDTO
         public long Id { get; set; }
         public TipoRefeicaoEnum TipoRefeicao { get; set; }
         public double? Calorias {  get; set; }
-
+        public DateOnly Data { get; set; }
     }
 }

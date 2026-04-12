@@ -8,5 +8,6 @@ namespace CalculadoraCalorias.Core.Domain.InternalDTO
         public TipoExercicioEnum TipoExercicio { get; set; }
         public decimal? CaloriasEstimadas {  get; set; }
         public TimeSpan? TempoDeExercicio { get; set; }
+        public DateOnly Data { get; set; }
     }
 }

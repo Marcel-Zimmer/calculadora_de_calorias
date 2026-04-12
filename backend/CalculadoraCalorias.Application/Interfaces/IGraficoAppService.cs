@@ -8,7 +8,7 @@ namespace CalculadoraCalorias.Application.Interfaces
     public interface IGraficoAppService
     {
         Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId);
-        Task<Resultado<object>> GraficoMensal(long usuarioId);
-        Task<Resultado<object>> GraficoSemanal(long usuarioId);
+        Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long usuarioId);
+        Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long usuarioId);
     }
 }

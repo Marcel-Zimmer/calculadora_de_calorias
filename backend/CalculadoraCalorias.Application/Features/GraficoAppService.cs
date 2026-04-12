@@ -1,7 +1,8 @@
-﻿using CalculadoraCalorias.Application.DTOs.Responses;
+using CalculadoraCalorias.Application.DTOs.Responses;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Interfaces;
+using System.Globalization;
 
 namespace CalculadoraCalorias.Application.Features
 {
@@ -33,14 +34,60 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<RefeicaoGraficoDiarioResponse>.Success(informacoesDiarias);
         }
 
-        public Task<Resultado<object>> GraficoMensal(long idUsuario)
+        public async Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long idUsuario)
         {
-            throw new NotImplementedException();
+            if (idUsuario == 0) return Resultado<GraficoPeriodoResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
+
+            var hoje = DateTime.Today;
+            int diff = (7 + (hoje.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var inicioSemana = DateOnly.FromDateTime(hoje.AddDays(-1 * diff));
+            var fimSemana = inicioSemana.AddDays(6);
+
+            return await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
         }
 
-        public Task<Resultado<object>> GraficoSemanal(long idUsuario)
+        public async Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long idUsuario)
         {
-            throw new NotImplementedException();
+            if (idUsuario == 0) return Resultado<GraficoPeriodoResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
+
+            var hoje = DateTime.Today;
+            var inicioMes = new DateOnly(hoje.Year, hoje.Month, 1);
+            var fimMes = inicioMes.AddMonths(1).AddDays(-1);
+
+            return await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
+        }
+
+        private async Task<Resultado<GraficoPeriodoResponse>> ObterDadosPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim, bool usarNomeDia)
+        {
+            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            if (registroFisico == null) return Resultado<GraficoPeriodoResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
+
+            var refeicoes = await _refeicaoService.ObterPorPeriodo(usuarioId, inicio, fim);
+            var atividades = await _atividadeFisicaService.ObterPorPeriodo(usuarioId, inicio, fim);
+
+            var pontos = new List<GraficoPontoResponse>();
+            var cultura = new CultureInfo("pt-BR");
+
+            for (var data = inicio; data <= fim; data = data.AddDays(1))
+            {
+                var legenda = usarNomeDia 
+                    ? cultura.DateTimeFormat.GetDayName(data.ToDateTime(TimeOnly.MinValue).DayOfWeek)
+                    : data.Day.ToString();
+
+                pontos.Add(new GraficoPontoResponse
+                {
+                    Data = data.ToString("yyyy-MM-dd"),
+                    Legenda = legenda,
+                    CaloriasConsumidas = refeicoes.Where(r => r.Data == data).Sum(r => r.Calorias ?? 0),
+                    CaloriasGastas = (double)atividades.Where(a => a.Data == data).Sum(a => a.CaloriasEstimadas ?? 0)
+                });
+            }
+
+            return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse
+            {
+                MetaCaloricaDiaria = registroFisico.MetaCaloricaDiaria ?? 0,
+                Pontos = pontos
+            });
         }
     }
 }
