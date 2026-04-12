@@ -15,4 +15,8 @@ export class UsuarioService {
     return this.http.post(`${this.baseUrl}/login`, usuario);
   }
 
+  registrar(usuario: any) {
+    return this.http.post(`${this.baseUrl}/registrar`, usuario);
+  }
+
 }

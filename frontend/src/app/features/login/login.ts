@@ -49,6 +49,7 @@ export class Login {
   }
 
   criarConta() {
+    this.router.navigate(['/cadastro']);
   }
 
 }
