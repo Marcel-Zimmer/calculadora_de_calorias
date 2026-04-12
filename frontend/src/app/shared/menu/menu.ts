@@ -1,25 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, model, signal } from '@angular/core';
+import { Component, inject, input, model, output, signal } from '@angular/core';
 import { Ui } from '../../core/services/ui.service';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './menu.html',
   styleUrl: './menu.css',
 })
 export class Menu {
   ui = inject(Ui);
-  constructor(private autenticacaoService:AutenticacaoService, private router: Router){};
+  private autenticacaoService = inject(AutenticacaoService);
+  private router = inject(Router);
 
-  activeTab = signal<'dashboard' | 'estatisticas' | 'perfil'>('dashboard');
-  menuAberto = model<boolean>(true);
+  abaAtiva = input<'dashboard' | 'estatisticas' | 'perfil'>('dashboard');
+  menuAberto = model<boolean>(false);
+  abaSelecionada = output<'dashboard' | 'estatisticas' | 'perfil'>();
 
-  changeTabAndCloseSidebar(tab: 'dashboard' | 'estatisticas' | 'perfil') {
-      this.activeTab.set(tab);
+  selecionarAba(aba: 'dashboard' | 'estatisticas' | 'perfil') {
+      this.abaSelecionada.emit(aba);
       this.menuAberto.set(false);
+      this.ui.fecharMenu();
   }
 
   logout() {

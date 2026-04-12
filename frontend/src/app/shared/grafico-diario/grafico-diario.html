@@ -5,7 +5,7 @@
         </h3>
         <div class="space-y-4">
             @for (refeicao of refeicoes(); track refeicao.id) {
-            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100">
+            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100 group">
                 <div class="flex items-center space-x-4">
                     <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" [class]="mapaRefeicoes()[refeicao.tipoRefeicao]?.cor">
                         {{ mapaRefeicoes()[refeicao.tipoRefeicao]?.icone }}
@@ -38,7 +38,7 @@
         </h3>
         <div class="space-y-4">
             @for (exercicio of exercicios(); track exercicio.id) {
-            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100">
+            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100 group">
                 <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
                     <div class="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl" [class]="mapaExercicios()[exercicio.tipoExercicio]?.cor">
                         {{ mapaExercicios()[exercicio.tipoExercicio]?.icone }}

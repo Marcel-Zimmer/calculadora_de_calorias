@@ -1,6 +1,13 @@
 <app-carregamento></app-carregamento>
 <div class="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col lg:flex-row relative">
 
+  <!-- Desktop Sidebar / Mobile Drawer -->
+  <app-menu 
+    [abaAtiva]="abaMenu()" 
+    (abaSelecionada)="alterarAbaMenu($event)"
+    [(menuAberto)]="menuAberto">
+  </app-menu>
+
   <div class="flex-1 flex flex-col min-w-0">
 
     <header class="bg-white px-4 py-4 shadow-sm sticky top-0 z-30 lg:hidden flex items-center justify-between">
@@ -14,7 +21,8 @@
     <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
       <div class="max-w-6xl mx-auto space-y-6">
 
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <!-- Dashboard Header & Tabs (Só mostra no Dashboard) -->
+        <div *ngIf="abaMenu() === 'dashboard'" class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="hidden lg:block">
             <h2 class="text-2xl font-black text-slate-800">Bem-vindo, Marcel!</h2>
             <p class="text-slate-500 text-sm italic">Aqui está o seu resumo de saúde.</p>
@@ -26,6 +34,7 @@
           </div>
         </div>
 
+        <!-- Dashboard Content -->
         <div *ngIf="abaMenu() === 'dashboard'" class="animate-fade-in space-y-6">
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -92,9 +101,132 @@
 
         </div>
 
-        <div *ngIf="abaMenu() !== 'dashboard'" class="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-200">
+        <!-- Perfil Section -->
+        <div *ngIf="abaMenu() === 'perfil'" class="animate-fade-in space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+            <h2 class="text-2xl font-black text-slate-800">Seu Perfil</h2>
+            
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto overflow-x-auto">
+              <button (click)="subAbaPerfil.set('biometrico')" 
+                [class]="subAbaPerfil() === 'biometrico' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" 
+                class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Dados Pessoais</button>
+              <button (click)="subAbaPerfil.set('fisico')" 
+                [class]="subAbaPerfil() === 'fisico' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" 
+                class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Metas & Medidas</button>
+              <button (click)="subAbaPerfil.set('seguranca')" 
+                [class]="subAbaPerfil() === 'seguranca' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" 
+                class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Segurança</button>
+            </div>
+          </div>
+
+          <!-- Formulário Dados Biométricos -->
+          <div *ngIf="subAbaPerfil() === 'biometrico'" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 max-w-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Data de Nascimento</label>
+                <input type="date" [(ngModel)]="dataNascimento"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Gênero</label>
+                <select [(ngModel)]="genero"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
+                  <option [value]="1">Masculino</option>
+                  <option [value]="2">Feminino</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Altura (cm)</label>
+                <input type="number" [(ngModel)]="alturaCm"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Nível de Atividade</label>
+                <select [(ngModel)]="nivelAtividade"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
+                  <option [value]="1">Sedentário</option>
+                  <option [value]="2">Levemente Ativo</option>
+                  <option [value]="3">Moderadamente Ativo</option>
+                  <option [value]="4">Muito Ativo</option>
+                  <option [value]="5">Extremamente Ativo</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-2 space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Objetivo Principal</label>
+                <select [(ngModel)]="objetivo"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
+                  <option [value]="1">Perda de Peso Agressiva</option>
+                  <option [value]="2">Perda de Peso Leve</option>
+                  <option [value]="3">Manter Peso</option>
+                </select>
+              </div>
+            </div>
+
+            <button (click)="salvarPerfilBiometrico()" 
+              class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">
+              Salvar Alterações
+            </button>
+          </div>
+
+          <!-- Formulário Registro Físico -->
+          <div *ngIf="subAbaPerfil() === 'fisico'" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 max-w-2xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Peso Atual (kg)</label>
+                <input type="number" [(ngModel)]="pesoKg"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Meta de Calorias (Kcal)</label>
+                <input type="number" [(ngModel)]="metaCaloricaDiaria"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+              </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-blue-50 rounded-2xl border border-blue-100">
+              <p class="text-xs text-blue-700 font-medium leading-relaxed">
+                <span class="font-black">Dica:</span> Ao alterar seu peso ou nível de atividade, sua Taxa Metabólica Basal é recalculada automaticamente pelo sistema para ajustar suas metas.
+              </p>
+            </div>
+
+            <button (click)="salvarRegistroFisico()" 
+              class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">
+              Atualizar Medidas
+            </button>
+          </div>
+
+          <!-- Formulário Segurança -->
+          <div *ngIf="subAbaPerfil() === 'seguranca'" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 max-w-2xl">
+            <div class="grid grid-cols-1 gap-6">
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Nova Senha</label>
+                <input type="password" [(ngModel)]="novaSenha" placeholder="No mínimo 6 caracteres"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Confirmar Nova Senha</label>
+                <input type="password" [(ngModel)]="confirmarNovaSenha" placeholder="Repita a nova senha"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+              </div>
+            </div>
+
+            <button (click)="salvarNovaSenha()" 
+              class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">
+              Trocar Senha
+            </button>
+          </div>
+        </div>
+
+        <!-- Estatísticas Section -->
+        <div *ngIf="abaMenu() === 'estatisticas'" class="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-200">
           <span class="text-5xl block mb-4">🚧</span>
-          <h3 class="text-xl font-bold text-slate-800">Seção em Construção</h3>
+          <h3 class="text-xl font-bold text-slate-800">Estatísticas em Construção</h3>
         </div>
 
       </div>

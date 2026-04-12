@@ -19,4 +19,10 @@ export class UsuarioService {
     return this.http.post(`${this.baseUrl}/registrar`, usuario);
   }
 
+  atualizarSenha(novaSenha: string) {
+    return this.http.put(`${this.baseUrl}/atualizar-senha`, JSON.stringify(novaSenha), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
 }
