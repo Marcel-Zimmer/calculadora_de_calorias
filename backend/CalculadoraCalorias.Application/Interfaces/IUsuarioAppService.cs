@@ -10,5 +10,6 @@ namespace CalculadoraCalorias.Application.Interfaces
         public Task<Resultado<CriarUsuarioResponse>> Registrar(RegistroUsuarioRequest requisicao);
         Task<Resultado<LoginUsarioResponse>> Login(LoginUsuarioRequest requisicao);
         Task<Resultado<TokenResponse>> RefreshToken(string accessToken, string refreshToken);
+        Task<Resultado<bool>> AtualizarSenha(long usuarioId, string novaSenha);
     }
 }

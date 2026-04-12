@@ -37,5 +37,11 @@ namespace CalculadoraCalorias.Api.Controllers
         {
             return ProcessarResultado(await _usuarioAppService.RefreshToken(tokens.AccessToken, tokens.RefreshToken));
         }
+
+        [HttpPut("atualizar-senha")]
+        public async Task<IActionResult> AtualizarSenha([FromBody] string novaSenha)
+        {
+            return ProcessarResultado(await _usuarioAppService.AtualizarSenha(UsuarioId, novaSenha));
+        }
     }
 }

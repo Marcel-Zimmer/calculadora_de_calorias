@@ -11,5 +11,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
 
         public Task<bool> ValidarExistencia(long usuarioId);
         Task<Usuario?> ObterPorEmail(string email);
+        Task<Usuario?> AtualizarSenha(long usuarioId, string novaSenhaHash);
     }
 }

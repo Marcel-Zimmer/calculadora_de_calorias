@@ -29,5 +29,14 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
     {
         return await _usuarioRepository.ObterPorEmail(email);
     }
+
+    public async Task<Usuario?> AtualizarSenha(long usuarioId, string novaSenhaHash)
+    {
+        var usuario = await _usuarioRepository.ObterPorId(usuarioId);
+        if (usuario == null) return null;
+
+        usuario.AtualizarSenha(novaSenhaHash);
+        return usuario;
+    }
 }
 

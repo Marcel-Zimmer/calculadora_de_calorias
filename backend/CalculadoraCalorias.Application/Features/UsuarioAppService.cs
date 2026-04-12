@@ -104,6 +104,17 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<TokenResponse>.Success(novosTokens);
         }
 
+        public async Task<Resultado<bool>> AtualizarSenha(long usuarioId, string novaSenha)
+        {
+            var senhaHash = BCrypt.Net.BCrypt.HashPassword(novaSenha);
+            var usuario = await _usuarioService.AtualizarSenha(usuarioId, senhaHash);
+
+            if (usuario == null) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Usuário não encontrado");
+
+            await _unitOfWork.CommitAsync();
+            return Resultado<bool>.Success(true);
+        }
+
         private async Task SalvarRefreshToken(long usuarioId, string token)
         {
             var refreshToken = new RefreshToken

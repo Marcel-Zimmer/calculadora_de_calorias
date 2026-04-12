@@ -33,7 +33,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         protected void Reativar() {
             Ativo = true;
         }
-        protected void AlterarSenha(string senha) { 
+        public void AtualizarSenha(string senha) { 
             Senha = senha;
         }
 
