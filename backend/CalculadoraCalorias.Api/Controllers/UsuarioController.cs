@@ -14,10 +14,11 @@ namespace CalculadoraCalorias.Api.Controllers
         private readonly IUsuarioAppService _usuarioAppService = usuarioAppService;
 
         [HttpPost]
+        [Route("registrar")]
         [AllowAnonymous]
-        public async Task<IActionResult> Adicionar([FromBody] CriarUsuarioRequest requisicao)
+        public async Task<IActionResult> Registrar([FromBody] RegistroUsuarioRequest requisicao)
         {
-            return ProcessarResultado(await _usuarioAppService.Adicionar(requisicao));
+            return ProcessarResultado(await _usuarioAppService.Registrar(requisicao));
         }
 
         [HttpPost]

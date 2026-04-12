@@ -20,7 +20,8 @@ namespace CalculadoraCalorias.Application.Features
         {
             var registroFisico = await _registroFisicoService.Adicionar(requisicao.UsuarioId,
                                                                        requisicao.PesoKg,
-                                                                       requisicao.MetaCaloricaDiaria);
+                                                                       requisicao.MetaCaloricaDiaria,
+                                                                       null);
 
             if (registroFisico == null)
             {

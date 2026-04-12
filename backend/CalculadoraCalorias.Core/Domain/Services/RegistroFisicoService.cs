@@ -16,9 +16,9 @@ public class RegistroFisicoService : IRegistroFisicoService
     }
 
 
-    public async Task<RegistroFisico?> Adicionar(long usuarioId, decimal pesoKg, decimal? metaCaloricaDiaria)
+    public async Task<RegistroFisico?> Adicionar(long usuarioId, decimal pesoKg, decimal? metaCaloricaDiaria, PerfilBiometrico? perfil = null)
     {
-        var perfilBiometrico = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
+        var perfilBiometrico = perfil ?? await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
         var imcCalculado = CalcularImc(perfilBiometrico?.AlturaCm, pesoKg);
         var taxaMetabolica = CalcularTaxaMetabolicaBasal(perfilBiometrico, pesoKg);
 

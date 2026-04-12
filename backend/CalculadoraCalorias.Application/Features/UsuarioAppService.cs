@@ -4,6 +4,7 @@ using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Application.Mapping;
 using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
+using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,15 +16,19 @@ namespace CalculadoraCalorias.Application.Features
         UsuarioMapper usuarioMapper, 
         IUnitOfWork unitOfWork, 
         ITokenService tokenService,
-        IRefreshTokenService refreshTokenService) : IUsuarioAppService
+        IRefreshTokenService refreshTokenService,
+        IPerfilBiometricoService perfilBiometricoService,
+        IRegistroFisicoService registroFisicoService) : IUsuarioAppService
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
         private readonly UsuarioMapper _mapperUsuario = usuarioMapper;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly ITokenService _tokenService = tokenService;
         private readonly IRefreshTokenService _refreshTokenService = refreshTokenService;
+        private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
+        private readonly IRegistroFisicoService _registroFisicoService = registroFisicoService;
 
-        public async Task<Resultado<CriarUsuarioResponse>> Adicionar(CriarUsuarioRequest requisicao)
+        public async Task<Resultado<CriarUsuarioResponse>> Registrar(RegistroUsuarioRequest requisicao)
         {
             if (await _usuarioService.VerificarSeEmailEstaEmUso(requisicao.Email))
             {
@@ -31,9 +36,22 @@ namespace CalculadoraCalorias.Application.Features
             }
 
             var senhaHash = BCrypt.Net.BCrypt.HashPassword(requisicao.Senha);
-            var usuario = await _usuarioService.CriarUsuario(requisicao.Nome, requisicao.Email, senhaHash, requisicao.Role);
+            var usuario = await _usuarioService.CriarUsuario(requisicao.Nome, requisicao.Email, senhaHash, RoleEnum.Usuario);
+
+            var perfil = await _perfilBiometricoService.Adicionar(usuario.Id,
+                                                     requisicao.DataNascimento,
+                                                     requisicao.Genero,
+                                                     requisicao.AlturaCm,
+                                                     requisicao.NivelAtividade,
+                                                     requisicao.Objetivo);
+
+            await _registroFisicoService.Adicionar(usuario.Id,
+                                                   requisicao.PesoKg,
+                                                   requisicao.MetaCaloricaDiaria,
+                                                   perfil);
 
             await _unitOfWork.CommitAsync();
+
             return Resultado<CriarUsuarioResponse>.Success(_mapperUsuario.CriarUsuarioParaRespose(usuario));
         }
 
