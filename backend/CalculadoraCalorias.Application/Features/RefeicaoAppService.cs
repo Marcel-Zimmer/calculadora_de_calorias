@@ -2,6 +2,7 @@
 
 using CalculadoraCalorias.Application.DTOs.Records;
 using CalculadoraCalorias.Application.DTOs.Requests;
+using CalculadoraCalorias.Application.DTOs.Responses;
 using CalculadoraCalorias.Application.Filas;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Core.Domain.Common;
@@ -20,30 +21,49 @@ namespace CalculadoraCalorias.Application.Features
         {
             if(!await _usuarioService.ValidarExistencia(requisicao.UsuarioId)) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
 
-            var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
-            if (!Directory.Exists(caminhoBase))
+            Refeicao? refeicao;
+
+            if (requisicao.CodigoRefeicaoModelo.HasValue)
             {
-                Directory.CreateDirectory(caminhoBase);
+                refeicao = await _refeicaoService.AdicionarBaseadoEmModelo(
+                    requisicao.UsuarioId, 
+                    requisicao.CodigoRefeicaoModelo.Value, 
+                    requisicao.PesoEmGramas, 
+                    requisicao.Tipo, 
+                    requisicao.Data);
             }
-            var extensao = Path.GetExtension(requisicao.Imagem.FileName);
-            var guidArquivo = Guid.NewGuid();
-            var nomeArquivo = $"{guidArquivo}{extensao}";
-
-            var caminhoFisicoCompleto = Path.Combine(caminhoBase, nomeArquivo);
-
-            using (var stream = new FileStream(caminhoFisicoCompleto, FileMode.Create))
+            else
             {
-                await requisicao.Imagem.CopyToAsync(stream);
+                if (requisicao.Imagem == null) return Resultado<Refeicao>.Failure(TipoDeErro.Validation, "Imagem é obrigatória quando não se utiliza um modelo");
+
+                var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
+                if (!Directory.Exists(caminhoBase))
+                {
+                    Directory.CreateDirectory(caminhoBase);
+                }
+                var extensao = Path.GetExtension(requisicao.Imagem.FileName);
+                var guidArquivo = Guid.NewGuid();
+                var nomeArquivo = $"{guidArquivo}{extensao}";
+
+                var caminhoFisicoCompleto = Path.Combine(caminhoBase, nomeArquivo);
+
+                using (var stream = new FileStream(caminhoFisicoCompleto, FileMode.Create))
+                {
+                    await requisicao.Imagem.CopyToAsync(stream);
+                }
+
+                refeicao = await _refeicaoService.Adicionar(requisicao.UsuarioId, requisicao.Apelido, requisicao.PesoEmGramas, requisicao.Tipo, requisicao.Data, guidArquivo);
             }
 
-            var refeicao = await _refeicaoService.Adicionar(requisicao.UsuarioId, requisicao.Apelido, requisicao.PesoEmGramas, requisicao.Tipo, requisicao.Data, guidArquivo);
-
-            if (refeicao == null) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "erro ao solicitar a estimatiza de calorias");
+            if (refeicao == null) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "erro ao processar a refeição");
 
             await _unitOfWork.CommitAsync();
 
-            var requestFila = new EstimativaIaRequest(refeicao.Id, guidArquivo);
-            await _filaEstimativaIa.EnviarParaFilaAsync(requestFila);
+            if (!requisicao.CodigoRefeicaoModelo.HasValue)
+            {
+                var requestFila = new EstimativaIaRequest(refeicao.Id, refeicao.GuidArquivo);
+                await _filaEstimativaIa.EnviarParaFilaAsync(requestFila);
+            }
 
             return Resultado<Refeicao>.Success(refeicao);
         }
@@ -55,6 +75,23 @@ namespace CalculadoraCalorias.Application.Features
 
             await _unitOfWork.CommitAsync();
             return Resultado<bool>.Success(true);
+        }
+
+        public async Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId)
+        {
+            var modelos = await _refeicaoService.ObterModelosFrequentes(usuarioId);
+            var response = modelos.Select(x => new RefeicaoModeloResponse
+            {
+                Id = x.Id,
+                Apelido = x.Apelido,
+                Calorias = x.Calorias,
+                Proteinas = x.Proteinas,
+                Carboidratos = x.Carboidratos,
+                Gorduras = x.Gorduras,
+                PesoOriginal = x.PesoOriginal
+            }).ToList();
+
+            return Resultado<List<RefeicaoModeloResponse>>.Success(response);
         }
     }
 }

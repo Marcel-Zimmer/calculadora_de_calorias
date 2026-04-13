@@ -24,7 +24,8 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         [Required(ErrorMessage = "A data da refeição deve ser informada.")]
         public DateOnly Data { get; set; }
 
-        [Required(ErrorMessage = "A imagem deve ser informada.")]
-        public required IFormFile Imagem { get; set; }
+        public IFormFile? Imagem { get; set; }
+
+        public long? CodigoRefeicaoModelo { get; set; }
     }
 }

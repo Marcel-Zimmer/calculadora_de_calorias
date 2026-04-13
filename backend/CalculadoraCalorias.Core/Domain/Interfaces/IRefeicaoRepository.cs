@@ -8,5 +8,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
     {
         Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId);
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
+        Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId);
     }
 }

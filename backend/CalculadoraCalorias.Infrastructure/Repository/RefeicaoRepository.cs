@@ -37,5 +37,33 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 })
                 .ToListAsync();
         }
+
+        public async Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId)
+        {
+            var agrupado = await _dbSet
+                .AsNoTracking()
+                .Where(x => x.UsuarioId == usuarioId && x.Apelido != null && x.Calorias != null)
+                .GroupBy(x => x.Apelido)
+                .Select(g => new
+                {
+                    Apelido = g.Key,
+                    Count = g.Count(),
+                    UltimaRefeicao = g.OrderByDescending(x => x.Data).ThenByDescending(x => x.Id).FirstOrDefault()
+                })
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToListAsync();
+
+            return agrupado.Select(x => new RefeicaoModeloDTO
+            {
+                Id = x.UltimaRefeicao!.Id,
+                Apelido = x.Apelido,
+                Calorias = x.UltimaRefeicao.Calorias,
+                Proteinas = x.UltimaRefeicao.Proteinas,
+                Carboidratos = x.UltimaRefeicao.Carboidratos,
+                Gorduras = x.UltimaRefeicao.Gorduras,
+                PesoOriginal = x.UltimaRefeicao.Peso
+            }).ToList();
+        }
     }
 }

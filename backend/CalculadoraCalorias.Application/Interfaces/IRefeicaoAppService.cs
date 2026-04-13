@@ -9,5 +9,6 @@ namespace CalculadoraCalorias.Application.Interfaces
     {
         public Task<Resultado<Refeicao>> Adicionar(CriarRefeicaoRequest requisicao);
         public Task<Resultado<bool>> Excluir(long id);
+        public Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId);
     }
 }

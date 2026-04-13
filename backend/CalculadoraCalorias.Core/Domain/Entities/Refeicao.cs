@@ -63,6 +63,13 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             StatusProcessamento = StatusProcessamentoEnum.Concluido;
 
         }
+
+        public void MarcarComoBaseadoEmModelo(long modeloId)
+        {
+            UtilizadoRefeicaoModelo = true;
+            CodigoRefeicaoModelo = modeloId;
+            StatusProcessamento = StatusProcessamentoEnum.Concluido;
+        }
     }
 
 

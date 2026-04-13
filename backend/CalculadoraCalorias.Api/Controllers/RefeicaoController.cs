@@ -18,6 +18,13 @@ namespace CalculadoraCalorias.Api.Controllers
             return ProcessarResultado(await _refeicaoAppService.Adicionar(requisicao));
         }
 
+        [HttpGet]
+        [Route("modelos-frequentes/{usuarioId}")]
+        public async Task<IActionResult> ObterModelosFrequentes([FromRoute] long usuarioId)
+        {
+            return ProcessarResultado(await _refeicaoAppService.ObterModelosFrequentes(usuarioId));
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Excluir([FromRoute] long id)
         {
