@@ -1,0 +1,24 @@
+<div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 h-full">
+    <h3 class="font-black text-slate-800 mb-6 text-lg tracking-tight">{{ titulo() }}</h3>
+    
+    <div class="space-y-6">
+        @for (item of itens(); track item.nome) {
+        <div class="space-y-2">
+            <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-500">
+                <span>{{ item.nome }}</span>
+                <span class="text-slate-800">{{ item.valor.toFixed(0) }} <span class="text-[10px] text-slate-400">kcal</span></span>
+            </div>
+            <div class="h-3 bg-slate-100 rounded-full overflow-hidden">
+                <div [class]="corPrincipal()" 
+                     class="h-full rounded-full transition-all duration-1000"
+                     [style.width]="item.percentual + '%'"></div>
+            </div>
+            <div class="text-[10px] text-right font-black text-slate-400">{{ item.percentual.toFixed(1) }}%</div>
+        </div>
+        } @empty {
+            <div class="py-12 text-center text-slate-400 italic text-sm">
+                Nenhum dado registrado para este período.
+            </div>
+        }
+    </div>
+</div>

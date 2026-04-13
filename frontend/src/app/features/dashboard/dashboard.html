@@ -14,51 +14,45 @@
       <button (click)="menuAberto.set(true)" class="p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-full">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
-      <h1 class="text-xl font-black text-slate-800">Dashboard</h1>
+      <h1 class="text-xl font-black text-slate-800">Calculadora</h1>
       <div class="w-10"></div>
     </header>
 
     <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
       <div class="max-w-6xl mx-auto space-y-6">
 
-        <!-- Dashboard Header & Tabs (Só mostra no Dashboard) -->
-        <div *ngIf="abaMenu() === 'dashboard'" class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div class="hidden lg:block">
-            <h2 class="text-2xl font-black text-slate-800">Bem-vindo, Marcel!</h2>
-            <p class="text-slate-500 text-sm italic">Aqui está o seu resumo de saúde.</p>
-          </div>
-          <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
-            <button (click)="alterarAbaGrafico('diario')" [class]="graficoDashboard() === 'diario' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Diário</button>
-            <button (click)="alterarAbaGrafico('semanal')" [class]="graficoDashboard() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Semanal</button>
-            <button (click)="alterarAbaGrafico('mensal')" [class]="graficoDashboard() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Mensal</button>
-          </div>
-        </div>
-
-        <!-- Dashboard Content -->
+        <!-- DASHBOARD SECTION -->
         <div *ngIf="abaMenu() === 'dashboard'" class="animate-fade-in space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="hidden lg:block">
+              <h2 class="text-2xl font-black text-slate-800">Bem-vindo, Marcel!</h2>
+              <p class="text-slate-500 text-sm italic">Aqui está o seu resumo de saúde.</p>
+            </div>
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+              <button (click)="alterarAbaGrafico('diario')" [class]="graficoDashboard() === 'diario' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Diário</button>
+              <button (click)="alterarAbaGrafico('semanal')" [class]="graficoDashboard() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Semanal</button>
+              <button (click)="alterarAbaGrafico('mensal')" [class]="graficoDashboard() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Mensal</button>
+            </div>
+          </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div class="lg:col-span-8 grid grid-cols-3 gap-3 md:gap-6">
-              
               <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
                 <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🎯</div>
                 <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Meta</span>
                 <span class="text-lg md:text-2xl font-black text-slate-800">{{ metaCalorias() }}</span>
               </div>
-
-              <div class="transform md:translate-x-[20px] bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
                 <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🍽️</div>
-                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Calorias Consumidas</span>
+                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Ingeridas</span>
                 <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasConsumidas() }}</span>
               </div>
-
-              <div class="transform md:translate-x-[20px] bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
                 <div class="w-10 h-10 md:w-12 md:h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🔥</div>
-                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Calorias Queimadas</span>
+                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Gastas</span>
                 <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasQueimadas() }}</span>
               </div>
             </div>
-
             <div *ngIf="graficoDashboard() === 'diario'" class="lg:col-span-4 grid grid-cols-2 gap-3 h-full">
               <button (click)="mostrarModalRefeicao.set(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-3xl shadow-lg shadow-emerald-100 flex flex-col items-center justify-center space-y-2 transition-all hover:-translate-y-1">
                 <span class="font-bold text">+ Refeicao</span>
@@ -71,7 +65,6 @@
 
           <div class="w-full mt-6">
             @switch (graficoDashboard()) {
-                
                 @case ('diario') {
                     <app-grafico-diario 
                         [refeicoes]="refeicoesDeHoje()"
@@ -82,71 +75,114 @@
                         (onExcluirExercicio)="excluirExercicio($event)">
                     </app-grafico-diario>
                 }
-                
                 @case ('semanal') {
-                    <app-grafico-semanal 
-                        [meta]="metaCalorias()" 
-                        [dados]="dadosGraficoSemanal()">
-                    </app-grafico-semanal>
+                    <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()"></app-grafico-semanal>
                 }
-                
                 @case ('mensal') {
-                    <app-grafico-mensal 
-                        [meta]="metaCalorias()" 
-                        [dados]="dadosGraficoMensal()">
-                    </app-grafico-mensal>
+                    <app-grafico-mensal [meta]="metaCalorias()" [dados]="dadosGraficoMensal()"></app-grafico-mensal>
                 }
             }
           </div>
-
         </div>
 
-        <!-- Perfil Section -->
-        <div *ngIf="abaMenu() === 'perfil'" class="animate-fade-in space-y-6">
+        <!-- CONSUMO STATISTICS SECTION -->
+        <div *ngIf="abaMenu() === 'estatisticas-consumo'" class="animate-fade-in space-y-6">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
-            <h2 class="text-2xl font-black text-slate-800">Seu Perfil</h2>
-            
-            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto overflow-x-auto">
-              <button (click)="subAbaPerfil.set('biometrico')" 
-                [class]="subAbaPerfil() === 'biometrico' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" 
-                class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Dados Pessoais</button>
-              <button (click)="subAbaPerfil.set('fisico')" 
-                [class]="subAbaPerfil() === 'fisico' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" 
-                class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Metas & Medidas</button>
-              <button (click)="subAbaPerfil.set('seguranca')" 
-                [class]="subAbaPerfil() === 'seguranca' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" 
-                class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Segurança</button>
+            <h2 class="text-2xl font-black text-slate-800">Estatísticas de Consumo</h2>
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+              <button (click)="alterarPeriodoEstatisticas('semanal')" [class]="periodoEstatisticas() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
+              <button (click)="alterarPeriodoEstatisticas('mensal')" [class]="periodoEstatisticas() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
             </div>
           </div>
 
-          <!-- Formulário Dados Biométricos -->
+          <!-- 5 Cards de Médias por Refeição -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" *ngIf="dadosEstatisticas()">
+            @for (dist of dadosEstatisticas().distribuicaoRefeicoesEnriquecida; track dist.nome) {
+                <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="dist.corCss">
+                        {{ dist.icone }}
+                    </div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
+                    <p class="text-lg font-black text-slate-800">{{ (dist.valor / (periodoEstatisticas() === 'semanal' ? 7 : 30)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
+                    <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
+                </div>
+            }
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+            <div class="lg:col-span-2">
+                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
+                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
+            </div>
+            <div class="lg:col-span-1">
+                <app-distribuicao-tipos titulo="Distribuição de Refeições" [itens]="dadosEstatisticas().distribuicaoRefeicoesEnriquecida" corPrincipal="bg-emerald-500"></app-distribuicao-tipos>
+            </div>
+          </div>
+        </div>
+
+        <!-- GASTO STATISTICS SECTION -->
+        <div *ngIf="abaMenu() === 'estatisticas-gasto'" class="animate-fade-in space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+            <h2 class="text-2xl font-black text-slate-800">Estatísticas de Gasto</h2>
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+              <button (click)="alterarPeriodoEstatisticas('semanal')" [class]="periodoEstatisticas() === 'semanal' ? 'bg-white shadow-sm text-orange-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
+              <button (click)="alterarPeriodoEstatisticas('mensal')" [class]="periodoEstatisticas() === 'mensal' ? 'bg-white shadow-sm text-orange-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="dadosEstatisticas()">
+            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Gasto no Período</p>
+                <p class="text-3xl font-black text-orange-500">{{ dadosEstatisticas().totalGasto.toFixed(0) }} <span class="text-xs font-medium">kcal</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Média Diária de Queima</p>
+                <p class="text-3xl font-black text-slate-800">{{ dadosEstatisticas().mediaGastoDiario.toFixed(0) }} <span class="text-xs font-medium">kcal/dia</span></p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+            <div class="lg:col-span-2">
+                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
+                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
+            </div>
+            <div class="lg:col-span-1">
+                <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>
+            </div>
+          </div>
+        </div>
+
+        <!-- PERFIL SECTION -->
+        <div *ngIf="abaMenu() === 'perfil'" class="animate-fade-in space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+            <h2 class="text-2xl font-black text-slate-800">Seu Perfil</h2>
+            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto overflow-x-auto">
+              <button (click)="subAbaPerfil.set('biometrico')" [class]="subAbaPerfil() === 'biometrico' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Dados Pessoais</button>
+              <button (click)="subAbaPerfil.set('fisico')" [class]="subAbaPerfil() === 'fisico' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Metas & Medidas</button>
+              <button (click)="subAbaPerfil.set('seguranca')" [class]="subAbaPerfil() === 'seguranca' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 whitespace-nowrap px-4 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Segurança</button>
+            </div>
+          </div>
+
           <div *ngIf="subAbaPerfil() === 'biometrico'" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 max-w-2xl">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Data de Nascimento</label>
-                <input type="date" [(ngModel)]="dataNascimento"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <input type="date" [(ngModel)]="dataNascimento" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
               </div>
-
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Gênero</label>
-                <select [(ngModel)]="genero"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
+                <select [(ngModel)]="genero" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
                   <option [value]="1">Masculino</option>
                   <option [value]="2">Feminino</option>
                 </select>
               </div>
-
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Altura (cm)</label>
-                <input type="number" [(ngModel)]="alturaCm"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <input type="number" [(ngModel)]="alturaCm" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
               </div>
-
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Nível de Atividade</label>
-                <select [(ngModel)]="nivelAtividade"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
+                <select [(ngModel)]="nivelAtividade" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
                   <option [value]="1">Sedentário</option>
                   <option [value]="2">Levemente Ativo</option>
                   <option [value]="3">Moderadamente Ativo</option>
@@ -154,79 +190,45 @@
                   <option [value]="5">Extremamente Ativo</option>
                 </select>
               </div>
-
               <div class="md:col-span-2 space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Objetivo Principal</label>
-                <select [(ngModel)]="objetivo"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
+                <select [(ngModel)]="objetivo" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all appearance-none">
                   <option [value]="1">Perda de Peso Agressiva</option>
                   <option [value]="2">Perda de Peso Leve</option>
                   <option [value]="3">Manter Peso</option>
                 </select>
               </div>
             </div>
-
-            <button (click)="salvarPerfilBiometrico()" 
-              class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">
-              Salvar Alterações
-            </button>
+            <button (click)="salvarPerfilBiometrico()" class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">Salvar Alterações</button>
           </div>
 
-          <!-- Formulário Registro Físico -->
           <div *ngIf="subAbaPerfil() === 'fisico'" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 max-w-2xl">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Peso Atual (kg)</label>
-                <input type="number" [(ngModel)]="pesoKg"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <input type="number" [(ngModel)]="pesoKg" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
               </div>
-
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Meta de Calorias (Kcal)</label>
-                <input type="number" [(ngModel)]="metaCaloricaDiaria"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <input type="number" [(ngModel)]="metaCaloricaDiaria" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
               </div>
             </div>
-
-            <div class="mt-6 p-4 bg-blue-50 rounded-2xl border border-blue-100">
-              <p class="text-xs text-blue-700 font-medium leading-relaxed">
-                <span class="font-black">Dica:</span> Ao alterar seu peso ou nível de atividade, sua Taxa Metabólica Basal é recalculada automaticamente pelo sistema para ajustar suas metas.
-              </p>
-            </div>
-
-            <button (click)="salvarRegistroFisico()" 
-              class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">
-              Atualizar Medidas
-            </button>
+            <button (click)="salvarRegistroFisico()" class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">Atualizar Medidas</button>
           </div>
 
-          <!-- Formulário Segurança -->
           <div *ngIf="subAbaPerfil() === 'seguranca'" class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 max-w-2xl">
             <div class="grid grid-cols-1 gap-6">
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Nova Senha</label>
-                <input type="password" [(ngModel)]="novaSenha" placeholder="No mínimo 6 caracteres"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <input type="password" [(ngModel)]="novaSenha" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
               </div>
-
               <div class="space-y-1">
                 <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">Confirmar Nova Senha</label>
-                <input type="password" [(ngModel)]="confirmarNovaSenha" placeholder="Repita a nova senha"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                <input type="password" [(ngModel)]="confirmarNovaSenha" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
               </div>
             </div>
-
-            <button (click)="salvarNovaSenha()" 
-              class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">
-              Trocar Senha
-            </button>
+            <button (click)="salvarNovaSenha()" class="mt-8 w-full md:w-auto px-12 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-lg shadow-emerald-100">Trocar Senha</button>
           </div>
-        </div>
-
-        <!-- Estatísticas Section -->
-        <div *ngIf="abaMenu() === 'estatisticas'" class="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-slate-200">
-          <span class="text-5xl block mb-4">🚧</span>
-          <h3 class="text-xl font-bold text-slate-800">Estatísticas em Construção</h3>
         </div>
 
       </div>

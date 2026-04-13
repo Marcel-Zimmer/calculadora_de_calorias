@@ -18,11 +18,12 @@ import { PerfilBiometricoService } from '../../core/services/perfil-biometrico.s
 import { RegistroFisicoService } from '../../core/services/registro-fisico.service';
 import { environment } from '../../../environments/environment';
 import { UsuarioService } from '../../core/services/usuario.service';
+import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-tipos';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -36,10 +37,14 @@ export class Dashboard implements OnInit {
   autenticacao = inject(AutenticacaoService);
 
   // Navegação
-  abaMenu = signal<'dashboard' | 'estatisticas' | 'perfil'>('dashboard');
+  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'perfil'>('dashboard');
   menuAberto = signal<boolean>(false);
   graficoDashboard = signal<'diario' | 'semanal' | 'mensal'>('diario');
   subAbaPerfil = signal<'biometrico' | 'fisico' | 'seguranca'>('biometrico');
+  
+  // Estatísticas
+  periodoEstatisticas = signal<'semanal' | 'mensal'>('semanal');
+  dadosEstatisticas = signal<any>(null);
 
   // Dados Dashboard
   metaCalorias = signal<number>(0);
@@ -74,15 +79,73 @@ export class Dashboard implements OnInit {
 
   todayDate = new Date().toISOString().split('T')[0];
 
+  // Mapas de exibição
+  mapaRefeicoes: Record<number, any> = {
+    1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
+    2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },
+    3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
+    4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' },
+    5: { nome: 'Gula/Extra',    icone: '🍩', cor: 'bg-rose-100 text-rose-500' }
+  }; 
+
+  mapaExercicios: Record<number, any> = {
+      1: { nome: 'Ciclismo',   icone: '🚴', cor: 'bg-sky-100 text-sky-600' },
+      2: { nome: 'Boxe',       icone: '🥊', cor: 'bg-red-100 text-red-600' },
+      3: { nome: 'Musculação', icone: '🏋️', cor: 'bg-slate-100 text-slate-600' },
+      4: { nome: 'Corrida',    icone: '🏃', cor: 'bg-amber-100 text-amber-600' },
+      5: { nome: 'Natação',    icone: '🏊', cor: 'bg-cyan-100 text-cyan-600' }
+  };
+
   ngOnInit(): void {
     this.obterGraficoDiario();
   }
 
-  alterarAbaMenu(aba: 'dashboard' | 'estatisticas' | 'perfil') {
+  alterarAbaMenu(aba: 'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'perfil') {
     this.abaMenu.set(aba);
     if (aba === 'perfil') {
       this.carregarDadosPerfil();
+    } else if (aba === 'estatisticas-consumo' || aba === 'estatisticas-gasto') {
+      this.carregarEstatisticas();
     }
+  }
+
+  alterarPeriodoEstatisticas(periodo: 'semanal' | 'mensal') {
+    this.periodoEstatisticas.set(periodo);
+    this.carregarEstatisticas();
+  }
+
+  carregarEstatisticas() {
+    const userId = this.autenticacao.obterId();
+    const obs = this.periodoEstatisticas() === 'semanal' 
+      ? this.graficoService.obterEstatisticasSemanais(userId)
+      : this.graficoService.obterEstatisticasMensais(userId);
+
+    obs.subscribe({
+      next: (res: any) => {
+        // Enriquecer dados de exercícios
+        res.distribuicaoExerciciosEnriquecida = res.distribuicaoExercicios.map((item: any) => {
+          const info = this.mapaExercicios[Number(item.nome)];
+          return {
+            ...item,
+            displayNome: info?.nome || item.nome
+          };
+        });
+
+        // Enriquecer dados de refeições para os cards
+        res.distribuicaoRefeicoesEnriquecida = res.distribuicaoRefeicoes.map((item: any) => {
+          const info = this.mapaRefeicoes[Number(item.nome)];
+          return {
+            ...item,
+            displayNome: info?.nome || 'Outro',
+            icone: info?.icone || '🍽️',
+            corCss: info?.cor || 'bg-slate-100 text-slate-500'
+          };
+        });
+
+        this.dadosEstatisticas.set(res);
+      },
+      error: (erro) => console.error('Falha ao carregar estatísticas', erro)
+    });
   }
 
   alterarAbaGrafico(aba: 'diario' | 'semanal' | 'mensal') {
@@ -256,22 +319,6 @@ export class Dashboard implements OnInit {
       }
     });
   }
-
-  // Mapas de exibição
-  mapaRefeicoes: Record<number, any> = {
-    1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
-    2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },
-    3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
-    4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' }
-  }; 
-
-  mapaExercicios: Record<number, any> = {
-      1: { nome: 'Ciclismo',   icone: '🚴', cor: 'bg-sky-100 text-sky-600' },
-      2: { nome: 'Boxe',       icone: '🥊', cor: 'bg-red-100 text-red-600' },
-      3: { nome: 'Musculação', icone: '🏋️', cor: 'bg-slate-100 text-slate-600' },
-      4: { nome: 'Corrida',    icone: '🏃', cor: 'bg-amber-100 text-amber-600' },
-      5: { nome: 'Natação',    icone: '🏊', cor: 'bg-cyan-100 text-cyan-600' }
-  };
 
   formatarTempo(tempo: string | null | undefined): string {
     if (!tempo) return 'Tempo não registrado';

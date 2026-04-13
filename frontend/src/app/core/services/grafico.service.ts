@@ -22,4 +22,12 @@ export class GraficoService {
     return this.http.get(`${this.baseUrl}/dashboard-mensal/`+ usuarioId);
   }
 
+  obterEstatisticasSemanais(usuarioId:number){
+    return this.http.get(`${this.baseUrl}/estatisticas-semanais/`+ usuarioId);
+  }
+
+  obterEstatisticasMensais(usuarioId:number){
+    return this.http.get(`${this.baseUrl}/estatisticas-mensais/`+ usuarioId);
+  }
+
 }
