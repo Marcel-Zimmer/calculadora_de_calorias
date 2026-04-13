@@ -1,4 +1,4 @@
-import { Component, inject, model, signal, output } from '@angular/core';
+import { Component, inject, model, signal, output, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefeicaoService } from '../../core/services/refeicao.service';
@@ -32,6 +32,25 @@ export class AdicionarRefeicao {
   apelidoRefeicao = signal<string>('');
   fotoReal = signal<File | null>(null);
 
+  // Novos campos para modelos
+  usarModelo = signal<boolean>(false);
+  modelosFrequentes = signal<any[]>([]);
+  idModeloSelecionado = signal<number | null>(null);
+
+  // Cálculo de calorias estimadas baseado no modelo selecionado
+  caloriasEstimadas = computed(() => {
+    const id = this.idModeloSelecionado();
+    const peso = this.pesoRefeicao();
+    
+    if (id && peso) {
+      const modelo = this.modelosFrequentes().find(m => m.id == id);
+      if (modelo && modelo.calorias && modelo.pesoOriginal) {
+        return Math.round((modelo.calorias / modelo.pesoOriginal) * peso);
+      }
+    }
+    return null;
+  });
+
   // Mapeamentos Visuais
   mapaRefeicoes: Record<number, any> = {
     1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
@@ -39,6 +58,20 @@ export class AdicionarRefeicao {
     3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
     4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' }
   }; 
+
+  carregarModelos() {
+    this.refeicaoService.obterModelosFrequentes(this.autenticacao.obterId()).subscribe({
+      next: (modelos) => this.modelosFrequentes.set(modelos),
+      error: (err) => console.error('Erro ao carregar modelos', err)
+    });
+  }
+
+  toggleUsarModelo(valor: boolean) {
+    this.usarModelo.set(valor);
+    if (valor && this.modelosFrequentes().length === 0) {
+      this.carregarModelos();
+    }
+  }
 
   closeMealModal() {
     this.mostrarModal.set(false);
@@ -58,15 +91,19 @@ export class AdicionarRefeicao {
 
   salvarRefeicao() {
     let novaRefeicao: FormData = new FormData();
-    novaRefeicao.append("Apelido", this.apelidoRefeicao());
     novaRefeicao.append("Tipo", this.tipoRefeicao().toString());
     novaRefeicao.append("Data", this.dataRefeicao());
     novaRefeicao.append("PesoEmGramas", this.pesoRefeicao()?.toString() ?? "");
     novaRefeicao.append("UsuarioId", this.autenticacao.obterId().toString());
     
-    const foto = this.fotoReal();
-    if (foto) {
-      novaRefeicao.append("Imagem", foto);
+    if (this.usarModelo() && this.idModeloSelecionado()) {
+      novaRefeicao.append("CodigoRefeicaoModelo", this.idModeloSelecionado()!.toString());
+    } else {
+      novaRefeicao.append("Apelido", this.apelidoRefeicao());
+      const foto = this.fotoReal();
+      if (foto) {
+        novaRefeicao.append("Imagem", foto);
+      }
     }
 
     this.refeicaoService.adicionar(novaRefeicao).subscribe({
@@ -91,6 +128,8 @@ export class AdicionarRefeicao {
     this.pesoRefeicao.set(null);
     this.apelidoRefeicao.set('');
     this.fotoReal.set(null);
+    this.idModeloSelecionado.set(null);
+    this.usarModelo.set(false);
     this.closeMealModal();
   } 
 }

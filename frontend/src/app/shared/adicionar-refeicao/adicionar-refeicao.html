@@ -7,14 +7,43 @@
             <button (click)="closeMealModal()" class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors font-bold">✕</button>
         </div>
 
+        <!-- Toggle de Opção -->
+        <div class="flex p-1 bg-slate-100 rounded-2xl mb-8">
+            <button (click)="toggleUsarModelo(false)" 
+                    [class]="!usarModelo() ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
+                    class="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                📸 Foto
+            </button>
+            <button (click)="toggleUsarModelo(true)" 
+                    [class]="usarModelo() ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
+                    class="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                🏷️ Modelo
+            </button>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div (click)="fileInput.click()" class="aspect-square bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:border-emerald-300 hover:bg-emerald-50 transition-all overflow-hidden relative group">
+            <!-- Área de Upload (Sempre visível se não for modelo, ou pode ser trocada) -->
+            <div *ngIf="!usarModelo()" (click)="fileInput.click()" class="aspect-square bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:border-emerald-300 hover:bg-emerald-50 transition-all overflow-hidden relative group">
                 <img *ngIf="imagemRefeicao()" [src]="imagemRefeicao()" class="absolute inset-0 w-full h-full object-cover">
                 <div *ngIf="!imagemRefeicao()" class="text-center p-4">
                     <span class="text-4xl mb-2 block">📸</span>
                     <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest group-hover:text-emerald-500 transition-colors">Adicionar Foto</span>
                 </div>
                 <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
+            </div>
+
+            <!-- Placeholder ou Lista de Modelos se estiver em modo modelo -->
+            <div *ngIf="usarModelo()" class="aspect-square bg-emerald-50 border-2 border-emerald-100 rounded-3xl flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-6xl mb-4">🥗</span>
+                <h4 class="font-black text-emerald-800 mb-2">Usar Modelo</h4>
+                <p class="text-xs text-emerald-600 font-medium">Selecione uma refeição que você já cadastrou anteriormente para calcular as calorias proporcionalmente.</p>
+                
+                @if(caloriasEstimadas()) {
+                    <div class="mt-6 bg-white px-6 py-3 rounded-2xl shadow-sm border border-emerald-100 animate-bounce">
+                        <span class="text-[10px] font-black text-slate-400 uppercase block">Estimativa</span>
+                        <span class="text-2xl font-black text-emerald-600">{{caloriasEstimadas()}} kcal</span>
+                    </div>
+                }
             </div>
 
             <div class="space-y-4">
@@ -34,14 +63,32 @@
                         <input type="date" [(ngModel)]="dataRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
                     </div>
                 </div>
+
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Peso (g)</label>
                     <input type="number" [(ngModel)]="pesoRefeicao" placeholder="Ex: 450" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
                 </div>
-                <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Apelido (Opcional)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
 
-                <button (click)="salvarRefeicao()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-emerald-200 transition-all active:scale-[0.98]">
-                    Enviar Refeição
+                <!-- Campo de Apelido (Foto) ou Dropdown (Modelo) -->
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase ml-1">{{ usarModelo() ? 'Selecionar Refeição' : 'Apelido (Opcional)' }}</label>
+                    
+                    @if(!usarModelo()) {
+                        <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                    } @else {
+                        <select [(ngModel)]="idModeloSelecionado" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+                            <option [value]="null">Selecione um modelo...</option>
+                            <option *ngFor="let modelo of modelosFrequentes()" [value]="modelo.id">
+                                {{modelo.apelido}} ({{modelo.calorias}}kcal em {{modelo.pesoOriginal}}g)
+                            </option>
+                        </select>
+                    }
+                </div>
+
+                <button (click)="salvarRefeicao()" 
+                        [disabled]="(usarModelo() && !idModeloSelecionado()) || (!usarModelo() && !imagemRefeicao()) || !pesoRefeicao()"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-emerald-200 transition-all active:scale-[0.98]">
+                    {{ usarModelo() ? 'Confirmar Refeição' : 'Enviar para IA' }}
                 </button>
             </div>
         </div>

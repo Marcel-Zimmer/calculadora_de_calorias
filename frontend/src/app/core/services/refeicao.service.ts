@@ -14,6 +14,10 @@ export class RefeicaoService {
     return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
   }
 
+  obterModelosFrequentes(usuarioId: number) {
+    return this.http.get<any[]>(`${this.baseUrl}/modelos-frequentes/${usuarioId}`);
+  }
+
   excluir(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
