@@ -53,7 +53,14 @@ namespace CalculadoraCalorias.Application.Features
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
-            return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse { MetaCaloricaDiaria = dados.MetaCaloricaDiaria, Pontos = dados.Pontos });
+            return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
+            { 
+                MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
+                TotalCaloriasConsumidas = dados.TotalConsumido,
+                TotalCaloriasGastas = dados.TotalGasto,
+                CaloriasCalculadas = dados.TotalConsumido - dados.TotalGasto,
+                Pontos = dados.Pontos 
+            });
         }
 
         public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId)

@@ -9,6 +9,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public decimal MetaCaloricaDiaria { get; set; }
         public int TotalCaloriasConsumidas { get; set; }
         public int TotalCaloriasGastas {  get; set; }
+        public int CaloriasCalculadas { get; set; }
         public List<RefeicaoDTO> Refeicoes {  get; set; } = [];
         public List<ExercicioDTO> Exercicios { get; set; } = [];
     }
@@ -24,6 +25,9 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
     public class GraficoPeriodoResponse
     {
         public decimal MetaCaloricaDiaria { get; set; }
+        public int TotalCaloriasConsumidas { get; set; }
+        public int TotalCaloriasGastas { get; set; }
+        public int CaloriasCalculadas { get; set; }
         public List<GraficoPontoResponse> Pontos { get; set; } = [];
     }
 
