@@ -25,8 +25,17 @@ export class AdicionarRefeicao {
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   imagemRefeicao = signal<string | null>(null);
   
+  obterTipoRefeicaoAtual(): number {
+    const dataBrasilia = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+    const hora = dataBrasilia.getHours();
+    if (hora < 11) return 1; // Café da Manhã
+    if (hora < 15) return 2; // Almoço
+    if (hora < 19) return 4; // Lanche
+    return 3; // Jantar
+  }
+
   // Campos do Formulário
-  tipoRefeicao = signal<number>(1);
+  tipoRefeicao = signal<number>(this.obterTipoRefeicaoAtual());
   dataRefeicao = signal<string>(this.todayDate);
   pesoRefeicao = signal<number | null>(null);
   apelidoRefeicao = signal<string>('');
@@ -123,7 +132,7 @@ export class AdicionarRefeicao {
   }
 
   limparEFecharModal() {
-    this.tipoRefeicao.set(1);
+    this.tipoRefeicao.set(this.obterTipoRefeicaoAtual());
     this.dataRefeicao.set(this.todayDate);
     this.pesoRefeicao.set(null);
     this.apelidoRefeicao.set('');
