@@ -27,13 +27,8 @@ export class AdicionarExercicio {
   tempoExercicio = signal<string>(''); // O input de tempo retorna "HH:mm"
   calorias = signal<number | null>(null);
 
-  mapaExercicios: Record<number, any> = {
-      1: { nome: 'Ciclismo',   icone: '🚴', cor: 'bg-sky-100 text-sky-600', border: 'border-sky-100', text: 'text-sky-800' },
-      2: { nome: 'Boxe',       icone: '🥊', cor: 'bg-red-100 text-red-600', border: 'border-red-100', text: 'text-red-800' },
-      3: { nome: 'Musculação', icone: '🏋️', cor: 'bg-slate-100 text-slate-600', border: 'border-slate-100', text: 'text-slate-800' },
-      4: { nome: 'Corrida',    icone: '🏃', cor: 'bg-amber-100 text-amber-600', border: 'border-amber-100', text: 'text-amber-800' },
-      5: { nome: 'Natação',    icone: '🏊', cor: 'bg-cyan-100 text-cyan-600', border: 'border-cyan-100', text: 'text-cyan-800' }
-  };
+  mapaExercicios: Record<number, any> = this.atividadeFisicaService.obterMapaExercicios();
+  listaExercicios = signal<any[]>(this.atividadeFisicaService.obterListaExercicios());
 
   exercicioSelecionado = computed(() => this.mapaExercicios[this.tipoExercicio()]);
 

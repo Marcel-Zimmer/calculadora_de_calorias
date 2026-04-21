@@ -81,21 +81,8 @@ export class Dashboard implements OnInit {
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
 
   // Mapas de exibição
-  mapaRefeicoes: Record<number, any> = {
-    1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
-    2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },
-    3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
-    4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' },
-    5: { nome: 'Gula/Extra',    icone: '🍩', cor: 'bg-rose-100 text-rose-500' }
-  }; 
-
-  mapaExercicios: Record<number, any> = {
-      1: { nome: 'Ciclismo',   icone: '🚴', cor: 'bg-sky-100 text-sky-600' },
-      2: { nome: 'Boxe',       icone: '🥊', cor: 'bg-red-100 text-red-600' },
-      3: { nome: 'Musculação', icone: '🏋️', cor: 'bg-slate-100 text-slate-600' },
-      4: { nome: 'Corrida',    icone: '🏃', cor: 'bg-amber-100 text-amber-600' },
-      5: { nome: 'Natação',    icone: '🏊', cor: 'bg-cyan-100 text-cyan-600' }
-  };
+  mapaRefeicoes: Record<number, any> = this.refeicaoService.obterMapaRefeicoes(); 
+  mapaExercicios: Record<number, any> = this.atividadeFisicaService.obterMapaExercicios();
 
   ngOnInit(): void {
     this.obterGraficoDiario();

@@ -49,6 +49,8 @@ export class AdicionarRefeicao {
   // Campos de adição manual
   caloriasManuais = signal<number | null>(null);
   alimentoManual = signal<string>('');
+  
+  listaRefeicoes = signal<any[]>(this.refeicaoService.obterListaRefeicoes());
 
   // Cálculo de calorias estimadas baseado no modelo selecionado ou manual
   caloriasEstimadas = computed(() => {
@@ -65,15 +67,6 @@ export class AdicionarRefeicao {
     }
     return null;
   });
-
-  // Mapeamentos Visuais
-  mapaRefeicoes: Record<number, any> = {
-    1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
-    2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },
-    3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
-    4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' },
-    5: { nome: 'Gula/Extra',    icone: '🍩', cor: 'bg-rose-100 text-rose-500' }
-  }; 
 
   carregarModelos() {
     this.refeicaoService.obterModelosFrequentes(this.autenticacao.obterId()).subscribe({
