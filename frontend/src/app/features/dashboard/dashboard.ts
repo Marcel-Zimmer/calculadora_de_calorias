@@ -50,6 +50,7 @@ export class Dashboard implements OnInit {
   metaCalorias = signal<number>(0);
   caloriasConsumidas = signal<number>(0);
   caloriasQueimadas = signal<number>(0);
+  caloriasCalculadas = signal<number>(0);
   refeicoesDeHoje = signal<any[]>([]);
   exerciciosDeHoje = signal<any[]>([]);
   dadosGraficoSemanal = signal<any[]>([]);
@@ -258,6 +259,9 @@ export class Dashboard implements OnInit {
         next: (resposta: any) => {
           this.dadosGraficoSemanal.set(resposta.pontos);
           this.metaCalorias.set(resposta.metaCaloricaDiaria);
+          this.caloriasConsumidas.set(resposta.totalCaloriasConsumidas);
+          this.caloriasQueimadas.set(resposta.totalCaloriasGastas);
+          this.caloriasCalculadas.set(resposta.caloriasCalculadas);
         },
         error: (erro) => console.error('Falha ao obter gráfico semanal', erro)
       });
@@ -269,6 +273,9 @@ export class Dashboard implements OnInit {
         next: (resposta: any) => {
           this.dadosGraficoMensal.set(resposta.pontos);
           this.metaCalorias.set(resposta.metaCaloricaDiaria);
+          this.caloriasConsumidas.set(resposta.totalCaloriasConsumidas);
+          this.caloriasQueimadas.set(resposta.totalCaloriasGastas);
+          this.caloriasCalculadas.set(resposta.caloriasCalculadas);
         },
         error: (erro) => console.error('Falha ao obter gráfico mensal', erro)
       });

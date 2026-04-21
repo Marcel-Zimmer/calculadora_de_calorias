@@ -21,7 +21,8 @@ export class AdicionarExercicio {
 
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
 
-  // Variáveis do formulário simplificadas  tipoExercicio = signal<number>(1);
+  // Variáveis do formulário simplificadas
+  tipoExercicio = signal<number>(1);
   dataExercicio = signal<string>(this.todayDate);
   tempoExercicio = signal<string>(''); // O input de tempo retorna "HH:mm"
   calorias = signal<number | null>(null);
