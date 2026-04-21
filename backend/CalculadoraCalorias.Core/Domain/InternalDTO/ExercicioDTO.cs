@@ -6,7 +6,7 @@ namespace CalculadoraCalorias.Core.Domain.InternalDTO
     {
         public long Id { get; set; }
         public TipoExercicioEnum TipoExercicio { get; set; }
-        public decimal? CaloriasEstimadas {  get; set; }
+        public int? CaloriasEstimadas {  get; set; }
         public TimeSpan? TempoDeExercicio { get; set; }
         public DateOnly Data { get; set; }
     }

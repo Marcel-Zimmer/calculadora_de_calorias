@@ -100,8 +100,8 @@ namespace CalculadoraCalorias.Application.Features
                 {
                     Data = data.ToString("yyyy-MM-dd"),
                     Legenda = legenda,
-                    CaloriasConsumidas = consumidoDia,
-                    CaloriasGastas = gastoDia
+                    CaloriasConsumidas = (int)consumidoDia,
+                    CaloriasGastas = (int)gastoDia
                 });
             }
 
@@ -115,7 +115,7 @@ namespace CalculadoraCalorias.Application.Features
                 .Select(g => new DistribuicaoItemResponse
                 {
                     Nome = g.Key.ToString(),
-                    Valor = (double)g.Sum(x => x.CaloriasEstimadas ?? 0),
+                    Valor = (int)g.Sum(x => x.CaloriasEstimadas ?? 0),
                     Percentual = totalGasto > 0 ? (double)g.Sum(x => x.CaloriasEstimadas ?? 0) / totalGasto * 100 : 0
                 }).ToList();
 
@@ -127,18 +127,19 @@ namespace CalculadoraCalorias.Application.Features
                     return new DistribuicaoItemResponse
                     {
                         Nome = ((int)tipo).ToString(),
-                        Valor = soma,
-                        Percentual = totalConsumido > 0 ? (soma / totalConsumido) * 100 : 0
+                        Valor = (int)soma,
+                        Percentual = totalConsumido > 0 ? (soma / (double)totalConsumido) * 100 : 0
                     };
                 }).ToList();
 
             return new EstatisticasDetalhadasResponse
             {
                 MetaCaloricaDiaria = registroFisico?.MetaCaloricaDiaria ?? 0,
-                TotalConsumido = totalConsumido,
-                TotalGasto = totalGasto,
-                MediaConsumoDiario = totalConsumido / totalDiasPeriodo,
-                MediaGastoDiario = totalGasto / totalDiasPeriodo,
+                TotalConsumido = (int)totalConsumido,
+                TotalGasto = (int)totalGasto,
+                MediaConsumoDiario = diasComDados > 0 ? (int)(totalConsumido / diasComDados) : 0,
+                MediaGastoDiario = diasComDados > 0 ? (int)(totalGasto / diasComDados) : 0,
+                DiasComDados = diasComDados,
                 Pontos = pontos,
                 DistribuicaoExercicios = distExercicios,
                 DistribuicaoRefeicoes = distRefeicoes

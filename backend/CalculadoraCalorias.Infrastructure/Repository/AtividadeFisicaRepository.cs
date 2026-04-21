@@ -20,7 +20,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 {
                     Id = x.Id,
                     TipoExercicio = (TipoExercicioEnum)x.TipoAtividadeId,
-                    CaloriasEstimadas = x.CaloriasEstimadas,
+                    CaloriasEstimadas = (int)x.CaloriasEstimadas,
                     TempoDeExercicio = x.TempoExercicio,
                     Data = x.DataExercicio
                 })
@@ -37,7 +37,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 {
                     Id = x.Id,
                     TipoExercicio = (TipoExercicioEnum)x.TipoAtividadeId,
-                    CaloriasEstimadas = x.CaloriasEstimadas,
+                    CaloriasEstimadas = (int)x.CaloriasEstimadas,
                     TempoDeExercicio = x.TempoExercicio,
                     Data = x.DataExercicio
                 })

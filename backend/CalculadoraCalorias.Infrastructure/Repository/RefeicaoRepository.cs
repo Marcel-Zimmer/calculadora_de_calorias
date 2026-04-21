@@ -3,6 +3,7 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 using CalculadoraCalorias.Core.Domain.InternalDTO;
 using CalculadoraCalorias.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using CalculadoraCalorias.Core.Domain.Common;
 
 namespace CalculadoraCalorias.Infrastructure.Repository
 {
@@ -17,7 +18,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .Where(x => x.UsuarioId == usuarioId && x.Data == dataHoje)
                 .Select(x => new RefeicaoDTO{
                     Id = x.Id,
-                    Calorias = x.Calorias,
+                    Calorias = (int?)x.Calorias,
                     TipoRefeicao = x.Tipo,
                     Data = x.Data
                 })
@@ -31,7 +32,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .Where(x => x.UsuarioId == usuarioId && x.Data >= inicio && x.Data <= fim)
                 .Select(x => new RefeicaoDTO{
                     Id = x.Id,
-                    Calorias = x.Calorias,
+                    Calorias = (int?)x.Calorias,
                     TipoRefeicao = x.Tipo,
                     Data = x.Data
                 })
@@ -58,7 +59,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
             {
                 Id = x.UltimaRefeicao!.Id,
                 Apelido = x.Apelido,
-                Calorias = x.UltimaRefeicao.Calorias,
+                Calorias = (int?)x.UltimaRefeicao.Calorias,
                 Proteinas = x.UltimaRefeicao.Proteinas,
                 Carboidratos = x.UltimaRefeicao.Carboidratos,
                 Gorduras = x.UltimaRefeicao.Gorduras,
