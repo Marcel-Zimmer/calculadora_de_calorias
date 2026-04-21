@@ -103,7 +103,7 @@
                         {{ dist.icone }}
                     </div>
                     <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
-                    <p class="text-lg font-black text-slate-800">{{ (dist.valor / (periodoEstatisticas() === 'semanal' ? 7 : 30)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
+                    <p class="text-lg font-black text-slate-800">{{ (dist.valor / (dadosEstatisticas().diasComDados || 1)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
                     <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
                 </div>
             }
