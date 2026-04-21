@@ -10,7 +10,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
     {
         public async Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId)
         {
-            var dataHoje = DateOnly.FromDateTime(DateTime.Now);
+            var dataHoje = FusoHorario.ObterDataHojeBrasilia();
 
             return await _dbSet
                 .AsNoTracking()

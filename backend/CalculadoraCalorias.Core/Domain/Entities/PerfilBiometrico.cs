@@ -1,4 +1,5 @@
 ﻿using CalculadoraCalorias.Core.Domain.Enums;
+using CalculadoraCalorias.Core.Domain.Common;
 using System.Runtime.Intrinsics.X86;
 
 namespace CalculadoraCalorias.Core.Domain.Entities
@@ -32,7 +33,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
 
         public int ObterIdade() {
 
-            var dataAtual = DateTime.UtcNow;
+            var dataAtual = FusoHorario.ObterDataHoraBrasilia();
             int idadeAnos = dataAtual.Year - DataNascimento.Year;
 
             if (dataAtual.Month < DataNascimento.Month ||

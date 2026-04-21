@@ -1,4 +1,5 @@
-﻿
+﻿using CalculadoraCalorias.Core.Domain.Common;
+
 namespace CalculadoraCalorias.Core.Domain.Entities
 {
     public class RegistroFisico
@@ -37,7 +38,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             ImcCalculado = imcCalculado;
             TaxaMetabolicaBasal = taxaMetabolicaBasal;
             MetaCaloricaDiaria = metaCaloricaDiaria;
-            DataRegistro = DateTime.UtcNow;
+            DataRegistro = FusoHorario.ObterDataHoraBrasilia();
         }
     }
 }

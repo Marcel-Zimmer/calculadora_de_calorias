@@ -12,7 +12,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
     {
         public async Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId)
         {
-            var dataHoje = DateOnly.FromDateTime(DateTime.Now);
+            var dataHoje = FusoHorario.ObterDataHojeBrasilia();
             return await _dbSet
                 .AsNoTracking()
                 .Where(x => x.UsuarioId == usuarioId && x.DataExercicio == dataHoje)

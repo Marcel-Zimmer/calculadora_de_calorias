@@ -2,6 +2,7 @@
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.Interfaces;
+using CalculadoraCalorias.Core.Domain.Common;
 
 namespace CalculadoraCalorias.Core.Domain.Services;
 public class RegistroFisicoService : IRegistroFisicoService
@@ -26,7 +27,7 @@ public class RegistroFisicoService : IRegistroFisicoService
         {
             return null;
         }
-        var registroFisico = new RegistroFisico(usuarioId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica);
+        var registroFisico = new RegistroFisico(usuarioId, FusoHorario.ObterDataHoraBrasilia(), pesoKg, imcCalculado, taxaMetabolica);
 
         if (metaCaloricaDiaria != null && metaCaloricaDiaria != 0m) {
             registroFisico.AdicionarMetaCalorica((decimal)metaCaloricaDiaria);
