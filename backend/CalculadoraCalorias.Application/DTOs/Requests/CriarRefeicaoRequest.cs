@@ -27,5 +27,8 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         public IFormFile? Imagem { get; set; }
 
         public long? CodigoRefeicaoModelo { get; set; }
+
+        public int? CaloriasManuais { get; set; }
+        public string? AlimentoManual { get; set; }
     }
 }

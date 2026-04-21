@@ -20,6 +20,14 @@ public class RefeicaoService(IRefeicaoRepository refeicaoRepository) : IRefeicao
 
     }
 
+    public async Task<Refeicao> AdicionarManual(long usuarioId, string? apelido, string alimento, int calorias, int peso, TipoRefeicaoEnum tipo, DateOnly data)
+    {
+        var refeicao = new Refeicao(usuarioId, apelido, peso, tipo, data, Guid.Empty);
+        refeicao.AtualizarEstimativa(alimento, calorias, 0, 0, 0, 0, 0);
+        await _refeicaoRepository.Adicionar(refeicao);
+        return refeicao;
+    }
+
     public async Task<Refeicao?> AdicionarBaseadoEmModelo(long usuarioId, long modeloId, int pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data)
     {
         var modelo = await _refeicaoRepository.ObterPorId(modeloId);

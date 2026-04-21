@@ -1,5 +1,3 @@
-﻿
-
 using CalculadoraCalorias.Application.DTOs.Records;
 using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.DTOs.Responses;
@@ -32,9 +30,21 @@ namespace CalculadoraCalorias.Application.Features
                     requisicao.Tipo, 
                     requisicao.Data);
             }
+            else if (requisicao.CaloriasManuais.HasValue && !string.IsNullOrWhiteSpace(requisicao.AlimentoManual))
+            {
+                refeicao = await _refeicaoService.AdicionarManual(
+                    requisicao.UsuarioId,
+                    requisicao.Apelido,
+                    requisicao.AlimentoManual,
+                    requisicao.CaloriasManuais.Value,
+                    requisicao.PesoEmGramas,
+                    requisicao.Tipo,
+                    requisicao.Data
+                );
+            }
             else
             {
-                if (requisicao.Imagem == null) return Resultado<Refeicao>.Failure(TipoDeErro.Validation, "Imagem é obrigatória quando não se utiliza um modelo");
+                if (requisicao.Imagem == null) return Resultado<Refeicao>.Failure(TipoDeErro.Validation, "Imagem é obrigatória quando não se utiliza um modelo ou adição manual");
 
                 var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
                 if (!Directory.Exists(caminhoBase))
@@ -59,7 +69,7 @@ namespace CalculadoraCalorias.Application.Features
 
             await _unitOfWork.CommitAsync();
 
-            if (!requisicao.CodigoRefeicaoModelo.HasValue)
+            if (!requisicao.CodigoRefeicaoModelo.HasValue && !requisicao.CaloriasManuais.HasValue)
             {
                 var requestFila = new EstimativaIaRequest(refeicao.Id, refeicao.GuidArquivo);
                 await _filaEstimativaIa.EnviarParaFilaAsync(requestFila);
