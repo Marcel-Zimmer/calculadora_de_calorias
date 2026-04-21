@@ -10,4 +10,5 @@ import { CommonModule } from '@angular/common';
 export class GraficoMensal {
   meta = input<number>(0);
   dados = input<any[]>([]);
+  tipoVisualizacao = input<'consumo' | 'gasto'>('consumo');
 }

@@ -148,8 +148,8 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
             <div class="lg:col-span-2">
-                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
-                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
+                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-semanal>
+                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-mensal>
             </div>
             <div class="lg:col-span-1">
                 <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>

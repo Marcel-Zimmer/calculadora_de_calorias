@@ -2,17 +2,19 @@
     <div class="flex justify-between items-center mb-8">
         <h3 class="font-black text-slate-800 text-lg">Desempenho Semanal</h3>
         <div class="flex items-center space-x-4 text-[10px] font-bold text-slate-400">
-            <span class="flex items-center"><div class="w-3 h-3 rounded-md bg-emerald-400 mr-2"></div> Na Meta</span>
-            <span class="flex items-center"><div class="w-3 h-3 rounded-md bg-rose-400 mr-2"></div> Acima</span>
+            <span class="flex items-center"><div class="w-3 h-3 rounded-md mr-2" [ngClass]="tipoVisualizacao() === 'consumo' ? 'bg-emerald-400' : 'bg-orange-400'"></div> Na Meta / Progresso</span>
+            <span class="flex items-center"><div class="w-3 h-3 rounded-md mr-2" [ngClass]="tipoVisualizacao() === 'consumo' ? 'bg-rose-400' : 'bg-emerald-600'"></div> Acima da Meta</span>
         </div>
     </div>
     <div class="flex items-end justify-between h-56 px-2 space-x-4 border-b border-slate-100 pb-4">
         @for (day of dados(); track day.data) {
         <div class="flex-1 flex flex-col items-center group relative h-full justify-end">
-            <span class="text-[9px] font-black text-slate-400 mb-1">{{ day.caloriasConsumidas > 0 ? day.caloriasConsumidas : '' }}</span>
+            <span class="text-[9px] font-black text-slate-400 mb-1">{{ (tipoVisualizacao() === 'consumo' ? day.caloriasConsumidas : day.caloriasGastas) > 0 ? (tipoVisualizacao() === 'consumo' ? day.caloriasConsumidas : day.caloriasGastas) : '' }}</span>
             <div class="w-full rounded-t-xl transition-all duration-300 hover:scale-x-105"
-                 [class]="day.caloriasConsumidas > meta() ? 'bg-rose-400' : 'bg-emerald-400'"
-                 [style.height]="day.caloriasConsumidas === 0 ? '4px' : (day.caloriasConsumidas / 3000 * 100) + '%'">
+                 [ngClass]="tipoVisualizacao() === 'consumo' 
+                            ? ((day.caloriasConsumidas > meta()) ? 'bg-rose-400' : 'bg-emerald-400')
+                            : 'bg-orange-400'"
+                 [style.height]="(tipoVisualizacao() === 'consumo' ? day.caloriasConsumidas : day.caloriasGastas) === 0 ? '4px' : ((tipoVisualizacao() === 'consumo' ? day.caloriasConsumidas : day.caloriasGastas) / 3000 * 100) + '%'">
             </div>
             <span class="absolute -bottom-7 text-[10px] font-bold text-slate-400 uppercase">{{ day.legenda.substring(0,3) }}</span>
         </div>
