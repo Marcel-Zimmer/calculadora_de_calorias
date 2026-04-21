@@ -13,6 +13,19 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  # Interface visual para o Banco de Dados
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: contador-calorias-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
   # Backend API
   backend:
     build:
@@ -25,6 +38,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CalculadoraCaloriasDb;Username=usuario;Password=Senha123@;
+      - Gemini__ApiKey=${GEMINI_API_KEY}
     ports:
       - "5000:8080"
     volumes:
