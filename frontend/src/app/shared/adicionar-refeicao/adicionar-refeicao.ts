@@ -22,7 +22,7 @@ export class AdicionarRefeicao {
   autenticacao = inject(AutenticacaoService);
 
   // Variáveis de Estado (Signals)
-  todayDate = new Date().toISOString().split('T')[0];
+  todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   imagemRefeicao = signal<string | null>(null);
   
   // Campos do Formulário

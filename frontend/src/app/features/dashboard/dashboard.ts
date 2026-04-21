@@ -77,7 +77,7 @@ export class Dashboard implements OnInit {
   novaSenha = signal<string>('');
   confirmarNovaSenha = signal<string>('');
 
-  todayDate = new Date().toISOString().split('T')[0];
+  todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
 
   // Mapas de exibição
   mapaRefeicoes: Record<number, any> = {
