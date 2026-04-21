@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build --configuration=production --base-href /contador-calorias/
+RUN npm run build -- --configuration=production --base-href /contador-calorias/
 
 FROM nginx:alpine AS final
 
