@@ -7,6 +7,13 @@
   <span class="block w-6 h-0.5 bg-slate-600 rounded-full"></span>
 
 </button>
+
+<div 
+  *ngIf="ui.menuAberto()" 
+  (click)="ui.fecharMenu()" 
+  class="fixed inset-0 z-[998] bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity">
+</div>
+
 <aside 
   [ngClass]="ui.menuAberto() ? 'translate-x-0' : '-translate-x-full'"
   class="fixed inset-y-0 left-0 z-[999] w-72 bg-white shadow-2xl lg:shadow-none lg:border-r lg:border-slate-100 transform lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
