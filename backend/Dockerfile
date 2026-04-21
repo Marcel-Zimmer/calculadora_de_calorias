@@ -31,4 +31,5 @@ RUN dotnet publish "CalculadoraCalorias.Api.csproj" -c $BUILD_CONFIGURATION -o /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN mkdir -p /app/wwwroot/uploads/refeicoes
 ENTRYPOINT ["dotnet", "CalculadoraCalorias.Api.dll"]
