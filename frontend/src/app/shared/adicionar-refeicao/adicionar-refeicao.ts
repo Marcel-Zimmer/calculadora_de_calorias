@@ -41,17 +41,23 @@ export class AdicionarRefeicao {
   apelidoRefeicao = signal<string>('');
   fotoReal = signal<File | null>(null);
 
-  // Novos campos para modelos
-  usarModelo = signal<boolean>(false);
+  // Novos campos para modelos e adição manual
+  modoEntrada = signal<'foto' | 'modelo' | 'manual'>('foto');
   modelosFrequentes = signal<any[]>([]);
   idModeloSelecionado = signal<number | null>(null);
+  
+  // Campos de adição manual
+  caloriasManuais = signal<number | null>(null);
+  alimentoManual = signal<string>('');
 
-  // Cálculo de calorias estimadas baseado no modelo selecionado
+  // Cálculo de calorias estimadas baseado no modelo selecionado ou manual
   caloriasEstimadas = computed(() => {
+    if (this.modoEntrada() === 'manual') return this.caloriasManuais();
+    
     const id = this.idModeloSelecionado();
     const peso = this.pesoRefeicao();
     
-    if (id && peso) {
+    if (id && peso && this.modoEntrada() === 'modelo') {
       const modelo = this.modelosFrequentes().find(m => m.id == id);
       if (modelo && modelo.calorias && modelo.pesoOriginal) {
         return Math.round((modelo.calorias / modelo.pesoOriginal) * peso);
@@ -65,7 +71,8 @@ export class AdicionarRefeicao {
     1: { nome: 'Café da Manhã', icone: '☕', cor: 'bg-orange-100 text-orange-500' },
     2: { nome: 'Almoço',        icone: '🍽️', cor: 'bg-emerald-100 text-emerald-500' },
     3: { nome: 'Jantar',        icone: '🌙', cor: 'bg-blue-100 text-blue-500' },
-    4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' }
+    4: { nome: 'Lanche',        icone: '🥪', cor: 'bg-purple-100 text-purple-500' },
+    5: { nome: 'Gula/Extra',    icone: '🍩', cor: 'bg-rose-100 text-rose-500' }
   }; 
 
   carregarModelos() {
@@ -75,9 +82,9 @@ export class AdicionarRefeicao {
     });
   }
 
-  toggleUsarModelo(valor: boolean) {
-    this.usarModelo.set(valor);
-    if (valor && this.modelosFrequentes().length === 0) {
+  toggleModoEntrada(modo: 'foto' | 'modelo' | 'manual') {
+    this.modoEntrada.set(modo);
+    if (modo === 'modelo' && this.modelosFrequentes().length === 0) {
       this.carregarModelos();
     }
   }
@@ -105,8 +112,12 @@ export class AdicionarRefeicao {
     novaRefeicao.append("PesoEmGramas", this.pesoRefeicao()?.toString() ?? "");
     novaRefeicao.append("UsuarioId", this.autenticacao.obterId().toString());
     
-    if (this.usarModelo() && this.idModeloSelecionado()) {
+    if (this.modoEntrada() === 'modelo' && this.idModeloSelecionado()) {
       novaRefeicao.append("CodigoRefeicaoModelo", this.idModeloSelecionado()!.toString());
+    } else if (this.modoEntrada() === 'manual') {
+      novaRefeicao.append("Apelido", this.apelidoRefeicao());
+      novaRefeicao.append("AlimentoManual", this.alimentoManual());
+      novaRefeicao.append("CaloriasManuais", this.caloriasManuais()?.toString() ?? "");
     } else {
       novaRefeicao.append("Apelido", this.apelidoRefeicao());
       const foto = this.fotoReal();
@@ -136,9 +147,11 @@ export class AdicionarRefeicao {
     this.dataRefeicao.set(this.todayDate);
     this.pesoRefeicao.set(null);
     this.apelidoRefeicao.set('');
+    this.alimentoManual.set('');
+    this.caloriasManuais.set(null);
     this.fotoReal.set(null);
     this.idModeloSelecionado.set(null);
-    this.usarModelo.set(false);
+    this.modoEntrada.set('foto');
     this.closeMealModal();
   } 
 }

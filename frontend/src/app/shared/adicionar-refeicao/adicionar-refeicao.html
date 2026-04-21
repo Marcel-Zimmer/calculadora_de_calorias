@@ -9,21 +9,26 @@
 
         <!-- Toggle de Opção -->
         <div class="flex p-1 bg-slate-100 rounded-2xl mb-8">
-            <button (click)="toggleUsarModelo(false)" 
-                    [class]="!usarModelo() ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
+            <button (click)="toggleModoEntrada('foto')" 
+                    [class]="modoEntrada() === 'foto' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
                     class="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
                 📸 Foto
             </button>
-            <button (click)="toggleUsarModelo(true)" 
-                    [class]="usarModelo() ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
+            <button (click)="toggleModoEntrada('modelo')" 
+                    [class]="modoEntrada() === 'modelo' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
                     class="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
                 🏷️ Modelo
+            </button>
+            <button (click)="toggleModoEntrada('manual')" 
+                    [class]="modoEntrada() === 'manual' ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-500'"
+                    class="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                ✍️ Manual
             </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Área de Upload (Sempre visível se não for modelo, ou pode ser trocada) -->
-            <div *ngIf="!usarModelo()" (click)="fileInput.click()" class="aspect-square bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:border-emerald-300 hover:bg-emerald-50 transition-all overflow-hidden relative group">
+            <!-- Área de Upload (Modo Foto) -->
+            <div *ngIf="modoEntrada() === 'foto'" (click)="fileInput.click()" class="aspect-square bg-slate-50 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:border-emerald-300 hover:bg-emerald-50 transition-all overflow-hidden relative group">
                 <img *ngIf="imagemRefeicao()" [src]="imagemRefeicao()" class="absolute inset-0 w-full h-full object-cover">
                 <div *ngIf="!imagemRefeicao()" class="text-center p-4">
                     <span class="text-4xl mb-2 block">📸</span>
@@ -33,15 +38,29 @@
             </div>
 
             <!-- Placeholder ou Lista de Modelos se estiver em modo modelo -->
-            <div *ngIf="usarModelo()" class="aspect-square bg-emerald-50 border-2 border-emerald-100 rounded-3xl flex flex-col items-center justify-center p-6 text-center">
+            <div *ngIf="modoEntrada() === 'modelo'" class="aspect-square bg-emerald-50 border-2 border-emerald-100 rounded-3xl flex flex-col items-center justify-center p-6 text-center">
                 <span class="text-6xl mb-4">🥗</span>
                 <h4 class="font-black text-emerald-800 mb-2">Usar Modelo</h4>
-                <p class="text-xs text-emerald-600 font-medium">Selecione uma refeição que você já cadastrou anteriormente para calcular as calorias proporcionalmente.</p>
+                <p class="text-xs text-emerald-600 font-medium">Selecione uma refeição cadastrada para calcular proporcionalmente.</p>
                 
                 @if(caloriasEstimadas()) {
                     <div class="mt-6 bg-white px-6 py-3 rounded-2xl shadow-sm border border-emerald-100 animate-bounce">
                         <span class="text-[10px] font-black text-slate-400 uppercase block">Estimativa</span>
                         <span class="text-2xl font-black text-emerald-600">{{caloriasEstimadas()}} kcal</span>
+                    </div>
+                }
+            </div>
+
+            <!-- Placeholder para Modo Manual -->
+            <div *ngIf="modoEntrada() === 'manual'" class="aspect-square bg-blue-50 border-2 border-blue-100 rounded-3xl flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-6xl mb-4">✍️</span>
+                <h4 class="font-black text-blue-800 mb-2">Adição Manual</h4>
+                <p class="text-xs text-blue-600 font-medium">Insira as informações da sua refeição manualmente.</p>
+                
+                @if(caloriasEstimadas()) {
+                    <div class="mt-6 bg-white px-6 py-3 rounded-2xl shadow-sm border border-blue-100">
+                        <span class="text-[10px] font-black text-slate-400 uppercase block">Total Informado</span>
+                        <span class="text-2xl font-black text-blue-600">{{caloriasEstimadas()}} kcal</span>
                     </div>
                 }
             </div>
@@ -69,26 +88,40 @@
                     <input type="number" [(ngModel)]="pesoRefeicao" placeholder="Ex: 450" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
                 </div>
 
-                <!-- Campo de Apelido (Foto) ou Dropdown (Modelo) -->
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase ml-1">{{ usarModelo() ? 'Selecionar Refeição' : 'Apelido (Opcional)' }}</label>
+                    <label class="text-[10px] font-black text-slate-400 uppercase ml-1">{{ modoEntrada() === 'modelo' ? 'Selecionar Refeição' : 'Apelido (Opcional)' }}</label>
                     
-                    @if(!usarModelo()) {
+                    @if(modoEntrada() === 'foto') {
                         <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-                    } @else {
+                    } @else if(modoEntrada() === 'modelo') {
                         <select [(ngModel)]="idModeloSelecionado" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
                             <option [value]="null">Selecione um modelo...</option>
                             <option *ngFor="let modelo of modelosFrequentes()" [value]="modelo.id">
                                 {{modelo.apelido}} ({{modelo.calorias}}kcal em {{modelo.pesoOriginal}}g)
                             </option>
                         </select>
+                    } @else {
+                        <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
                     }
                 </div>
 
+                @if(modoEntrada() === 'manual') {
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Alimento</label>
+                            <input type="text" [(ngModel)]="alimentoManual" placeholder="Ex: Frango com Batata" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Calorias (Kcal)</label>
+                            <input type="number" [(ngModel)]="caloriasManuais" placeholder="Ex: 350" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                        </div>
+                    </div>
+                }
+
                 <button (click)="salvarRefeicao()" 
-                        [disabled]="(usarModelo() && !idModeloSelecionado()) || (!usarModelo() && !imagemRefeicao()) || !pesoRefeicao()"
+                        [disabled]="(modoEntrada() === 'modelo' && !idModeloSelecionado()) || (modoEntrada() === 'foto' && !imagemRefeicao()) || (modoEntrada() === 'manual' && (!alimentoManual() || !caloriasManuais())) || !pesoRefeicao()"
                         class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-emerald-200 transition-all active:scale-[0.98]">
-                    {{ usarModelo() ? 'Confirmar Refeição' : 'Enviar para IA' }}
+                    {{ modoEntrada() === 'foto' ? 'Enviar para IA' : 'Confirmar Refeição' }}
                 </button>
             </div>
         </div>
