@@ -121,7 +121,7 @@ namespace CalculadoraCalorias.Application.Features
             {
                 UsuarioId = usuarioId,
                 Token = token,
-                DataExpiracao = DateTime.UtcNow.AddDays(7),
+                DataExpiracao = DateTime.UtcNow.AddHours(24),
                 DataCriacao = DateTime.UtcNow,
                 Revogado = false
             };
