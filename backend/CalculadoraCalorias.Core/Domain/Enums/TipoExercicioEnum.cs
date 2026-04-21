@@ -3,6 +3,9 @@
    public enum TipoExercicioEnum
     {
         Ciclismo = 1, 
-        Natacao = 2,
+        Caminhada = 2,
+        Corrida = 3,
+        Boxe = 4,
+        Musculacao = 5
     }
 }
