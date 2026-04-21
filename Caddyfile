@@ -1,8 +1,12 @@
-marcel-zimmer.online {
+localhost {
     redir / /contador-calorias/
 
     handle /api/* {
         reverse_proxy backend:8080
+    }
+
+    handle /pgadmin* {
+        reverse_proxy pgadmin:80
     }
 
     handle /contador-calorias* {
@@ -10,11 +14,15 @@ marcel-zimmer.online {
     }
 }
 
-localhost {
+marcel-zimmer.online {
     redir / /contador-calorias/
 
     handle /api/* {
         reverse_proxy backend:8080
+    }
+
+    handle /pgadmin* {
+        reverse_proxy pgadmin:80
     }
 
     handle /contador-calorias* {
