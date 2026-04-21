@@ -1,4 +1,20 @@
 services:
+  # Caddy (Proxy Reverso com HTTPS automático)
+  caddy:
+    image: caddy:2-alpine
+    container_name: contador-calorias-caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
   # Banco de Dados
   db:
     image: postgres:16-alpine
@@ -39,12 +55,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CalculadoraCaloriasDb;Username=usuario;Password=Senha123@;
       - Gemini__ApiKey=${GEMINI_API_KEY}
-    ports:
-      - "5000:8080"
     volumes:
       - ./backend/CalculadoraCalorias.Api/wwwroot/uploads:/app/wwwroot/uploads
-      
-  #frontend  
+
+  # Frontend  
   frontend:
       build:
         context: ./frontend
@@ -53,7 +67,8 @@ services:
       restart: always
       depends_on:
         - backend
-      ports:
-        - "80:80"
+
 volumes:
   db-data:
+  caddy_data:
+  caddy_config:

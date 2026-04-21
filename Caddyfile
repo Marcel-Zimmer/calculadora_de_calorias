@@ -1,0 +1,11 @@
+marcel-zimmer.online {
+    redir / /contador-calorias
+
+    handle /api/* {
+        reverse_proxy backend:8080
+    }
+
+    handle /contador-calorias* {
+        reverse_proxy frontend:80
+    }
+}
