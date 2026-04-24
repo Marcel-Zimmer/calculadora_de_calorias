@@ -14,7 +14,7 @@ namespace CalculadoraCalorias.Infrastructure.Repository
         {
             return await _dbSet
                 .AsTracking()
-                .Where(x => x.Token == refreshToken && x.Id == usuarioId)
+                .Where(x => x.Token == refreshToken && x.UsuarioId == usuarioId)
                 .FirstOrDefaultAsync();
         }
     }

@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -8,6 +9,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AutenticacaoService {
   private http = inject(HttpClient);
+  private router = inject(Router);
   private readonly baseUrl = `${environment.apiUrl}/Usuario`; 
 
   private stringId = localStorage.getItem('meu_app_user_id') ?? null;
@@ -27,6 +29,7 @@ export class AutenticacaoService {
     localStorage.removeItem('meu_token_jwt');
     localStorage.removeItem('meu_refresh_token');
     this.usuarioId.set(null);
+    this.router.navigate(['/login']);
   }
 
   obterAccessToken(): string | null {
