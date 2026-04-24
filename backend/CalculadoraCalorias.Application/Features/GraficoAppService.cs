@@ -23,11 +23,15 @@ namespace CalculadoraCalorias.Application.Features
             var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId);
             var atividades = await _atividadeFisicaService.ObterDiariasPorUsuarioId(usuarioId);
 
+            var totalConsumido = refeicoes?.Sum(x => x.Calorias ?? 0) ?? 0;
+            var totalGasto = atividades?.Sum(y => y.CaloriasEstimadas ?? 0) ?? 0;
+
             var informacoesDiarias = new RefeicaoGraficoDiarioResponse
             {
                 MetaCaloricaDiaria = registroFisico.MetaCaloricaDiaria ?? 0,
-                TotalCaloriasConsumidas = refeicoes?.Sum(x => x.Calorias) ?? 0,
-                TotalCaloriasGastas = atividades?.Sum(y => y.CaloriasEstimadas) ?? 0,
+                TotalCaloriasConsumidas = totalConsumido,
+                TotalCaloriasGastas = totalGasto,
+                CaloriasCalculadas = Math.Max(0, totalConsumido - totalGasto),
                 Refeicoes = refeicoes ?? [], 
                 Exercicios = atividades ?? []
             };
@@ -43,7 +47,14 @@ namespace CalculadoraCalorias.Application.Features
             var fimSemana = inicioSemana.AddDays(6);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
-            return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse { MetaCaloricaDiaria = dados.MetaCaloricaDiaria, Pontos = dados.Pontos });
+            return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
+            { 
+                MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
+                TotalCaloriasConsumidas = dados.TotalConsumido,
+                TotalCaloriasGastas = dados.TotalGasto,
+                CaloriasCalculadas = Math.Max(0, dados.TotalConsumido - dados.TotalGasto),
+                Pontos = dados.Pontos 
+            });
         }
 
         public async Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long idUsuario)
@@ -58,7 +69,7 @@ namespace CalculadoraCalorias.Application.Features
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
                 TotalCaloriasConsumidas = dados.TotalConsumido,
                 TotalCaloriasGastas = dados.TotalGasto,
-                CaloriasCalculadas = dados.TotalConsumido - dados.TotalGasto,
+                CaloriasCalculadas = Math.Max(0, dados.TotalConsumido - dados.TotalGasto),
                 Pontos = dados.Pontos 
             });
         }

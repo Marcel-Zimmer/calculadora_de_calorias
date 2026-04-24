@@ -235,6 +235,7 @@ export class Dashboard implements OnInit {
           this.refeicoesDeHoje.set(resposta.refeicoes);
           this.caloriasQueimadas.set(resposta.totalCaloriasGastas);
           this.exerciciosDeHoje.set(resposta.exercicios);
+          this.caloriasCalculadas.set(resposta.caloriasCalculadas);
         },
         error: (erro) => console.error('Falha ao obter gráfico diário', erro)
       });
