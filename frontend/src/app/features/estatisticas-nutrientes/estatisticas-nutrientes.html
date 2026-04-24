@@ -1,0 +1,94 @@
+<div class="animate-fade-in space-y-6">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+    <h2 class="text-2xl font-black text-slate-800">Estatísticas de Nutrientes</h2>
+    <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+      <button (click)="alterarPeriodo('diario')" [class]="periodo() === 'diario' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Dia</button>
+      <button (click)="alterarPeriodo('semanal')" [class]="periodo() === 'semanal' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
+      <button (click)="alterarPeriodo('mensal')" [class]="periodo() === 'mensal' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" *ngIf="dados()">
+    
+    <!-- Card de Proteínas -->
+    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-3xl">🥩</span>
+        <div class="text-right">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Proteínas</p>
+          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoProteinas }}g</span> / {{ dados()?.metaProteinas }}g</p>
+        </div>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div class="bg-red-500 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoProteinas || 0, dados()?.metaProteinas || 1)"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoProteinas || 0, dados()?.metaProteinas || 1).toFixed(1) }}% atingido</p>
+    </div>
+
+    <!-- Card de Carboidratos -->
+    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-3xl">🍞</span>
+        <div class="text-right">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Carboidratos</p>
+          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoCarboidratos }}g</span> / {{ dados()?.metaCarboidratos }}g</p>
+        </div>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div class="bg-amber-500 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoCarboidratos || 0, dados()?.metaCarboidratos || 1)"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoCarboidratos || 0, dados()?.metaCarboidratos || 1).toFixed(1) }}% atingido</p>
+    </div>
+
+    <!-- Card de Gorduras -->
+    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-3xl">🥑</span>
+        <div class="text-right">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gorduras</p>
+          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoGorduras }}g</span> / {{ dados()?.metaGorduras }}g</p>
+        </div>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div class="bg-yellow-400 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoGorduras || 0, dados()?.metaGorduras || 1)"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoGorduras || 0, dados()?.metaGorduras || 1).toFixed(1) }}% atingido</p>
+    </div>
+
+    <!-- Card de Fibras -->
+    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-3xl">🥦</span>
+        <div class="text-right">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fibras</p>
+          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoFibras }}g</span> / {{ dados()?.metaFibras }}g</p>
+        </div>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div class="bg-green-500 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoFibras || 0, dados()?.metaFibras || 1)"></div>
+      </div>
+      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoFibras || 0, dados()?.metaFibras || 1).toFixed(1) }}% atingido</p>
+    </div>
+
+    <!-- Card de Açúcares (Limite) -->
+    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-3xl">🍭</span>
+        <div class="text-right">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Açúcares (Limite)</p>
+          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black" [class.text-rose-500]="(dados()?.consumoAcucares || 0) > (dados()?.limiteAcucares || 0)">{{ dados()?.consumoAcucares }}g</span> / {{ dados()?.limiteAcucares }}g</p>
+        </div>
+      </div>
+      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+        <div class="h-3 rounded-full transition-all duration-1000" 
+             [ngClass]="{'bg-blue-400': (dados()?.consumoAcucares || 0) <= (dados()?.limiteAcucares || 0), 'bg-rose-500': (dados()?.consumoAcucares || 0) > (dados()?.limiteAcucares || 0)}"
+             [style.width.%]="obterPercentual(dados()?.consumoAcucares || 0, dados()?.limiteAcucares || 1)"></div>
+      </div>
+      <p class="text-[10px] mt-2 font-bold text-center" 
+         [ngClass]="{'text-slate-400': (dados()?.consumoAcucares || 0) <= (dados()?.limiteAcucares || 0), 'text-rose-500': (dados()?.consumoAcucares || 0) > (dados()?.limiteAcucares || 0)}">
+         {{ obterPercentual(dados()?.consumoAcucares || 0, dados()?.limiteAcucares || 1).toFixed(1) }}% do limite
+      </p>
+    </div>
+
+  </div>
+</div>

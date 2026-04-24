@@ -20,10 +20,13 @@ import { environment } from '../../../environments/environment';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-tipos';
 
+import { EstatisticasNutrientesComponent } from '../estatisticas-nutrientes/estatisticas-nutrientes';
+
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -37,7 +40,7 @@ export class Dashboard implements OnInit {
   autenticacao = inject(AutenticacaoService);
 
   // Navegação
-  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'perfil'>('dashboard');
+  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil'>('dashboard');
   menuAberto = signal<boolean>(false);
   graficoDashboard = signal<'diario' | 'semanal' | 'mensal'>('diario');
   subAbaPerfil = signal<'biometrico' | 'fisico' | 'seguranca'>('biometrico');
@@ -88,7 +91,7 @@ export class Dashboard implements OnInit {
     this.obterGraficoDiario();
   }
 
-  alterarAbaMenu(aba: 'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'perfil') {
+  alterarAbaMenu(aba: 'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil') {
     this.abaMenu.set(aba);
     if (aba === 'perfil') {
       this.carregarDadosPerfil();
