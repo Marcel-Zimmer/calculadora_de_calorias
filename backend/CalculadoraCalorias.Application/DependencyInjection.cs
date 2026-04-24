@@ -21,6 +21,7 @@ namespace CalculadoraCalorias.Application
             services.AddScoped<IRefeicaoAppService, RefeicaoAppService>();
             services.AddSingleton<FilaEstimativaIa>();
             services.AddScoped<IGraficoAppService, GraficoAppService>();
+            services.AddScoped<INutrientesAppService, NutrientesAppService>();
             return services;
         }
     }

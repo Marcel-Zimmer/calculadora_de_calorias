@@ -20,7 +20,12 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                     Id = x.Id,
                     Calorias = (int?)x.Calorias,
                     TipoRefeicao = x.Tipo,
-                    Data = x.Data
+                    Data = x.Data,
+                    Proteinas = (double?)x.Proteinas,
+                    Carboidratos = (double?)x.Carboidratos,
+                    Gorduras = (double?)x.Gorduras,
+                    Acucares = (double?)x.Acucares,
+                    Fibras = (double?)x.Fibras
                 })
                 .ToListAsync();
         }
@@ -34,7 +39,12 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                     Id = x.Id,
                     Calorias = (int?)x.Calorias,
                     TipoRefeicao = x.Tipo,
-                    Data = x.Data
+                    Data = x.Data,
+                    Proteinas = (double?)x.Proteinas,
+                    Carboidratos = (double?)x.Carboidratos,
+                    Gorduras = (double?)x.Gorduras,
+                    Acucares = (double?)x.Acucares,
+                    Fibras = (double?)x.Fibras
                 })
                 .ToListAsync();
         }
