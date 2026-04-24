@@ -30,5 +30,11 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
 
         public int? CaloriasManuais { get; set; }
         public string? AlimentoManual { get; set; }
+
+        public double? ProteinasManuais { get; set; }
+        public double? CarboidratosManuais { get; set; }
+        public double? GordurasManuais { get; set; }
+        public double? AcucaresManuais { get; set; }
+        public double? FibrasManuais { get; set; }
     }
 }

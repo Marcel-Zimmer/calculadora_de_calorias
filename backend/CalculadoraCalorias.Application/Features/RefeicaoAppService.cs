@@ -37,6 +37,11 @@ namespace CalculadoraCalorias.Application.Features
                     requisicao.Apelido,
                     requisicao.AlimentoManual,
                     requisicao.CaloriasManuais.Value,
+                    requisicao.ProteinasManuais ?? 0,
+                    requisicao.CarboidratosManuais ?? 0,
+                    requisicao.GordurasManuais ?? 0,
+                    requisicao.AcucaresManuais ?? 0,
+                    requisicao.FibrasManuais ?? 0,
                     requisicao.PesoEmGramas,
                     requisicao.Tipo,
                     requisicao.Data

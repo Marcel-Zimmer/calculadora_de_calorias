@@ -8,7 +8,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
     public interface IRefeicaoService
     {
         public Task<Refeicao> Adicionar(long usuarioId, string? apelido, int pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data, Guid guidArquivo);
-        Task<Refeicao> AdicionarManual(long usuarioId, string? apelido, string alimento, int calorias, int pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data);
+        Task<Refeicao> AdicionarManual(long usuarioId, string? apelido, string alimento, int calorias, double proteinas, double carboidratos, double gorduras, double acucares, double fibras, int pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data);
         Task<Refeicao?> AdicionarBaseadoEmModelo(long usuarioId, long modeloId, int pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data);
         Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId);
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
