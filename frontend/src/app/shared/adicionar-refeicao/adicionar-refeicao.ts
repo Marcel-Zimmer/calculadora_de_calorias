@@ -49,7 +49,13 @@ export class AdicionarRefeicao {
   // Campos de adição manual
   caloriasManuais = signal<number | null>(null);
   alimentoManual = signal<string>('');
-  
+  proteinasManuais = signal<number | null>(null);
+  carboidratosManuais = signal<number | null>(null);
+  gordurasManuais = signal<number | null>(null);
+  acucaresManuais = signal<number | null>(null);
+  fibrasManuais = signal<number | null>(null);
+  abaManual = signal<'geral' | 'macros'>('geral');
+
   listaRefeicoes = signal<any[]>(this.refeicaoService.obterListaRefeicoes());
 
   // Cálculo de calorias estimadas baseado no modelo selecionado ou manual
@@ -111,6 +117,11 @@ export class AdicionarRefeicao {
       novaRefeicao.append("Apelido", this.apelidoRefeicao());
       novaRefeicao.append("AlimentoManual", this.alimentoManual());
       novaRefeicao.append("CaloriasManuais", this.caloriasManuais()?.toString() ?? "");
+      if (this.proteinasManuais() !== null) novaRefeicao.append("ProteinasManuais", this.proteinasManuais()!.toString());
+      if (this.carboidratosManuais() !== null) novaRefeicao.append("CarboidratosManuais", this.carboidratosManuais()!.toString());
+      if (this.gordurasManuais() !== null) novaRefeicao.append("GordurasManuais", this.gordurasManuais()!.toString());
+      if (this.acucaresManuais() !== null) novaRefeicao.append("AcucaresManuais", this.acucaresManuais()!.toString());
+      if (this.fibrasManuais() !== null) novaRefeicao.append("FibrasManuais", this.fibrasManuais()!.toString());
     } else {
       novaRefeicao.append("Apelido", this.apelidoRefeicao());
       const foto = this.fotoReal();
@@ -142,6 +153,12 @@ export class AdicionarRefeicao {
     this.apelidoRefeicao.set('');
     this.alimentoManual.set('');
     this.caloriasManuais.set(null);
+    this.proteinasManuais.set(null);
+    this.carboidratosManuais.set(null);
+    this.gordurasManuais.set(null);
+    this.acucaresManuais.set(null);
+    this.fibrasManuais.set(null);
+    this.abaManual.set('geral');
     this.fotoReal.set(null);
     this.idModeloSelecionado.set(null);
     this.modoEntrada.set('foto');

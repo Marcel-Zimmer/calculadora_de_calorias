@@ -1,7 +1,7 @@
 @if(mostrarModal()){
 <div class="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm animate-fade-in flex items-end sm:items-center justify-center p-4">
 
-    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-lg p-8 shadow-2xl overflow-y-auto max-h-[90vh] relative animate-fade-in">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-lg md:max-w-2xl p-8 shadow-2xl overflow-y-auto max-h-[90vh] relative animate-fade-in">
         <div class="flex justify-between items-center mb-8">
             <h3 class="text-2xl font-black text-slate-800">Nova Refeição</h3>
             <button (click)="closeMealModal()" class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors font-bold">✕</button>
@@ -66,52 +66,125 @@
             </div>
 
             <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Tipo</label>
-                        <select [(ngModel)]="tipoRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none cursor-pointer">
-                            <option *ngFor="let ref of listaRefeicoes()" [value]="ref.id">{{ ref.nome }}</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Data</label>
-                        <input type="date" [(ngModel)]="dataRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-                    </div>
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Peso (g)</label>
-                    <input type="number" [(ngModel)]="pesoRefeicao" placeholder="Ex: 450" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase ml-1">{{ modoEntrada() === 'modelo' ? 'Selecionar Refeição' : 'Apelido (Opcional)' }}</label>
-                    
-                    @if(modoEntrada() === 'foto') {
-                        <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-                    } @else if(modoEntrada() === 'modelo') {
-                        <select [(ngModel)]="idModeloSelecionado" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
-                            <option [value]="null">Selecione um modelo...</option>
-                            <option *ngFor="let modelo of modelosFrequentes()" [value]="modelo.id">
-                                {{modelo.apelido}} ({{modelo.calorias}}kcal em {{modelo.pesoOriginal}}g)
-                            </option>
-                        </select>
-                    } @else {
-                        <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
-                    }
-                </div>
-
-                @if(modoEntrada() === 'manual') {
+                @if(modoEntrada() !== 'manual') {
                     <div class="grid grid-cols-2 gap-3">
                         <div class="space-y-1">
-                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Alimento</label>
-                            <input type="text" [(ngModel)]="alimentoManual" placeholder="Ex: Frango com Batata" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Tipo</label>
+                            <select [(ngModel)]="tipoRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none cursor-pointer">
+                                <option *ngFor="let ref of listaRefeicoes()" [value]="ref.id">{{ ref.nome }}</option>
+                            </select>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Calorias (Kcal)</label>
-                            <input type="number" [(ngModel)]="caloriasManuais" placeholder="Ex: 350" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Data</label>
+                            <input type="date" [(ngModel)]="dataRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
                         </div>
                     </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Peso (g)</label>
+                        <input type="number" [(ngModel)]="pesoRefeicao" placeholder="Ex: 450" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">{{ modoEntrada() === 'modelo' ? 'Selecionar Refeição' : 'Apelido (Opcional)' }}</label>
+                        
+                        @if(modoEntrada() === 'foto') {
+                            <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                        } @else if(modoEntrada() === 'modelo') {
+                            <select [(ngModel)]="idModeloSelecionado" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+                                <option [value]="null">Selecione um modelo...</option>
+                                <option *ngFor="let modelo of modelosFrequentes()" [value]="modelo.id">
+                                    {{modelo.apelido}} ({{modelo.calorias}}kcal em {{modelo.pesoOriginal}}g)
+                                </option>
+                            </select>
+                        }
+                    </div>
+                }
+
+                @if(modoEntrada() === 'manual') {
+                    <div class="flex p-1 bg-slate-100 rounded-2xl mb-4">
+                        <button (click)="abaManual.set('geral')" 
+                                [class]="abaManual() === 'geral' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500'"
+                                class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                            Principal
+                        </button>
+                        <button (click)="abaManual.set('macros')" 
+                                [class]="abaManual() === 'macros' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-500'"
+                                class="flex-1 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                            Nutrientes
+                        </button>
+                    </div>
+
+                    @if(abaManual() === 'geral' || abaManual() === 'macros') {
+                        <div class="grid">
+                            <div class="col-start-1 row-start-1 transition-opacity duration-300 space-y-4" 
+                                 [class.opacity-0]="abaManual() !== 'geral'" 
+                                 [class.pointer-events-none]="abaManual() !== 'geral'">
+                                
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Tipo</label>
+                                        <select [(ngModel)]="tipoRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none cursor-pointer">
+                                            <option *ngFor="let ref of listaRefeicoes()" [value]="ref.id">{{ ref.nome }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Data</label>
+                                        <input type="date" [(ngModel)]="dataRefeicao" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Peso (g)</label>
+                                        <input type="number" [(ngModel)]="pesoRefeicao" placeholder="Ex: 450" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Apelido (Opcional)</label>
+                                        <input type="text" [(ngModel)]="apelidoRefeicao" placeholder="Ex: Meu Almoço Top" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Alimento</label>
+                                        <input type="text" [(ngModel)]="alimentoManual" placeholder="Ex: Frango com Batata" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Calorias (Kcal)</label>
+                                        <input type="number" [(ngModel)]="caloriasManuais" placeholder="Ex: 350" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-start-1 row-start-1 transition-opacity duration-300" 
+                                 [class.opacity-0]="abaManual() !== 'macros'" 
+                                 [class.pointer-events-none]="abaManual() !== 'macros'">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Proteínas (g)</label>
+                                        <input type="number" [(ngModel)]="proteinasManuais" placeholder="Ex: 30" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Carboidratos (g)</label>
+                                        <input type="number" [(ngModel)]="carboidratosManuais" placeholder="Ex: 50" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Gorduras (g)</label>
+                                        <input type="number" [(ngModel)]="gordurasManuais" placeholder="Ex: 15" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Fibras (g)</label>
+                                        <input type="number" [(ngModel)]="fibrasManuais" placeholder="Ex: 5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                    <div class="space-y-1 col-span-2">
+                                        <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Açúcares (g)</label>
+                                        <input type="number" [(ngModel)]="acucaresManuais" placeholder="Ex: 2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 }
 
                 <button (click)="salvarRefeicao()" 
