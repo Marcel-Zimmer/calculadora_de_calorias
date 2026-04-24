@@ -50,9 +50,9 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
-                TotalCaloriasConsumidas = dados.TotalConsumido,
-                TotalCaloriasGastas = dados.TotalGasto,
-                CaloriasCalculadas = Math.Max(0, dados.TotalConsumido - dados.TotalGasto),
+                TotalCaloriasConsumidas = dados.MediaConsumoDiario,
+                TotalCaloriasGastas = dados.MediaGastoDiario,
+                CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
                 Pontos = dados.Pontos 
             });
         }
@@ -67,9 +67,9 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
-                TotalCaloriasConsumidas = dados.TotalConsumido,
-                TotalCaloriasGastas = dados.TotalGasto,
-                CaloriasCalculadas = Math.Max(0, dados.TotalConsumido - dados.TotalGasto),
+                TotalCaloriasConsumidas = dados.MediaConsumoDiario,
+                TotalCaloriasGastas = dados.MediaGastoDiario,
+                CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
                 Pontos = dados.Pontos 
             });
         }
@@ -125,6 +125,13 @@ namespace CalculadoraCalorias.Application.Features
 
             var totalConsumido = refeicoes.Sum(r => r.Calorias ?? 0);
             var totalGasto = (double)atividades.Sum(a => a.CaloriasEstimadas ?? 0);
+            int diasComRefeicao = refeicoes.Select(r => r.Data).Distinct().Count();
+            
+            var hoje = DateOnly.FromDateTime(DateTime.Today);
+            var fimCalculo = hoje < fim ? hoje : fim;
+            int diasCorridos = (fimCalculo.DayNumber - inicio.DayNumber) + 1;
+            if (diasCorridos <= 0) diasCorridos = 1;
+
             int totalDiasPeriodo = (fim.DayNumber - inicio.DayNumber) + 1;
 
             // Distribuição de Exercícios
@@ -155,8 +162,8 @@ namespace CalculadoraCalorias.Application.Features
                 MetaCaloricaDiaria = registroFisico?.MetaCaloricaDiaria ?? 0,
                 TotalConsumido = (int)totalConsumido,
                 TotalGasto = (int)totalGasto,
-                MediaConsumoDiario = diasComDados > 0 ? (int)(totalConsumido / diasComDados) : 0,
-                MediaGastoDiario = diasComDados > 0 ? (int)(totalGasto / diasComDados) : 0,
+                MediaConsumoDiario = diasComRefeicao > 0 ? (int)(totalConsumido / diasComRefeicao) : 0,
+                MediaGastoDiario = (int)(totalGasto / diasCorridos),
                 DiasComDados = diasComDados,
                 Pontos = pontos,
                 DistribuicaoExercicios = distExercicios,
