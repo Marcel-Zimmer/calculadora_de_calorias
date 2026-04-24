@@ -27,7 +27,7 @@ public class RegistroFisicoService : IRegistroFisicoService
         {
             return null;
         }
-        var registroFisico = new RegistroFisico(usuarioId, FusoHorario.ObterDataHoraBrasilia(), pesoKg, imcCalculado, taxaMetabolica);
+        var registroFisico = new RegistroFisico(usuarioId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica);
 
         if (metaCaloricaDiaria != null && metaCaloricaDiaria != 0m) {
             registroFisico.AdicionarMetaCalorica((decimal)metaCaloricaDiaria);

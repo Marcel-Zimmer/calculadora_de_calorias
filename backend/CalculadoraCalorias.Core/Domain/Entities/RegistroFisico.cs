@@ -38,7 +38,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             ImcCalculado = imcCalculado;
             TaxaMetabolicaBasal = taxaMetabolicaBasal;
             MetaCaloricaDiaria = metaCaloricaDiaria;
-            DataRegistro = FusoHorario.ObterDataHoraBrasilia();
+            DataRegistro = DateTime.UtcNow;
         }
     }
 }
