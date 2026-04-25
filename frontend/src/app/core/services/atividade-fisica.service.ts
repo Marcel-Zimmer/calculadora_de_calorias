@@ -18,11 +18,13 @@ export class AtividadeFisicaService {
 
   obterMapaExercicios(): Record<number, any> {
     return {
-      1: { id: 1, nome: 'Ciclismo',   icone: '🚴', cor: 'bg-sky-100 text-sky-600', border: 'border-sky-100', text: 'text-sky-800' },
-      2: { id: 2, nome: 'Caminhada',  icone: '🚶', cor: 'bg-emerald-100 text-emerald-600', border: 'border-emerald-100', text: 'text-emerald-800' },
-      3: { id: 3, nome: 'Corrida',    icone: '🏃', cor: 'bg-amber-100 text-amber-600', border: 'border-amber-100', text: 'text-amber-800' },
-      4: { id: 4, nome: 'Boxe',       icone: '🥊', cor: 'bg-red-100 text-red-600', border: 'border-red-100', text: 'text-red-800' },
-      5: { id: 5, nome: 'Musculação', icone: '🏋️', cor: 'bg-slate-100 text-slate-600', border: 'border-slate-100', text: 'text-slate-800' }
+      1: { id: 1, nome: 'Ciclismo',   icone: '🚴', cor: 'bg-blue-50 text-blue-500' },
+      2: { id: 2, nome: 'Caminhada',  icone: '🚶', cor: 'bg-emerald-50 text-emerald-500' },
+      3: { id: 3, nome: 'Corrida',    icone: '🏃', cor: 'bg-orange-50 text-orange-500' },
+      4: { id: 4, nome: 'Futebol',    icone: '⚽', cor: 'bg-green-50 text-green-500' },
+      5: { id: 5, nome: 'Musculação', icone: '🏋️', cor: 'bg-indigo-50 text-indigo-500' },
+      6: { id: 6, nome: 'Natação',    icone: '🏊', cor: 'bg-cyan-50 text-cyan-500' },
+      7: { id: 7, nome: 'Crossfit',   icone: '💪', cor: 'bg-rose-50 text-rose-500' }
     };
   }
 

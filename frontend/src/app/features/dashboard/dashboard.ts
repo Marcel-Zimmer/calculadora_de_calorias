@@ -24,11 +24,12 @@ import { BsCardConsistenciaComponent } from '../../shared/bs-card-consistencia/b
 import { BsCardEquilibrioEnergeticoComponent } from '../../shared/bs-card-equilibrio-energetico/bs-card-equilibrio-energetico';
 import { BsCardImpactoEstimadoComponent } from '../../shared/bs-card-impacto-estimado/bs-card-impacto-estimado';
 import { BsCardMediaItemComponent } from '../../shared/bs-card-media-item/bs-card-media-item';
+import { BsGraficoDistribuicaoItensComponent } from '../../shared/bs-grafico-distribuicao-itens/bs-grafico-distribuicao-itens';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, BsCardImpactoEstimadoComponent, BsCardMediaItemComponent],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, BsCardImpactoEstimadoComponent, BsCardMediaItemComponent, BsGraficoDistribuicaoItensComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -94,7 +95,7 @@ export class Dashboard implements OnInit {
     });
 
     // 2. Médias por Refeição (Vindas do Backend)
-    const refeicoesEnriquecidas = dados.distribuicaoRefeicoesEnriquecida || [];
+    const refeicoesEnriquecidas = dados.distribuicaoRefeicoes || [];
     refeicoesEnriquecidas.forEach((refeicao: any) => {
         lista.push({
             icone: refeicao.icone,
@@ -245,7 +246,6 @@ export class Dashboard implements OnInit {
     this.periodoEstatisticas.set(periodo);
     this.carregarEstatisticas();
   }
-
   carregarEstatisticas() {
     const userId = this.autenticacao.obterId();
     const obs = this.periodoEstatisticas() === 'semanal' 
@@ -254,13 +254,28 @@ export class Dashboard implements OnInit {
 
     obs.subscribe({
       next: (res: any) => {
-        res.distribuicaoExerciciosEnriquecida = res.distribuicaoExercicios.map((item: any) => ({
-          ...item, displayNome: this.mapaExercicios[Number(item.nome)]?.nome || item.nome
-        }));
-        res.distribuicaoRefeicoesEnriquecida = res.distribuicaoRefeicoes.map((item: any) => {
-          const info = this.mapaRefeicoes[Number(item.nome)];
-          return { ...item, displayNome: info?.nome || 'Outro', icone: info?.icone || '🍽️', corCss: info?.cor || 'bg-slate-100 text-slate-500' };
+        // Enriquecer dados de exercícios
+        res.distribuicaoExercicios = res.distribuicaoExercicios.map((item: any) => {
+          const info = this.mapaExercicios[Number(item.nome)];
+          return {
+            ...item,
+            displayNome: info?.nome || 'Outro',
+            icone: info?.icone || '🔥',
+            corCss: info?.cor || 'bg-slate-50 text-slate-500'
+          };
         });
+
+        // Enriquecer dados de refeições
+        res.distribuicaoRefeicoes = res.distribuicaoRefeicoes.map((item: any) => {
+          const info = this.mapaRefeicoes[Number(item.nome)];
+          return {
+            ...item,
+            displayNome: info?.nome || 'Outro',
+            icone: info?.icone || '🍽️',
+            corCss: info?.cor || 'bg-slate-50 text-slate-500'
+          };
+        });
+
         this.dadosEstatisticas.set(res);
       }
     });

@@ -1,0 +1,30 @@
+<div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm h-full flex flex-col">
+    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">{{ titulo() }}</h3>
+    
+    <div class="space-y-5 flex-1">
+        @for (item of itens(); track item.nome) {
+            <div class="space-y-1.5" *ngIf="item.valor > 0">
+                <div class="flex justify-between items-end">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm">{{ item.icone }}</span>
+                        <span class="text-[10px] font-black text-slate-700 uppercase tracking-tight">{{ item.displayNome }}</span>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-400">{{ item.valor }} <span class="text-[8px] font-bold opacity-60">kcal</span></span>
+                </div>
+                
+                <div class="h-1.5 bg-slate-50 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-700"
+                         [class]="corPrincipal()"
+                         [style.width]="item.percentual + '%'">
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Estado Vazio -->
+        <div class="h-full flex flex-col items-center justify-center text-center space-y-2 py-8" *ngIf="itens().length === 0">
+            <span class="text-2xl opacity-20">📊</span>
+            <p class="text-[10px] font-bold text-slate-300 uppercase">Sem dados no período</p>
+        </div>
+    </div>
+</div>

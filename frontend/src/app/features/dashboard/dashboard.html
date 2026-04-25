@@ -269,7 +269,11 @@
 
             <!-- Distribuição (Sempre visível) -->
             <div class="lg:col-span-1">
-                <app-distribuicao-tipos titulo="Distribuição de Refeições" [itens]="dadosEstatisticas().distribuicaoRefeicoesEnriquecida" corPrincipal="bg-indigo-500"></app-distribuicao-tipos>
+                <app-bs-grafico-distribuicao-itens 
+                    titulo="Distribuição de Refeições" 
+                    [itens]="dadosEstatisticas().distribuicaoRefeicoes" 
+                    corPrincipal="bg-indigo-500">
+                </app-bs-grafico-distribuicao-itens>
             </div>
           </div>
         </div>
@@ -346,7 +350,11 @@
 
             <!-- Distribuição -->
             <div class="lg:col-span-1">
-                <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>
+                <app-bs-grafico-distribuicao-itens 
+                    titulo="Esforço por Exercício" 
+                    [itens]="dadosEstatisticas().distribuicaoExercicios" 
+                    corPrincipal="bg-orange-500">
+                </app-bs-grafico-distribuicao-itens>
             </div>
           </div>
         </div>
