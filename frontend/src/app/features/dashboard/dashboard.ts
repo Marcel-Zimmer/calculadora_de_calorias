@@ -37,6 +37,9 @@ export class Dashboard implements OnInit {
   usuarioService = inject(UsuarioService);
   autenticacao = inject(AutenticacaoService);
 
+  // Utilitários para o template
+  Math = Math;
+
   // Variáveis de data (Declaradas primeiro para evitar erro de inicialização)
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   dataSelecionada = signal<string>(this.todayDate);
@@ -92,6 +95,49 @@ export class Dashboard implements OnInit {
   });
 
   // Novos Insights Mensais Avançados (Calculados apenas quando periodoEstatisticas === 'mensal')
+  dashboardInsightsSemanal = computed(() => {
+    const todosOsPontos = this.dadosGraficoSemanal();
+    const meta = this.metaCalorias();
+    if (!todosOsPontos || todosOsPontos.length === 0) return null;
+
+    // Considerar apenas dias que possuem algum registro (Consumo ou Gasto > 0)
+    const pontosComRegistro = todosOsPontos.filter((p: any) => p.caloriasConsumidas > 0 || p.caloriasGastas > 0);
+    if (pontosComRegistro.length === 0) return null;
+
+    const diasNaMeta = pontosComRegistro.filter((p: any) => {
+      const saldoDia = p.caloriasConsumidas - p.caloriasGastas;
+      return saldoDia <= meta;
+    }).length;
+
+    const saldoTotal = pontosComRegistro.reduce((acc, p) => acc + (p.caloriasConsumidas - p.caloriasGastas), 0);
+    const metaTotal = meta * pontosComRegistro.length;
+    const diferencaAbsoluta = metaTotal - saldoTotal; 
+    const impactoPeso = (diferencaAbsoluta / 7700);
+
+    return { diasNaMeta, totalDias: pontosComRegistro.length, saldoTotal, impactoPeso, diferencaAbsoluta };
+  });
+
+  dashboardInsightsMensal = computed(() => {
+    const todosOsPontos = this.dadosGraficoMensal();
+    const meta = this.metaCalorias();
+    if (!todosOsPontos || todosOsPontos.length === 0) return null;
+
+    const pontosComRegistro = todosOsPontos.filter((p: any) => p.caloriasConsumidas > 0 || p.caloriasGastas > 0);
+    if (pontosComRegistro.length === 0) return null;
+
+    const diasNaMeta = pontosComRegistro.filter((p: any) => {
+      const saldoDia = p.caloriasConsumidas - p.caloriasGastas;
+      return saldoDia <= meta;
+    }).length;
+
+    const saldoTotal = pontosComRegistro.reduce((acc, p) => acc + (p.caloriasConsumidas - p.caloriasGastas), 0);
+    const metaTotal = meta * pontosComRegistro.length;
+    const diferencaAbsoluta = metaTotal - saldoTotal;
+    const impactoPeso = (diferencaAbsoluta / 7700);
+
+    return { diasNaMeta, totalDias: pontosComRegistro.length, saldoTotal, impactoPeso, diferencaAbsoluta };
+  });
+
   insightsMensaisConsumo = computed(() => {
     const dados = this.dadosEstatisticas();
     if (!dados || this.periodoEstatisticas() !== 'mensal') return null;

@@ -104,7 +104,7 @@
                   <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasQueimadas() }}</span>
                 </div>
               </div>
-              <div *ngIf="graficoDashboard() === 'diario'" class="lg:col-span-4 grid grid-cols-2 gap-3 h-full">
+              <div class="lg:col-span-4 grid grid-cols-2 gap-3 h-full">
                 <button (click)="mostrarModalRefeicao.set(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-3xl shadow-lg shadow-emerald-100 flex flex-col items-center justify-center space-y-2 transition-all hover:-translate-y-1">
                   <span class="font-bold text">+ Refeicao</span>
                 </button>
@@ -112,6 +112,47 @@
                   <span class="font-bold text">+ Exercicio</span>
                 </button>
               </div>
+            </div>
+
+            <!-- Insights de Dashboard (Semanal/Mensal) - Foco em SALDO -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" *ngIf="graficoDashboard() !== 'diario'">
+               <!-- Consistência (Baseada no Saldo) -->
+               <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl flex items-center space-x-4">
+                 <div class="w-10 h-10 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-lg shadow-sm">🏆</div>
+                 <div>
+                   <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Consistência</p>
+                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'semanal'">{{ dashboardInsightsSemanal()?.diasNaMeta }} de 7 dias com saldo na meta</p>
+                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'mensal'">{{ dashboardInsightsMensal()?.diasNaMeta }} de {{ dashboardInsightsMensal()?.totalDias }} dias com saldo na meta</p>
+                 </div>
+               </div>
+
+               <!-- Saldo Acumulado -->
+               <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl flex items-center space-x-4">
+                 <div class="w-10 h-10 bg-indigo-500 text-white rounded-2xl flex items-center justify-center text-lg shadow-sm">⚖️</div>
+                 <div>
+                   <p class="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Equilíbrio Energético</p>
+                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'semanal'">
+                      {{ (dashboardInsightsSemanal()?.diferencaAbsoluta || 0) > 0 ? 'Déficit' : 'Superávit' }} de {{ Math.abs(dashboardInsightsSemanal()?.diferencaAbsoluta || 0).toFixed(0) }} kcal
+                   </p>
+                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'mensal'">
+                      {{ (dashboardInsightsMensal()?.diferencaAbsoluta || 0) > 0 ? 'Déficit' : 'Superávit' }} de {{ Math.abs(dashboardInsightsMensal()?.diferencaAbsoluta || 0).toFixed(0) }} kcal
+                   </p>
+                 </div>
+               </div>
+
+               <!-- Impacto no Peso -->
+               <div class="bg-amber-50 border border-amber-100 p-4 rounded-3xl flex items-center space-x-4">
+                 <div class="w-10 h-10 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-lg shadow-sm">📏</div>
+                 <div>
+                   <p class="text-[9px] font-black text-amber-600 uppercase tracking-widest">Impacto Estimado</p>
+                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'semanal'">
+                      {{ (dashboardInsightsSemanal()?.impactoPeso || 0) >= 0 ? '-' : '+' }}{{ Math.abs((dashboardInsightsSemanal()?.impactoPeso || 0) * 1000).toFixed(0) }}g de gordura corporal
+                   </p>
+                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'mensal'">
+                      {{ (dashboardInsightsMensal()?.impactoPeso || 0) >= 0 ? '-' : '+' }}{{ Math.abs(dashboardInsightsMensal()?.impactoPeso || 0).toFixed(2) }}kg de gordura corporal
+                   </p>
+                 </div>
+               </div>
             </div>
 
             <div class="w-full mt-6">
@@ -130,7 +171,22 @@
                       <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()" tipoVisualizacao="liquido"></app-grafico-semanal>
                   }
                   @case ('mensal') {
-                      <app-grafico-mensal [meta]="metaCalorias()" [dados]="dadosGraficoMensal()" tipoVisualizacao="liquido"></app-grafico-mensal>
+                      <!-- Histórico Detalhado no lugar do gráfico de linha mensal -->
+                      <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
+                          <h3 class="font-black text-slate-800 mb-6 text-lg tracking-tight">Histórico Mensal Diário</h3>
+                          <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
+                              @for (dia of dadosGraficoMensal(); track dia.data) {
+                                  <div class="flex flex-col p-2 bg-slate-50 rounded-xl border border-slate-100 transition-all hover:bg-white hover:shadow-md group">
+                                      <span class="text-[8px] font-black text-slate-400 uppercase mb-0.5">Dia {{dia.legenda}}</span>
+                                      <p class="text-xs font-black transition-colors" 
+                                         [ngClass]="(dia.caloriasConsumidas - dia.caloriasGastas) > metaCalorias() ? 'text-rose-500' : ((dia.caloriasConsumidas - dia.caloriasGastas) > 0 ? 'text-emerald-500' : 'text-slate-400')">
+                                          {{dia.caloriasConsumidas - dia.caloriasGastas}} 
+                                          <span class="text-[8px] font-bold opacity-60">kcal</span>
+                                      </p>
+                                  </div>
+                              }
+                          </div>
+                      </div>
                   }
               }
             </div>
@@ -193,6 +249,11 @@
                   </p>
                 </div>
 
+                <div class="h-4 bg-slate-100 rounded-full overflow-hidden">
+                  <div class="h-full rounded-full transition-all duration-1000 shadow-inner" 
+                       [class]="(insightsMensaisConsumo()?.percentualConsumido || 0) > 100 ? 'bg-rose-500' : 'bg-emerald-500'"
+                       [style.width]="(insightsMensaisConsumo()?.percentualConsumido || 0) + '%'"></div>
+                </div>
 
                 <div class="flex items-center" 
                      [ngClass]="(insightsMensaisConsumo()?.percentualConsumido || 0) > 100 ? 'text-rose-500' : 'text-emerald-500'">
@@ -252,10 +313,10 @@
                         @for (dia of dadosEstatisticas().pontos; track dia.data) {
                             <div class="flex flex-col p-2 bg-slate-50 rounded-xl border border-slate-100 transition-all hover:bg-white hover:shadow-md group">
                                 <span class="text-[8px] font-black text-slate-400 uppercase mb-0.5">Dia {{dia.legenda}}</span>
-                                <p class="text-xs font-black transition-colors" 
+                                <p class="text-sm font-black transition-colors" 
                                    [ngClass]="dia.caloriasConsumidas > metaCalorias() ? 'text-rose-500' : (dia.caloriasConsumidas > 0 ? 'text-emerald-500' : 'text-slate-400')">
                                     {{dia.caloriasConsumidas}} 
-                                    <span class="text-[8px] font-bold opacity-60">kcal</span>
+                                    <span class="text-[9px] font-bold opacity-60">kcal</span>
                                 </p>
                             </div>
                         }
