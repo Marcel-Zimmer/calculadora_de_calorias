@@ -19,9 +19,7 @@ import { RegistroFisicoService } from '../../core/services/registro-fisico.servi
 import { environment } from '../../../environments/environment';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-tipos';
-
 import { EstatisticasNutrientesComponent } from '../estatisticas-nutrientes/estatisticas-nutrientes';
-
 
 @Component({
   selector: 'app-root',
@@ -38,6 +36,10 @@ export class Dashboard implements OnInit {
   registroFisicoService = inject(RegistroFisicoService);
   usuarioService = inject(UsuarioService);
   autenticacao = inject(AutenticacaoService);
+
+  // Variáveis de data (Declaradas primeiro para evitar erro de inicialização)
+  todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+  dataSelecionada = signal<string>(this.todayDate);
 
   // Navegação
   abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil'>('dashboard');
@@ -58,6 +60,53 @@ export class Dashboard implements OnInit {
   exerciciosDeHoje = signal<any[]>([]);
   dadosGraficoSemanal = signal<any[]>([]);
   dadosGraficoMensal = signal<any[]>([]);
+
+  // Mapas de exibição
+  mapaRefeicoes: Record<number, any> = this.refeicaoService.obterMapaRefeicoes(); 
+  mapaExercicios: Record<number, any> = this.atividadeFisicaService.obterMapaExercicios();
+
+  ngOnInit(): void {
+    this.obterGraficoDiario();
+  }
+
+  diaAnterior() {
+    const data = new Date(this.dataSelecionada());
+    data.setDate(data.getDate() - 1);
+    this.dataSelecionada.set(data.toISOString().split('T')[0]);
+    this.atualizarDadosAbaAtiva();
+  }
+
+  diaSeguinte() {
+    if (this.dataSelecionada() === this.todayDate) return;
+    
+    const data = new Date(this.dataSelecionada());
+    data.setDate(data.getDate() + 1);
+    this.dataSelecionada.set(data.toISOString().split('T')[0]);
+    this.atualizarDadosAbaAtiva();
+  }
+
+  onDataAlterada() {
+    this.atualizarDadosAbaAtiva();
+  }
+
+  private atualizarDadosAbaAtiva() {
+    if (this.abaMenu() === 'dashboard') {
+      if (this.graficoDashboard() === 'diario') this.obterGraficoDiario();
+      else if (this.graficoDashboard() === 'semanal') this.obterGraficoSemanal();
+      else if (this.graficoDashboard() === 'mensal') this.obterGraficoMensal();
+    } else if (this.abaMenu() === 'estatisticas-consumo' || this.abaMenu() === 'estatisticas-gasto') {
+      this.carregarEstatisticas();
+    }
+  }
+
+  formatarDataExibicao(dataIso: string): string {
+    if (dataIso === this.todayDate) return 'Hoje';
+    
+    const partes = dataIso.split('-');
+    const data = new Date(Number(partes[0]), Number(partes[1]) - 1, Number(partes[2]));
+    
+    return data.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
 
   // Modais
   mostrarModalRefeicao = signal<boolean>(false);
@@ -81,16 +130,6 @@ export class Dashboard implements OnInit {
   novaSenha = signal<string>('');
   confirmarNovaSenha = signal<string>('');
 
-  todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
-
-  // Mapas de exibição
-  mapaRefeicoes: Record<number, any> = this.refeicaoService.obterMapaRefeicoes(); 
-  mapaExercicios: Record<number, any> = this.atividadeFisicaService.obterMapaExercicios();
-
-  ngOnInit(): void {
-    this.obterGraficoDiario();
-  }
-
   alterarAbaMenu(aba: 'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil') {
     this.abaMenu.set(aba);
     if (aba === 'perfil') {
@@ -108,8 +147,8 @@ export class Dashboard implements OnInit {
   carregarEstatisticas() {
     const userId = this.autenticacao.obterId();
     const obs = this.periodoEstatisticas() === 'semanal' 
-      ? this.graficoService.obterEstatisticasSemanais(userId)
-      : this.graficoService.obterEstatisticasMensais(userId);
+      ? this.graficoService.obterEstatisticasSemanais(userId, this.dataSelecionada())
+      : this.graficoService.obterEstatisticasMensais(userId, this.dataSelecionada());
 
     obs.subscribe({
       next: (res: any) => {
@@ -230,7 +269,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoDiario(){
-    this.graficoService.obterGraficoDiario(this.autenticacao.obterId())
+    this.graficoService.obterGraficoDiario(this.autenticacao.obterId(), this.dataSelecionada())
       .subscribe({
         next: (resposta: any) => {
           this.metaCalorias.set(resposta.metaCaloricaDiaria);
@@ -245,7 +284,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoSemanal() {
-    this.graficoService.obterGraficoSemanal(this.autenticacao.obterId())
+    this.graficoService.obterGraficoSemanal(this.autenticacao.obterId(), this.dataSelecionada())
       .subscribe({
         next: (resposta: any) => {
           this.dadosGraficoSemanal.set(resposta.pontos);
@@ -259,7 +298,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoMensal() {
-    this.graficoService.obterGraficoMensal(this.autenticacao.obterId())
+    this.graficoService.obterGraficoMensal(this.autenticacao.obterId(), this.dataSelecionada())
       .subscribe({
         next: (resposta: any) => {
           this.dadosGraficoMensal.set(resposta.pontos);

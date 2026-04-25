@@ -10,24 +10,36 @@ export class GraficoService {
   
   private readonly baseUrl = `${environment.apiUrl}/Grafico`; 
 
-  obterGraficoDiario(usuarioId:number){
-    return this.http.get(`${this.baseUrl}/dashboard-diario/`+ usuarioId);
+  obterGraficoDiario(usuarioId: number, data?: string) {
+    let url = `${this.baseUrl}/dashboard-diario/${usuarioId}`;
+    if (data) {
+      url += `?data=${data}`;
+    }
+    return this.http.get(url);
   }
 
-  obterGraficoSemanal(usuarioId:number){
-    return this.http.get(`${this.baseUrl}/dashboard-semanal/`+ usuarioId);
+  obterGraficoSemanal(usuarioId: number, data?: string) {
+    let url = `${this.baseUrl}/dashboard-semanal/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get(url);
   }
 
-  obterGraficoMensal(usuarioId:number){
-    return this.http.get(`${this.baseUrl}/dashboard-mensal/`+ usuarioId);
+  obterGraficoMensal(usuarioId: number, data?: string) {
+    let url = `${this.baseUrl}/dashboard-mensal/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get(url);
   }
 
-  obterEstatisticasSemanais(usuarioId:number){
-    return this.http.get(`${this.baseUrl}/estatisticas-semanais/`+ usuarioId);
+  obterEstatisticasSemanais(usuarioId: number, data?: string) {
+    let url = `${this.baseUrl}/estatisticas-semanais/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get(url);
   }
 
-  obterEstatisticasMensais(usuarioId:number){
-    return this.http.get(`${this.baseUrl}/estatisticas-mensais/`+ usuarioId);
+  obterEstatisticasMensais(usuarioId: number, data?: string) {
+    let url = `${this.baseUrl}/estatisticas-mensais/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get(url);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, inject, model, signal, output, computed } from '@angular/core';
+import { Component, inject, model, signal, output, computed, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefeicaoService } from '../../core/services/refeicao.service';
@@ -15,6 +15,7 @@ export class AdicionarRefeicao {
   
   // Comunicação com o Componente Pai (Dashboard)
   mostrarModal = model<boolean>(false);
+  dataPreSelecionada = input<string>();
   refeicaoAdicionada = output<void>();
 
   // Injeção de Dependências
@@ -24,6 +25,15 @@ export class AdicionarRefeicao {
   // Variáveis de Estado (Signals)
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   imagemRefeicao = signal<string | null>(null);
+
+  constructor() {
+    effect(() => {
+      const data = this.dataPreSelecionada();
+      if (data) {
+        this.dataRefeicao.set(data);
+      }
+    });
+  }
   
   obterTipoRefeicaoAtual(): number {
     const dataBrasilia = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));

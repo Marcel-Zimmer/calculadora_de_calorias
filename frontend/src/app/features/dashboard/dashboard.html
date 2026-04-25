@@ -22,144 +22,177 @@
       <div class="max-w-6xl mx-auto space-y-6">
 
         <!-- DASHBOARD SECTION -->
-        <div *ngIf="abaMenu() === 'dashboard'" class="animate-fade-in space-y-6">
+        <div *ngIf="abaMenu() !== 'perfil'" class="animate-fade-in space-y-6">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="hidden lg:block">
               <h2 class="text-2xl font-black text-slate-800">Bem-vindo, Marcel!</h2>
               <p class="text-slate-500 text-sm italic">Aqui está o seu resumo de saúde.</p>
             </div>
-            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+
+            <!-- Navegação de Data Global Separada -->
+            <div class="flex items-center space-x-2 shrink-0">
+              <!-- Botão Anterior -->
+              <button (click)="diaAnterior()" class="w-12 h-12 bg-white shadow-sm border border-slate-100 flex items-center justify-center hover:bg-slate-50 rounded-2xl text-slate-400 hover:text-emerald-600 transition-all active:scale-95 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+              </button>
+              
+              <!-- Seletor Central (Área de toque total) -->
+              <div class="relative h-12 flex-1 min-w-[170px] md:min-w-[240px] group">
+                <!-- Visual do Seletor (Camada de Baixo) -->
+                <div class="absolute inset-0 bg-white shadow-sm border border-slate-100 flex items-center justify-center space-x-3 px-4 rounded-2xl group-hover:bg-slate-50 transition-all z-10">
+                  <span class="text-sm md:text-base font-black text-slate-700 whitespace-nowrap">
+                    {{ formatarDataExibicao(dataSelecionada()) }}
+                  </span>
+                  <svg class="w-5 h-5 text-slate-400 group-hover:text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+
+                <!-- Input Invisível (Camada de Cima - Interativa) -->
+                <!-- A classe date-input-overlay garante que o clique funcione em toda a área -->
+                <input 
+                  type="date" 
+                  [(ngModel)]="dataSelecionada" 
+                  (change)="onDataAlterada()"
+                  [max]="todayDate"
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30 date-input-overlay">
+              </div>
+
+              <!-- Botão Próximo -->
+              <button 
+                (click)="diaSeguinte()" 
+                [disabled]="dataSelecionada() === todayDate" 
+                [class.opacity-20]="dataSelecionada() === todayDate" 
+                class="w-12 h-12 bg-white shadow-sm border border-slate-100 flex items-center justify-center hover:bg-slate-50 rounded-2xl text-slate-400 hover:text-emerald-600 transition-all active:scale-95 disabled:active:scale-100 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </button>
+            </div>
+
+            <div *ngIf="abaMenu() === 'dashboard'" class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
               <button (click)="alterarAbaGrafico('diario')" [class]="graficoDashboard() === 'diario' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Diário</button>
               <button (click)="alterarAbaGrafico('semanal')" [class]="graficoDashboard() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Semanal</button>
               <button (click)="alterarAbaGrafico('mensal')" [class]="graficoDashboard() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:w-28 py-2 text-sm rounded-xl transition-all">Mensal</button>
             </div>
-          </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div class="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🎯</div>
-                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Meta</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ metaCalorias() }}</span>
-              </div>
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                <div class="w-10 h-10 md:w-12 md:h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">⚖️</div>
-                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Calculadas</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasCalculadas() }}</span>
-              </div>
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🍽️</div>
-                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Ingeridas</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasConsumidas() }}</span>
-              </div>
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
-                <div class="w-10 h-10 md:w-12 md:h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🔥</div>
-                <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Gastas</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasQueimadas() }}</span>
-              </div>
-            </div>
-            <div *ngIf="graficoDashboard() === 'diario'" class="lg:col-span-4 grid grid-cols-2 gap-3 h-full">
-              <button (click)="mostrarModalRefeicao.set(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-3xl shadow-lg shadow-emerald-100 flex flex-col items-center justify-center space-y-2 transition-all hover:-translate-y-1">
-                <span class="font-bold text">+ Refeicao</span>
-              </button>
-              <button (click)="mostrarModalExercicio.set(true)" class="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-3xl shadow-lg shadow-orange-100 flex flex-col items-center justify-center space-y-2 transition-all hover:-translate-y-1">
-                <span class="font-bold text">+ Exercicio</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="w-full mt-6">
-            @switch (graficoDashboard()) {
-                @case ('diario') {
-                    <app-grafico-diario 
-                        [refeicoes]="refeicoesDeHoje()"
-                        [exercicios]="exerciciosDeHoje()"
-                        [mapaRefeicoes]="mapaRefeicoes"
-                        [mapaExercicios]="mapaExercicios"
-                        (onExcluirRefeicao)="excluirRefeicao($event)"
-                        (onExcluirExercicio)="excluirExercicio($event)">
-                    </app-grafico-diario>
-                }
-                @case ('semanal') {
-                    <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()" tipoVisualizacao="liquido"></app-grafico-semanal>
-                }
-                @case ('mensal') {
-                    <app-grafico-mensal [meta]="metaCalorias()" [dados]="dadosGraficoMensal()" tipoVisualizacao="liquido"></app-grafico-mensal>
-                }
-            }
-          </div>
-        </div>
-
-        <!-- CONSUMO STATISTICS SECTION -->
-        <div *ngIf="abaMenu() === 'estatisticas-consumo'" class="animate-fade-in space-y-6">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
-            <h2 class="text-2xl font-black text-slate-800">Estatísticas de Consumo</h2>
-            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+            <div *ngIf="abaMenu() === 'estatisticas-consumo' || abaMenu() === 'estatisticas-gasto'" class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
               <button (click)="alterarPeriodoEstatisticas('semanal')" [class]="periodoEstatisticas() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
               <button (click)="alterarPeriodoEstatisticas('mensal')" [class]="periodoEstatisticas() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
             </div>
           </div>
 
-          <!-- 5 Cards de Médias por Refeição -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" *ngIf="dadosEstatisticas()">
-            @for (dist of dadosEstatisticas().distribuicaoRefeicoesEnriquecida; track dist.nome) {
-                <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
-                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="dist.corCss">
-                        {{ dist.icone }}
-                    </div>
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
-                    <p class="text-lg font-black text-slate-800">{{ (dist.valor / (dadosEstatisticas().diasComDados || 1)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
-                    <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
+          <div *ngIf="abaMenu() === 'dashboard'" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div class="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+                <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+                  <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🎯</div>
+                  <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Meta</span>
+                  <span class="text-lg md:text-2xl font-black text-slate-800">{{ metaCalorias() }}</span>
                 </div>
-            }
+                <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+                  <div class="w-10 h-10 md:w-12 md:h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">⚖️</div>
+                  <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Calculadas</span>
+                  <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasCalculadas() }}</span>
+                </div>
+                <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+                  <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🍽️</div>
+                  <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Ingeridas</span>
+                  <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasConsumidas() }}</span>
+                </div>
+                <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center">
+                  <div class="w-10 h-10 md:w-12 md:h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mb-3 text-xl md:text-2xl">🔥</div>
+                  <span class="text-[10px] md:text-xs text-slate-400 uppercase font-bold mb-1">Gastas</span>
+                  <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasQueimadas() }}</span>
+                </div>
+              </div>
+              <div *ngIf="graficoDashboard() === 'diario'" class="lg:col-span-4 grid grid-cols-2 gap-3 h-full">
+                <button (click)="mostrarModalRefeicao.set(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-3xl shadow-lg shadow-emerald-100 flex flex-col items-center justify-center space-y-2 transition-all hover:-translate-y-1">
+                  <span class="font-bold text">+ Refeicao</span>
+                </button>
+                <button (click)="mostrarModalExercicio.set(true)" class="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-3xl shadow-lg shadow-orange-100 flex flex-col items-center justify-center space-y-2 transition-all hover:-translate-y-1">
+                  <span class="font-bold text">+ Exercicio</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="w-full mt-6">
+              @switch (graficoDashboard()) {
+                  @case ('diario') {
+                      <app-grafico-diario 
+                          [refeicoes]="refeicoesDeHoje()"
+                          [exercicios]="exerciciosDeHoje()"
+                          [mapaRefeicoes]="mapaRefeicoes"
+                          [mapaExercicios]="mapaExercicios"
+                          (onExcluirRefeicao)="excluirRefeicao($event)"
+                          (onExcluirExercicio)="excluirExercicio($event)">
+                      </app-grafico-diario>
+                  }
+                  @case ('semanal') {
+                      <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()" tipoVisualizacao="liquido"></app-grafico-semanal>
+                  }
+                  @case ('mensal') {
+                      <app-grafico-mensal [meta]="metaCalorias()" [dados]="dadosGraficoMensal()" tipoVisualizacao="liquido"></app-grafico-mensal>
+                  }
+              }
+            </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
-            <div class="lg:col-span-2">
-                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
-                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
+          <!-- CONSUMO STATISTICS SECTION -->
+          <div *ngIf="abaMenu() === 'estatisticas-consumo'" class="space-y-6">
+            <h2 class="text-xl font-black text-slate-800 -mb-2">Resumo de Consumo</h2>
+            <!-- 5 Cards de Médias por Refeição -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" *ngIf="dadosEstatisticas()">
+              @for (dist of dadosEstatisticas().distribuicaoRefeicoesEnriquecida; track dist.nome) {
+                  <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                      <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="dist.corCss">
+                          {{ dist.icone }}
+                      </div>
+                      <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
+                      <p class="text-lg font-black text-slate-800">{{ (dist.valor / (dadosEstatisticas().diasComDados || 1)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
+                      <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
+                  </div>
+              }
             </div>
-            <div class="lg:col-span-1">
-                <app-distribuicao-tipos titulo="Distribuição de Refeições" [itens]="dadosEstatisticas().distribuicaoRefeicoesEnriquecida" corPrincipal="bg-emerald-500"></app-distribuicao-tipos>
-            </div>
-          </div>
-        </div>
 
-        <!-- GASTO STATISTICS SECTION -->
-        <div *ngIf="abaMenu() === 'estatisticas-gasto'" class="animate-fade-in space-y-6">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
-            <h2 class="text-2xl font-black text-slate-800">Estatísticas de Gasto</h2>
-            <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
-              <button (click)="alterarPeriodoEstatisticas('semanal')" [class]="periodoEstatisticas() === 'semanal' ? 'bg-white shadow-sm text-orange-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
-              <button (click)="alterarPeriodoEstatisticas('mensal')" [class]="periodoEstatisticas() === 'mensal' ? 'bg-white shadow-sm text-orange-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="dadosEstatisticas()">
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Gasto no Período</p>
-                <p class="text-3xl font-black text-orange-500">{{ dadosEstatisticas().totalGasto.toFixed(0) }} <span class="text-xs font-medium">kcal</span></p>
-            </div>
-            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Média Diária de Queima</p>
-                <p class="text-3xl font-black text-slate-800">{{ dadosEstatisticas().mediaGastoDiario.toFixed(0) }} <span class="text-xs font-medium">kcal/dia</span></p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+              <div class="lg:col-span-2">
+                  <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
+                  <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
+              </div>
+              <div class="lg:col-span-1">
+                  <app-distribuicao-tipos titulo="Distribuição de Refeições" [itens]="dadosEstatisticas().distribuicaoRefeicoesEnriquecida" corPrincipal="bg-emerald-500"></app-distribuicao-tipos>
+              </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
-            <div class="lg:col-span-2">
-                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-semanal>
-                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-mensal>
+          <!-- GASTO STATISTICS SECTION -->
+          <div *ngIf="abaMenu() === 'estatisticas-gasto'" class="space-y-6">
+            <h2 class="text-xl font-black text-slate-800 -mb-2">Resumo de Gasto</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="dadosEstatisticas()">
+              <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Gasto no Período</p>
+                  <p class="text-3xl font-black text-orange-500">{{ dadosEstatisticas().totalGasto.toFixed(0) }} <span class="text-xs font-medium">kcal</span></p>
+              </div>
+              <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Média Diária de Queima</p>
+                  <p class="text-3xl font-black text-slate-800">{{ dadosEstatisticas().mediaGastoDiario.toFixed(0) }} <span class="text-xs font-medium">kcal/dia</span></p>
+              </div>
             </div>
-            <div class="lg:col-span-1">
-                <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+              <div class="lg:col-span-2">
+                  <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-semanal>
+                  <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-mensal>
+              </div>
+              <div class="lg:col-span-1">
+                  <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- NUTRIENTES STATISTICS SECTION -->
-        <div *ngIf="abaMenu() === 'estatisticas-nutrientes'">
-          <app-estatisticas-nutrientes></app-estatisticas-nutrientes>
+          <!-- NUTRIENTES STATISTICS SECTION -->
+          <div *ngIf="abaMenu() === 'estatisticas-nutrientes'">
+            <app-estatisticas-nutrientes></app-estatisticas-nutrientes>
+          </div>
         </div>
 
         <!-- PERFIL SECTION -->
@@ -246,5 +279,5 @@
   </div>
 </div>
 
-<app-adicionar-refeicao [(mostrarModal)]="mostrarModalRefeicao" (refeicaoAdicionada)="obterGraficoDiario()"></app-adicionar-refeicao>
-<app-adicionar-exercicio [(mostrarModal)]="mostrarModalExercicio" (exercicioAdicionado)="obterGraficoDiario()"></app-adicionar-exercicio>
+<app-adicionar-refeicao [(mostrarModal)]="mostrarModalRefeicao" [dataPreSelecionada]="dataSelecionada()" (refeicaoAdicionada)="obterGraficoDiario()"></app-adicionar-refeicao>
+<app-adicionar-exercicio [(mostrarModal)]="mostrarModalExercicio" [dataPreSelecionada]="dataSelecionada()" (exercicioAdicionado)="obterGraficoDiario()"></app-adicionar-exercicio>

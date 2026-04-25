@@ -1,4 +1,4 @@
-import { Component, inject, model, signal, output, computed } from '@angular/core';
+import { Component, inject, model, signal, output, computed, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
@@ -14,12 +14,22 @@ import { AtividadeFisicaService } from '../../core/services/atividade-fisica.ser
 export class AdicionarExercicio {
   
   mostrarModal = model<boolean>(false);
+  dataPreSelecionada = input<string>();
   exercicioAdicionado = output<void>();
 
   autenticacao = inject(AutenticacaoService);
   atividadeFisicaService = inject(AtividadeFisicaService);
 
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+
+  constructor() {
+    effect(() => {
+      const data = this.dataPreSelecionada();
+      if (data) {
+        this.dataExercicio.set(data);
+      }
+    });
+  }
 
   // Variáveis do formulário simplificadas
   tipoExercicio = signal<number>(1);
