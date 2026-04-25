@@ -20,6 +20,7 @@ import { environment } from '../../../environments/environment';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-tipos';
 import { EstatisticasNutrientesComponent } from '../estatisticas-nutrientes/estatisticas-nutrientes';
+import { NotificacaoService } from '../../core/services/notificacao.service';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class Dashboard implements OnInit {
   registroFisicoService = inject(RegistroFisicoService);
   usuarioService = inject(UsuarioService);
   autenticacao = inject(AutenticacaoService);
+  notificacaoService = inject(NotificacaoService);
 
   // Utilitários para o template
   Math = Math;
@@ -208,6 +210,25 @@ export class Dashboard implements OnInit {
 
   ngOnInit(): void {
     this.obterGraficoDiario();
+    
+    // Configurar Notificações Real-time
+    this.notificacaoService.iniciarConexao();
+    this.notificacaoService.refeicaoProcessada$.subscribe((id) => {
+      this.atualizarDadosAbaAtiva();
+      
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true
+      });
+      Toast.fire({
+        icon: 'success',
+        title: 'Refeição processada!',
+        text: 'Os dados foram atualizados automaticamente.'
+      });
+    });
   }
 
   diaAnterior() {
