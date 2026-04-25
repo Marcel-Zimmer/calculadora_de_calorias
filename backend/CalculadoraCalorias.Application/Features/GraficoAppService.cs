@@ -47,13 +47,16 @@ namespace CalculadoraCalorias.Application.Features
             var fimSemana = inicioSemana.AddDays(6);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
+            var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
                 TotalCaloriasConsumidas = dados.MediaConsumoDiario,
                 TotalCaloriasGastas = dados.MediaGastoDiario,
                 CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
-                Pontos = dados.Pontos 
+                Pontos = dados.Pontos,
+                Insights = insights
             });
         }
 
@@ -64,14 +67,38 @@ namespace CalculadoraCalorias.Application.Features
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
+            var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
                 TotalCaloriasConsumidas = dados.MediaConsumoDiario,
                 TotalCaloriasGastas = dados.MediaGastoDiario,
                 CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
-                Pontos = dados.Pontos 
+                Pontos = dados.Pontos,
+                Insights = insights
             });
+        }
+
+        private DashboardInsightsResponse CalcularInsights(List<GraficoPontoResponse> pontos, decimal meta)
+        {
+            var pontosComRegistro = pontos.Where(p => p.CaloriasConsumidas > 0 || p.CaloriasGastas > 0).ToList();
+            if (pontosComRegistro.Count == 0) return new DashboardInsightsResponse();
+
+            var diasNaMeta = pontosComRegistro.Count(p => (p.CaloriasConsumidas - p.CaloriasGastas) <= (int)meta);
+            var saldoTotal = pontosComRegistro.Sum(p => p.CaloriasConsumidas - p.CaloriasGastas);
+            var metaTotal = (int)meta * pontosComRegistro.Count;
+            var diferencaAbsoluta = metaTotal - saldoTotal;
+            var impactoPeso = (double)diferencaAbsoluta / 7700;
+
+            return new DashboardInsightsResponse
+            {
+                DiasNaMeta = diasNaMeta,
+                TotalDias = pontos.Count,
+                SaldoTotal = saldoTotal,
+                DiferencaAbsoluta = diferencaAbsoluta,
+                ImpactoPeso = Math.Round(impactoPeso, 3)
+            };
         }
 
         public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId, DateOnly? data = null)
@@ -81,7 +108,9 @@ namespace CalculadoraCalorias.Application.Features
             var inicioSemana = DateOnly.FromDateTime(dataRef.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
-            return Resultado<EstatisticasDetalhadasResponse>.Success(await ObterDadosPorPeriodo(usuarioId, inicioSemana, fimSemana, true));
+            var dados = await ObterDadosPorPeriodo(usuarioId, inicioSemana, fimSemana, true);
+            dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
         }
 
         public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(long usuarioId, DateOnly? data = null)
@@ -90,7 +119,9 @@ namespace CalculadoraCalorias.Application.Features
             var inicioMes = new DateOnly(dataRef.Year, dataRef.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
-            return Resultado<EstatisticasDetalhadasResponse>.Success(await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false));
+            var dados = await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false);
+            dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
         }
 
         private async Task<EstatisticasDetalhadasResponse> ObterDadosPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim, bool usarNomeDia)

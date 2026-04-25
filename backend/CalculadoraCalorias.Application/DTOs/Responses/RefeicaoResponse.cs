@@ -23,6 +23,15 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public string Data { get; set; } = string.Empty;
     }
 
+    public class DashboardInsightsResponse
+    {
+        public int DiasNaMeta { get; set; }
+        public int TotalDias { get; set; }
+        public int SaldoTotal { get; set; }
+        public double ImpactoPeso { get; set; }
+        public int DiferencaAbsoluta { get; set; }
+    }
+
     public class GraficoPeriodoResponse
     {
         public decimal MetaCaloricaDiaria { get; set; }
@@ -30,6 +39,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public int TotalCaloriasGastas { get; set; }
         public int CaloriasCalculadas { get; set; }
         public List<GraficoPontoResponse> Pontos { get; set; } = [];
+        public DashboardInsightsResponse? Insights { get; set; }
     }
 
     public class DistribuicaoItemResponse
@@ -50,5 +60,6 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public List<GraficoPontoResponse> Pontos { get; set; } = [];
         public List<DistribuicaoItemResponse> DistribuicaoExercicios { get; set; } = [];
         public List<DistribuicaoItemResponse> DistribuicaoRefeicoes { get; set; } = [];
+        public DashboardInsightsResponse? Insights { get; set; }
     }
 }
