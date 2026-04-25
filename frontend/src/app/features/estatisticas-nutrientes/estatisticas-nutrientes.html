@@ -8,86 +8,116 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" *ngIf="dados()">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dados()">
     
-    <!-- Card de Proteínas -->
-    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-3xl">🥩</span>
-        <div class="text-right">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Proteínas</p>
-          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoProteinas }}g</span> / {{ dados()?.metaProteinas }}g</p>
+    <!-- CARD PRINCIPAL: RESUMO DE MACROS -->
+    <div class="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-8">
+      
+      <!-- Lado Esquerdo: Donut Chart SVG -->
+      <div class="relative w-48 h-48 shrink-0" *ngIf="distribuicaoMacros()">
+        <svg viewBox="0 0 40 40" class="w-full h-full transform -rotate-90 scale-x-[-1]">
+          <!-- Fundo (Gorduras) -->
+          <circle cx="20" cy="20" r="15.915" fill="transparent" stroke="#f1f5f9" stroke-width="5" />
+          
+          <!-- Gorduras (Laranja) -->
+          <circle cx="20" cy="20" r="15.915" fill="transparent" stroke="#f59e0b" stroke-width="5" 
+            [attr.stroke-dasharray]="distribuicaoMacros()?.percGord + ' 100'" 
+            [attr.stroke-dashoffset]="-distribuicaoMacros()?.offsetGord!" />
+
+          <!-- Carboidratos (Amarelo) -->
+          <circle cx="20" cy="20" r="15.915" fill="transparent" stroke="#fbbf24" stroke-width="5" 
+            [attr.stroke-dasharray]="distribuicaoMacros()?.percCarb + ' 100'" 
+            [attr.stroke-dashoffset]="-distribuicaoMacros()?.offsetCarb!" />
+          
+          <!-- Proteínas (Rose) -->
+          <circle cx="20" cy="20" r="15.915" fill="transparent" stroke="#f43f5e" stroke-width="5" 
+            [attr.stroke-dasharray]="distribuicaoMacros()?.percProt + ' 100'" 
+            [attr.stroke-dashoffset]="-distribuicaoMacros()?.offsetProt!" />
+        </svg>
+        <!-- Centro do Donut -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <span class="text-xs font-black text-slate-400 uppercase tracking-tighter">Total</span>
+          <span class="text-xl font-black text-slate-800">{{ distribuicaoMacros()?.total?.toFixed(0) }}</span>
+          <span class="text-[8px] font-bold text-slate-400 uppercase">kcal</span>
         </div>
       </div>
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-        <div class="bg-red-500 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoProteinas || 0, dados()?.metaProteinas || 1)"></div>
+
+      <!-- Lado Direito: Legenda e Barra Empilhada -->
+      <div class="flex-1 w-full space-y-6">
+        <h3 class="text-xl font-black text-slate-800 tracking-tight">Divisão de Calorias</h3>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+              <span class="text-sm font-bold text-slate-600">Proteínas</span>
+            </div>
+            <span class="text-sm font-black text-slate-800">{{ distribuicaoMacros()?.percProt?.toFixed(1) }}%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+              <span class="text-sm font-bold text-slate-600">Carboidratos</span>
+            </div>
+            <span class="text-sm font-black text-slate-800">{{ distribuicaoMacros()?.percCarb?.toFixed(1) }}%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-orange-500"></div>
+              <span class="text-sm font-bold text-slate-600">Gorduras</span>
+            </div>
+            <span class="text-sm font-black text-slate-800">{{ distribuicaoMacros()?.percGord?.toFixed(1) }}%</span>
+          </div>
+        </div>
+
+        <!-- Barra Empilhada Visual -->
+        <div class="h-3 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+          <div [style.width.%]="distribuicaoMacros()?.percProt" class="h-full bg-rose-500 transition-all duration-1000"></div>
+          <div [style.width.%]="distribuicaoMacros()?.percCarb" class="h-full bg-amber-400 transition-all duration-1000 border-x border-white/20"></div>
+          <div [style.width.%]="distribuicaoMacros()?.percGord" class="h-full bg-orange-500 transition-all duration-1000"></div>
+        </div>
       </div>
-      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoProteinas || 0, dados()?.metaProteinas || 1).toFixed(1) }}% atingido</p>
     </div>
 
-    <!-- Card de Carboidratos -->
-    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-3xl">🍞</span>
-        <div class="text-right">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Carboidratos</p>
-          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoCarboidratos }}g</span> / {{ dados()?.metaCarboidratos }}g</p>
-        </div>
+    <!-- CARD LATERAL: ANÁLISE DE PERFIL -->
+    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-center items-center text-center space-y-4">
+      <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-3xl shadow-sm">
+        {{ perfilNutricional()?.icone || '🧐' }}
       </div>
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-        <div class="bg-amber-500 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoCarboidratos || 0, dados()?.metaCarboidratos || 1)"></div>
+      <div>
+        <h4 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-1">
+          {{ perfilNutricional()?.titulo || 'Analisando...' }}
+        </h4>
+        <p class="text-slate-500 text-xs leading-relaxed px-4">
+          {{ perfilNutricional()?.descricao || 'Registre mais dados para um veredito detalhado.' }}
+        </p>
       </div>
-      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoCarboidratos || 0, dados()?.metaCarboidratos || 1).toFixed(1) }}% atingido</p>
+      <div *ngIf="perfilNutricional()" [class]="'px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-tighter ' + (perfilNutricional()?.cor)">
+        Veredito do Período
+      </div>
     </div>
 
-    <!-- Card de Gorduras -->
-    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-3xl">🥑</span>
-        <div class="text-right">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Gorduras</p>
-          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoGorduras }}g</span> / {{ dados()?.metaGorduras }}g</p>
+    <!-- GRID DE ANÉIS (5 NUTRIENTES) -->
+    <div class="lg:col-span-3 grid grid-cols-2 md:grid-cols-5 gap-6 mt-4">
+      @for (item of progressoNutrientes(); track item.nome) {
+        <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+          <div class="relative w-20 h-20 mb-4">
+            <svg viewBox="0 0 40 40" class="w-full h-full transform -rotate-90">
+              <!-- Background Circle -->
+              <circle cx="20" cy="20" r="16" fill="transparent" [class]="item.bg" stroke-width="4" stroke="currentColor" />
+              <!-- Progress Circle -->
+              <circle cx="20" cy="20" r="16" fill="transparent" [class]="item.cor" stroke-width="4" stroke-linecap="round"
+                stroke="currentColor" [attr.stroke-dasharray]="item.strokeDasharray" />
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center text-xl">
+              {{ item.icone }}
+            </div>
+          </div>
+          <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ item.nome }}</h5>
+          <p class="text-sm font-black text-slate-800">{{ item.valor }}g <span class="text-[10px] text-slate-400 font-bold">/ {{ item.meta }}g</span></p>
+          <p class="text-[8px] font-bold text-slate-400 mt-1 uppercase">{{ item.percentual.toFixed(0) }}% do {{ item.isLimite ? 'limite' : 'objetivo' }}</p>
         </div>
-      </div>
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-        <div class="bg-yellow-400 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoGorduras || 0, dados()?.metaGorduras || 1)"></div>
-      </div>
-      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoGorduras || 0, dados()?.metaGorduras || 1).toFixed(1) }}% atingido</p>
-    </div>
-
-    <!-- Card de Fibras -->
-    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-3xl">🥦</span>
-        <div class="text-right">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fibras</p>
-          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black">{{ dados()?.consumoFibras }}g</span> / {{ dados()?.metaFibras }}g</p>
-        </div>
-      </div>
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-        <div class="bg-green-500 h-3 rounded-full transition-all duration-1000" [style.width.%]="obterPercentual(dados()?.consumoFibras || 0, dados()?.metaFibras || 1)"></div>
-      </div>
-      <p class="text-[10px] text-slate-400 mt-2 font-bold text-center">{{ obterPercentual(dados()?.consumoFibras || 0, dados()?.metaFibras || 1).toFixed(1) }}% atingido</p>
-    </div>
-
-    <!-- Card de Açúcares (Limite) -->
-    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-      <div class="flex justify-between items-center mb-4">
-        <span class="text-3xl">🍭</span>
-        <div class="text-right">
-          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Açúcares (Limite)</p>
-          <p class="text-xs font-bold text-slate-400"><span class="text-lg text-slate-800 font-black" [class.text-rose-500]="(dados()?.consumoAcucares || 0) > (dados()?.limiteAcucares || 0)">{{ dados()?.consumoAcucares }}g</span> / {{ dados()?.limiteAcucares }}g</p>
-        </div>
-      </div>
-      <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-        <div class="h-3 rounded-full transition-all duration-1000" 
-             [ngClass]="{'bg-blue-400': (dados()?.consumoAcucares || 0) <= (dados()?.limiteAcucares || 0), 'bg-rose-500': (dados()?.consumoAcucares || 0) > (dados()?.limiteAcucares || 0)}"
-             [style.width.%]="obterPercentual(dados()?.consumoAcucares || 0, dados()?.limiteAcucares || 1)"></div>
-      </div>
-      <p class="text-[10px] mt-2 font-bold text-center" 
-         [ngClass]="{'text-slate-400': (dados()?.consumoAcucares || 0) <= (dados()?.limiteAcucares || 0), 'text-rose-500': (dados()?.consumoAcucares || 0) > (dados()?.limiteAcucares || 0)}">
-         {{ obterPercentual(dados()?.consumoAcucares || 0, dados()?.limiteAcucares || 1).toFixed(1) }}% do limite
-      </p>
+      }
     </div>
 
   </div>
