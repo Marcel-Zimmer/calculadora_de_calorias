@@ -119,7 +119,8 @@ namespace CalculadoraCalorias.Application.Features
                     Data = data.ToString("yyyy-MM-dd"),
                     Legenda = legenda,
                     CaloriasConsumidas = (int)consumidoDia,
-                    CaloriasGastas = (int)gastoDia
+                    CaloriasGastas = (int)gastoDia,
+                    SaldoCalorico = (int)(consumidoDia - gastoDia)
                 });
             }
 

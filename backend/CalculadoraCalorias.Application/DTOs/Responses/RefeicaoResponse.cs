@@ -19,6 +19,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public string Legenda { get; set; } = string.Empty;
         public int CaloriasConsumidas { get; set; }
         public int CaloriasGastas { get; set; }
+        public int SaldoCalorico { get; set; }
         public string Data { get; set; } = string.Empty;
     }
 
