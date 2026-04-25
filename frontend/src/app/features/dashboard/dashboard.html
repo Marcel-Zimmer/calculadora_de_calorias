@@ -117,42 +117,39 @@
             <!-- Insights de Dashboard (Semanal/Mensal) - Foco em SALDO -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4" *ngIf="graficoDashboard() !== 'diario'">
                <!-- Consistência (Baseada no Saldo) -->
-               <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl flex items-center space-x-4">
-                 <div class="w-10 h-10 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-lg shadow-sm">🏆</div>
-                 <div>
-                   <p class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Consistência</p>
-                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'semanal'">{{ dashboardInsightsSemanal()?.diasNaMeta }} de {{ dashboardInsightsSemanal()?.totalDias }} dias com saldo na meta</p>
-                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'mensal'">{{ dashboardInsightsMensal()?.diasNaMeta }} de {{ dashboardInsightsMensal()?.totalDias }} dias com saldo na meta</p>
-                 </div>
-               </div>
+               <app-bs-card-consistencia 
+                 *ngIf="graficoDashboard() === 'semanal'"
+                 [diasNaMeta]="dashboardInsightsSemanal()?.diasNaMeta || 0"
+                 [totalDias]="dashboardInsightsSemanal()?.totalDias || 0">
+               </app-bs-card-consistencia>
+
+               <app-bs-card-consistencia 
+                 *ngIf="graficoDashboard() === 'mensal'"
+                 [diasNaMeta]="dashboardInsightsMensal()?.diasNaMeta || 0"
+                 [totalDias]="dashboardInsightsMensal()?.totalDias || 0">
+               </app-bs-card-consistencia>
 
                <!-- Saldo Acumulado -->
-               <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-3xl flex items-center space-x-4">
-                 <div class="w-10 h-10 bg-indigo-500 text-white rounded-2xl flex items-center justify-center text-lg shadow-sm">⚖️</div>
-                 <div>
-                   <p class="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Equilíbrio Energético</p>
-                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'semanal'">
-                      {{ (dashboardInsightsSemanal()?.diferencaAbsoluta || 0) > 0 ? 'Déficit' : 'Superávit' }} de {{ Math.abs(dashboardInsightsSemanal()?.diferencaAbsoluta || 0).toFixed(0) }} kcal
-                   </p>
-                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'mensal'">
-                      {{ (dashboardInsightsMensal()?.diferencaAbsoluta || 0) > 0 ? 'Déficit' : 'Superávit' }} de {{ Math.abs(dashboardInsightsMensal()?.diferencaAbsoluta || 0).toFixed(0) }} kcal
-                   </p>
-                 </div>
-               </div>
+               <app-bs-card-equilibrio-energetico
+                 *ngIf="graficoDashboard() === 'semanal'"
+                 [diferencaAbsoluta]="dashboardInsightsSemanal()?.diferencaAbsoluta || 0">
+               </app-bs-card-equilibrio-energetico>
+
+               <app-bs-card-equilibrio-energetico
+                 *ngIf="graficoDashboard() === 'mensal'"
+                 [diferencaAbsoluta]="dashboardInsightsMensal()?.diferencaAbsoluta || 0">
+               </app-bs-card-equilibrio-energetico>
 
                <!-- Impacto no Peso -->
-               <div class="bg-amber-50 border border-amber-100 p-4 rounded-3xl flex items-center space-x-4">
-                 <div class="w-10 h-10 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-lg shadow-sm">📏</div>
-                 <div>
-                   <p class="text-[9px] font-black text-amber-600 uppercase tracking-widest">Impacto Estimado</p>
-                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'semanal'">
-                      {{ (dashboardInsightsSemanal()?.impactoPeso || 0) >= 0 ? '-' : '+' }}{{ Math.abs((dashboardInsightsSemanal()?.impactoPeso || 0) * 1000).toFixed(0) }}g de gordura corporal
-                   </p>
-                   <p class="text-slate-800 font-bold text-xs" *ngIf="graficoDashboard() === 'mensal'">
-                      {{ (dashboardInsightsMensal()?.impactoPeso || 0) >= 0 ? '-' : '+' }}{{ Math.abs(dashboardInsightsMensal()?.impactoPeso || 0).toFixed(2) }}kg de gordura corporal
-                   </p>
-                 </div>
-               </div>
+               <app-bs-card-impacto-estimado
+                 *ngIf="graficoDashboard() === 'semanal'"
+                 [impactoPeso]="dashboardInsightsSemanal()?.impactoPeso || 0">
+               </app-bs-card-impacto-estimado>
+
+               <app-bs-card-impacto-estimado
+                 *ngIf="graficoDashboard() === 'mensal'"
+                 [impactoPeso]="dashboardInsightsMensal()?.impactoPeso || 0">
+               </app-bs-card-impacto-estimado>
             </div>
 
             <div class="w-full mt-6">
