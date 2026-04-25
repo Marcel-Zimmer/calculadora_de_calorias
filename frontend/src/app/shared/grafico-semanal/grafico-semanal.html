@@ -3,7 +3,7 @@
         <h3 class="font-black text-slate-800 text-lg">
             {{ tipoVisualizacao() === 'liquido' ? 'Saldo de Calorias' : 'Desempenho Semanal' }}
         </h3>
-        <div class="flex items-center space-x-4 text-[10px] font-bold text-slate-400">
+        <div class="flex items-center space-x-4 text-[10px] font-bold text-slate-400" *ngIf="!corOverride()">
             <span class="flex items-center"><div class="w-3 h-3 rounded-md mr-2" [ngClass]="tipoVisualizacao() === 'gasto' ? 'bg-orange-400' : 'bg-emerald-400'"></div> {{ tipoVisualizacao() === 'gasto' ? 'Gasto' : 'Na Meta' }}</span>
             <span class="flex items-center" *ngIf="tipoVisualizacao() !== 'gasto'"><div class="w-3 h-3 rounded-md mr-2 bg-rose-400"></div> Acima da Meta</span>
         </div>

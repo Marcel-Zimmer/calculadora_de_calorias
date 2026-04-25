@@ -11,6 +11,7 @@ export class GraficoSemanal {
   meta = input<number>(0);
   dados = input<any[]>([]);
   tipoVisualizacao = input<'consumo' | 'gasto' | 'liquido'>('consumo');
+  corOverride = input<string | null>(null);
 
   obterValor(day: any): number {
     if (this.tipoVisualizacao() === 'gasto') return day.caloriasGastas;
@@ -26,6 +27,8 @@ export class GraficoSemanal {
   }
 
   obterCor(day: any): string {
+    if (this.corOverride()) return this.corOverride()!;
+
     const valor = this.obterValor(day);
     if (this.tipoVisualizacao() === 'gasto') return 'bg-orange-400';
     

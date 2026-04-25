@@ -114,7 +114,7 @@ export class Dashboard implements OnInit {
     const diferencaAbsoluta = metaTotal - saldoTotal; 
     const impactoPeso = (diferencaAbsoluta / 7700);
 
-    return { diasNaMeta, totalDias: pontosComRegistro.length, saldoTotal, impactoPeso, diferencaAbsoluta };
+    return { diasNaMeta, totalDias: todosOsPontos.length, saldoTotal, impactoPeso, diferencaAbsoluta };
   });
 
   dashboardInsightsMensal = computed(() => {
@@ -135,7 +135,7 @@ export class Dashboard implements OnInit {
     const diferencaAbsoluta = metaTotal - saldoTotal;
     const impactoPeso = (diferencaAbsoluta / 7700);
 
-    return { diasNaMeta, totalDias: pontosComRegistro.length, saldoTotal, impactoPeso, diferencaAbsoluta };
+    return { diasNaMeta, totalDias: todosOsPontos.length, saldoTotal, impactoPeso, diferencaAbsoluta };
   });
 
   insightsMensaisConsumo = computed(() => {
@@ -164,8 +164,9 @@ export class Dashboard implements OnInit {
     const percentualConsumido = (totalConsumido / totalMetaMes) * 100;
 
     const maiorIngestao = Math.max(...pontos.map((p: any) => p.caloriasConsumidas));
+    const diaMaiorIngestao = pontos.find((p: any) => p.caloriasConsumidas === maiorIngestao)?.legenda || '-';
 
-    return { topPicos, semanas, totalMetaMes, totalConsumido, percentualConsumido, maiorIngestao };
+    return { topPicos, semanas, totalMetaMes, totalConsumido, percentualConsumido, maiorIngestao, diaMaiorIngestao };
   });
 
   insightsMensaisGasto = computed(() => {
