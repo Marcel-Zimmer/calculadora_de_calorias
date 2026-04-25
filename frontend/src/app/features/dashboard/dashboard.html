@@ -189,23 +189,14 @@
           <h2 class="text-xl font-black text-slate-800 mb-4">Resumo de Consumo</h2>
           <!-- 6 Cards de Médias por Refeição + Total -->
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" *ngIf="dadosEstatisticas()">
-            <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center transition-all hover:-translate-y-1">
-                <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl bg-slate-50 text-indigo-500">
-                    📊
-                </div>
-                <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Média Diária</p>
-                <p class="text-lg font-black text-slate-800">{{ (dadosEstatisticas().mediaConsumoDiario || 0).toFixed(0) }} <span class="text-[10px] font-medium text-slate-400">kcal</span></p>
-                <p class="text-[8px] font-bold text-slate-300 mt-1">no período</p>
-            </div>
-            @for (dist of dadosEstatisticas().distribuicaoRefeicoesEnriquecida; track dist.nome) {
-                <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
-                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="dist.corCss">
-                        {{ dist.icone }}
-                    </div>
-                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
-                    <p class="text-lg font-black text-slate-800">{{ (dist.valor / (dadosEstatisticas().diasComDados || 1)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
-                    <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
-                </div>
+            @for (card of cardsMediaConsumo(); track card.titulo) {
+                <app-bs-card-media-item
+                    [icone]="card.icone"
+                    [corCss]="card.corCss"
+                    [titulo]="card.titulo"
+                    [valor]="card.valor"
+                    [legenda]="card.legenda">
+                </app-bs-card-media-item>
             }
           </div>
 

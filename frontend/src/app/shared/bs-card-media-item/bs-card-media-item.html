@@ -1,0 +1,8 @@
+<div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center transition-all hover:-translate-y-1">
+    <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="corCss()">
+        {{ icone() }}
+    </div>
+    <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ titulo() }}</p>
+    <p class="text-lg font-black text-slate-800">{{ valor() }} <span class="text-[10px] font-medium text-slate-400">kcal</span></p>
+    <p class="text-[8px] font-bold text-slate-300 mt-1">{{ legenda() }}</p>
+</div>

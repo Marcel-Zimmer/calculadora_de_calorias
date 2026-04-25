@@ -23,11 +23,12 @@ import { BsGraficoMediaSemanalComponent } from '../../shared/bs-grafico-media-se
 import { BsCardConsistenciaComponent } from '../../shared/bs-card-consistencia/bs-card-consistencia';
 import { BsCardEquilibrioEnergeticoComponent } from '../../shared/bs-card-equilibrio-energetico/bs-card-equilibrio-energetico';
 import { BsCardImpactoEstimadoComponent } from '../../shared/bs-card-impacto-estimado/bs-card-impacto-estimado';
+import { BsCardMediaItemComponent } from '../../shared/bs-card-media-item/bs-card-media-item';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, BsCardImpactoEstimadoComponent],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, BsCardImpactoEstimadoComponent, BsCardMediaItemComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -74,6 +75,37 @@ export class Dashboard implements OnInit {
     const dados = this.dadosEstatisticas();
     if (!dados) return [];
     return dados.pontos.map((p: any) => ({ legenda: p.legenda, valor: p.caloriasGastas }));
+  });
+
+  // Novos Cards de Média de Consumo (Gerados dinamicamente)
+  cardsMediaConsumo = computed(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados) return [];
+
+    const lista = [];
+    
+    // 1. Média Diária Geral
+    lista.push({
+      icone: '📊',
+      corCss: 'bg-slate-50 text-indigo-500',
+      titulo: 'Média Diária',
+      valor: dados.mediaConsumoDiario || 0,
+      legenda: 'no período'
+    });
+
+    // 2. Médias por Refeição (Vindas do Backend)
+    const refeicoesEnriquecidas = dados.distribuicaoRefeicoesEnriquecida || [];
+    refeicoesEnriquecidas.forEach((refeicao: any) => {
+        lista.push({
+            icone: refeicao.icone,
+            corCss: refeicao.corCss,
+            titulo: refeicao.displayNome,
+            valor: refeicao.media || 0,
+            legenda: 'média diária'
+        });
+    });
+
+    return lista;
   });
 
   dashboardInsightsSemanal = signal<any>(null);
