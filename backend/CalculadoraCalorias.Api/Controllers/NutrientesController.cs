@@ -17,23 +17,23 @@ namespace CalculadoraCalorias.Api.Controllers
 
         [HttpGet]
         [Route("diario/{usuarioId}")]
-        public async Task<IActionResult> ObterNutrientesDiario(long usuarioId)
+        public async Task<IActionResult> ObterNutrientesDiario(long usuarioId, [FromQuery] System.DateTime? data = null)
         {
-            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesDiario(usuarioId));
+            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesDiario(usuarioId, data));
         }
 
         [HttpGet]
         [Route("semanal/{usuarioId}")]
-        public async Task<IActionResult> ObterNutrientesSemanal(long usuarioId)
+        public async Task<IActionResult> ObterNutrientesSemanal(long usuarioId, [FromQuery] System.DateTime? data = null)
         {
-            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesSemanal(usuarioId));
+            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesSemanal(usuarioId, data));
         }
 
         [HttpGet]
         [Route("mensal/{usuarioId}")]
-        public async Task<IActionResult> ObterNutrientesMensal(long usuarioId)
+        public async Task<IActionResult> ObterNutrientesMensal(long usuarioId, [FromQuery] System.DateTime? data = null)
         {
-            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesMensal(usuarioId));
+            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesMensal(usuarioId, data));
         }
     }
 }

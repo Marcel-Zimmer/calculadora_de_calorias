@@ -12,26 +12,27 @@ namespace CalculadoraCalorias.Application.Features
         IRefeicaoService _refeicaoService, 
         IRegistroFisicoService _registroFisicoService) : INutrientesAppService
     {
-        public async Task<Resultado<NutrientesResponse>> ObterNutrientesDiario(long usuarioId)
+        public async Task<Resultado<NutrientesResponse>> ObterNutrientesDiario(long usuarioId, DateTime? data = null)
         {
-            var hoje = DateOnly.FromDateTime(DateTime.Today);
-            return await CalcularRelatorioNutrientes(usuarioId, hoje, hoje, "diario");
+            var dataReferencia = data ?? DateTime.Today;
+            var dataFormatada = DateOnly.FromDateTime(dataReferencia);
+            return await CalcularRelatorioNutrientes(usuarioId, dataFormatada, dataFormatada, "diario");
         }
 
-        public async Task<Resultado<NutrientesResponse>> ObterNutrientesSemanal(long usuarioId)
+        public async Task<Resultado<NutrientesResponse>> ObterNutrientesSemanal(long usuarioId, DateTime? data = null)
         {
-            var hoje = DateTime.Today;
-            int diff = (7 + (hoje.DayOfWeek - DayOfWeek.Monday)) % 7;
-            var inicioSemana = DateOnly.FromDateTime(hoje.AddDays(-1 * diff));
+            var dataReferencia = data ?? DateTime.Today;
+            int diff = (7 + (dataReferencia.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var inicioSemana = DateOnly.FromDateTime(dataReferencia.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
             return await CalcularRelatorioNutrientes(usuarioId, inicioSemana, fimSemana, "semanal");
         }
 
-        public async Task<Resultado<NutrientesResponse>> ObterNutrientesMensal(long usuarioId)
+        public async Task<Resultado<NutrientesResponse>> ObterNutrientesMensal(long usuarioId, DateTime? data = null)
         {
-            var hoje = DateTime.Today;
-            var inicioMes = new DateOnly(hoje.Year, hoje.Month, 1);
+            var dataReferencia = data ?? DateTime.Today;
+            var inicioMes = new DateOnly(dataReferencia.Year, dataReferencia.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             return await CalcularRelatorioNutrientes(usuarioId, inicioMes, fimMes, "mensal");
