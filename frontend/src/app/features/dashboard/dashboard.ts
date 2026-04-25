@@ -10,7 +10,6 @@ import { GraficoService } from '../../core/services/grafico.service';
 import { AdicionarRefeicao } from '../../shared/adicionar-refeicao/adicionar-refeicao';
 import { AdicionarExercicio } from "../../shared/adicionar-exercicio/adicionar-exercicio";
 import { GraficoDiario } from "../../shared/grafico-diario/grafico-diario";
-import { GraficoSemanal } from "../../shared/grafico-semanal/grafico-semanal";
 import { GraficoMensal } from "../../shared/grafico-mensal/grafico-mensal";
 import { AtividadeFisicaService } from '../../core/services/atividade-fisica.service';
 import Swal from 'sweetalert2';
@@ -27,7 +26,7 @@ import { BsGraficoMediaSemanalComponent } from '../../shared/bs-grafico-media-se
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -63,7 +62,7 @@ export class Dashboard implements OnInit {
     const pontos = this.dadosGraficoMensal();
     return pontos.map(p => ({
       legenda: p.legenda,
-      valor: p.saldoCalorico // Agora vem calculado do backend
+      valor: p.saldoCalorico ?? (p.caloriasConsumidas - p.caloriasGastas)
     }));
   });
 
@@ -71,7 +70,7 @@ export class Dashboard implements OnInit {
     const pontos = this.dadosGraficoSemanal();
     return pontos.map(p => ({
       legenda: p.legenda,
-      valor: p.saldoCalorico
+      valor: p.saldoCalorico ?? (p.caloriasConsumidas - p.caloriasGastas)
     }));
   });
 

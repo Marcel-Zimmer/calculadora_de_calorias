@@ -1,44 +1,6 @@
-.historico-container {
-    @apply bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col;
-}
-
-.historico-titulo {
-    @apply font-black text-slate-800 mb-6 text-lg tracking-tight;
-}
-
-.historico-grid {
-    @apply grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3;
-}
-
-.historico-card {
-    @apply flex flex-col p-2 bg-slate-50 rounded-xl border border-slate-100 transition-all hover:bg-white hover:shadow-md group;
-}
-
-.historico-legenda {
-    @apply text-[8px] font-black text-slate-400 uppercase mb-0.5;
-}
-
-.historico-valor-container {
-    @apply text-xs font-black transition-colors;
-}
-
-.historico-unidade {
-    @apply text-[8px] font-bold opacity-60;
-}
-
-/* Cores específicas */
-.texto-laranja {
-    @apply text-orange-500;
-}
-
-.texto-verde {
-    @apply text-emerald-500;
-}
-
-.texto-vermelho {
-    @apply text-rose-500;
-}
-
-.texto-vazio {
-    @apply text-slate-400;
-}
+/* Classes customizadas removidas para evitar erros com @apply no build. 
+   As classes utilitárias foram movidas diretamente para o HTML. */
+.texto-laranja { color: #f97316; }
+.texto-verde { color: #10b981; }
+.texto-vermelho { color: #f43f5e; }
+.texto-vazio { color: #94a3b8; }

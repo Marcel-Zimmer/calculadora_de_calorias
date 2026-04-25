@@ -20,12 +20,12 @@ export class BsGraficoHistoricoMensalComponent {
   pintarPorMeta = input<boolean>(false);
 
   obterClasseCor(valor: number): string {
-    if (valor === 0) return 'texto-vazio';
+    if (valor === 0) return 'text-slate-400';
 
     if (this.pintarPorMeta()) {
-      return valor > this.metaDiaria() ? 'texto-vermelho' : 'texto-verde';
+      return valor > this.metaDiaria() ? 'text-rose-500' : 'text-emerald-500';
     }
 
-    return 'texto-laranja';
+    return 'text-indigo-500';
   }
 }

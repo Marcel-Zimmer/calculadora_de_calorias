@@ -176,12 +176,12 @@
                       </app-bs-grafico-media-semanal>
                   }
                   @case ('mensal') {
-                      <app-bs-historico-mensal 
+                      <app-bs-grafico-historico-mensal 
                           titulo="Histórico Mensal Diário"
                           [dados]="dadosHistoricoSaldoMensal()"
                           [metaDiaria]="metaCalorias()"
                           [pintarPorMeta]="true">
-                      </app-bs-historico-mensal>
+                      </app-bs-grafico-historico-mensal>
                   }
               }
             </div>
@@ -266,17 +266,17 @@
                 <app-bs-grafico-media-semanal 
                     titulo="Consumo Semanal" 
                     [dados]="dadosHistoricoConsumo()" 
-                    corPadrao="bg-indigo-400">
+                    corPadrao="bg-indigo-500">
                 </app-bs-grafico-media-semanal>
             </div>
 
             <!-- Histórico Detalhado (Apenas na visão mensal) -->
             <div class="lg:col-span-2" *ngIf="periodoEstatisticas() === 'mensal'">
-                <app-bs-historico-mensal 
+                <app-bs-grafico-historico-mensal 
                     titulo="Histórico Diário de Consumo"
-                    [dados]="dadosHistoricoConsumoMensal()"
+                    [dados]="dadosHistoricoConsumo()"
                     [pintarPorMeta]="false">
-                </app-bs-historico-mensal>
+                </app-bs-grafico-historico-mensal>
             </div>
 
             <!-- Distribuição (Sempre visível) -->
@@ -343,17 +343,17 @@
                 <app-bs-grafico-media-semanal 
                     titulo="Desempenho Semanal" 
                     [dados]="dadosHistoricoGasto()" 
-                    corPadrao="bg-orange-400">
+                    corPadrao="bg-indigo-500">
                 </app-bs-grafico-media-semanal>
             </div>
 
             <!-- Histórico Diário de Gasto (Apenas na visão mensal) -->
             <div class="lg:col-span-2" *ngIf="periodoEstatisticas() === 'mensal'">
-                <app-bs-historico-mensal 
+                <app-bs-grafico-historico-mensal 
                     titulo="Histórico de Queima"
-                    [dados]="dadosHistoricoGastoMensal()"
+                    [dados]="dadosHistoricoGasto()"
                     [pintarPorMeta]="false">
-                </app-bs-historico-mensal>
+                </app-bs-grafico-historico-mensal>
             </div>
 
             <!-- Distribuição -->
