@@ -91,6 +91,60 @@ export class Dashboard implements OnInit {
     };
   });
 
+  // Novos Insights Mensais Avançados (Calculados apenas quando periodoEstatisticas === 'mensal')
+  insightsMensaisConsumo = computed(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados || this.periodoEstatisticas() !== 'mensal') return null;
+
+    const pontos = [...dados.pontos];
+    
+    // 1. Top 5 Picos
+    const topPicos = [...pontos]
+      .sort((a, b) => b.caloriasConsumidas - a.caloriasConsumidas)
+      .slice(0, 5)
+      .filter(p => p.caloriasConsumidas > 0);
+
+    // 2. Agrupamento por Semanas (Lotes de 7 dias)
+    const semanas = [];
+    for (let i = 0; i < pontos.length; i += 7) {
+      const lote = pontos.slice(i, i + 7);
+      const media = lote.reduce((acc, curr) => acc + curr.caloriasConsumidas, 0) / lote.length;
+      semanas.push({ nome: `Semana ${Math.floor(i/7) + 1}`, valor: media });
+    }
+
+    // 3. Balanço Acumulado
+    const totalMetaMes = dados.metaCaloricaDiaria * pontos.length;
+    const totalConsumido = dados.totalConsumido;
+    const percentualConsumido = (totalConsumido / totalMetaMes) * 100;
+
+    const maiorIngestao = Math.max(...pontos.map((p: any) => p.caloriasConsumidas));
+
+    return { topPicos, semanas, totalMetaMes, totalConsumido, percentualConsumido, maiorIngestao };
+  });
+
+  insightsMensaisGasto = computed(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados || this.periodoEstatisticas() !== 'mensal') return null;
+
+    const pontos = [...dados.pontos];
+    
+    // 1. Top 5 Picos de Gasto
+    const topGasto = [...pontos]
+      .sort((a, b) => b.caloriasGastas - a.caloriasGastas)
+      .slice(0, 5)
+      .filter(p => p.caloriasGastas > 0);
+
+    // 2. Agrupamento por Semanas
+    const semanas = [];
+    for (let i = 0; i < pontos.length; i += 7) {
+      const lote = pontos.slice(i, i + 7);
+      const soma = lote.reduce((acc, curr) => acc + curr.caloriasGastas, 0);
+      semanas.push({ nome: `Sem ${Math.floor(i/7) + 1}`, valor: soma });
+    }
+
+    return { topGasto, semanas };
+  });
+
   // Dados Dashboard
   metaCalorias = signal<number>(0);
   caloriasConsumidas = signal<number>(0);
