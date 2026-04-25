@@ -38,6 +38,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
       PGADMIN_CONFIG_ENFORCE_PASSWORD_BINARY_STRENGTH: "False"
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+      SCRIPT_NAME: /pgadmin
     depends_on:
       - db
 

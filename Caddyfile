@@ -9,6 +9,8 @@ localhost {
         reverse_proxy pgadmin:80
     }
 
+    redir /pgadmin /pgadmin/
+
     handle /contador-calorias* {
         reverse_proxy frontend:80
     }
@@ -24,6 +26,8 @@ marcel-zimmer.online {
     handle /pgadmin* {
         reverse_proxy pgadmin:80
     }
+
+    redir /pgadmin /pgadmin/
 
     handle /contador-calorias* {
         reverse_proxy frontend:80
