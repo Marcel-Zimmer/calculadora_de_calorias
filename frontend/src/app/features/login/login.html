@@ -21,7 +21,7 @@
 
         <div class="space-y-1">
           <label class="text-[10px] font-black text-slate-400 uppercase ml-1 tracking-widest">E-mail</label>
-          <input type="email" placeholder="exemplo@email.com" [(ngModel)]="email" (keyup.enter)="login()"
+          <input name="email" type="email" placeholder="exemplo@email.com" [(ngModel)]="email" (keyup.enter)="login()"
             class="w-full bg-slate-50 border border-slate-400 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all">
         </div>
 
@@ -29,7 +29,7 @@
           <div class="flex justify-between items-center px-1">
             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Senha</label>
           </div>
-          <input type="password" placeholder="••••••••" [(ngModel)]="senha" (keyup.enter)="login()"
+          <input name="senha" type="password" placeholder="••••••••" [(ngModel)]="senha" (keyup.enter)="login()"
             class="w-full bg-slate-50 border border-slate-400 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all">
         </div>
 

@@ -26,6 +26,13 @@ export class Login {
   login() {
     this.mensagemErro.set(null);
 
+    if (!this.email() || !this.senha()) {
+      this.mensagemErro.set('Preencha o e-mail e a senha.');
+      return;
+    }
+
+    console.log('Tentando login com:', this.email());
+
     let objeto: UsuarioLogin = {
       email: this.email(),
       senha: this.senha()
