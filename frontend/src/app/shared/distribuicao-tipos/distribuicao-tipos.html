@@ -5,7 +5,7 @@
         @for (item of itens(); track item.nome) {
         <div class="space-y-2">
             <div class="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-slate-500">
-                <span>{{ item.nome }}</span>
+                <span>{{ item.displayNome || item.nome }}</span>
                 <span class="text-slate-800">{{ item.valor.toFixed(0) }} <span class="text-[10px] text-slate-400">kcal</span></span>
             </div>
             <div class="h-3 bg-slate-100 rounded-full overflow-hidden">

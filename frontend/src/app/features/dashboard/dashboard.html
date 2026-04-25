@@ -136,58 +136,97 @@
             </div>
           </div>
 
-          <!-- CONSUMO STATISTICS SECTION -->
-          <div *ngIf="abaMenu() === 'estatisticas-consumo'" class="space-y-6">
-            <h2 class="text-xl font-black text-slate-800 -mb-2">Resumo de Consumo</h2>
-            <!-- 5 Cards de Médias por Refeição -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" *ngIf="dadosEstatisticas()">
-              @for (dist of dadosEstatisticas().distribuicaoRefeicoesEnriquecida; track dist.nome) {
-                  <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
-                      <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="dist.corCss">
-                          {{ dist.icone }}
-                      </div>
-                      <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
-                      <p class="text-lg font-black text-slate-800">{{ (dist.valor / (dadosEstatisticas().diasComDados || 1)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
-                      <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
-                  </div>
-              }
+        <!-- CONSUMO STATISTICS SECTION -->
+        <div *ngIf="abaMenu() === 'estatisticas-consumo'" class="space-y-6">
+          <h2 class="text-xl font-black text-slate-800 mb-4">Resumo de Consumo</h2>
+          <!-- 6 Cards de Médias por Refeição + Total -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" *ngIf="dadosEstatisticas()">
+            <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center transition-all hover:-translate-y-1">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl bg-slate-50 text-slate-500">
+                    📊
+                </div>
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">Média Diária</p>
+                <p class="text-lg font-black text-slate-800">{{ (dadosEstatisticas().mediaConsumoDiario || 0).toFixed(0) }} <span class="text-[10px] font-medium text-slate-400">kcal</span></p>
+                <p class="text-[8px] font-bold text-slate-300 mt-1">no período</p>
             </div>
+            @for (dist of dadosEstatisticas().distribuicaoRefeicoesEnriquecida; track dist.nome) {
+                <div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="dist.corCss">
+                        {{ dist.icone }}
+                    </div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ dist.displayNome }}</p>
+                    <p class="text-lg font-black text-slate-800">{{ (dist.valor / (dadosEstatisticas().diasComDados || 1)).toFixed(0) }} <span class="text-[10px] font-medium">kcal</span></p>
+                    <p class="text-[8px] font-bold text-slate-300 mt-1">média diária</p>
+                </div>
+            }
+          </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
-              <div class="lg:col-span-2">
-                  <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
-                  <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
+          <!-- Insights de Consumo -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="insightsConsumo()">
+            <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl flex items-center space-x-4">
+              <div class="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-emerald-200">✅</div>
+              <div>
+                <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Consistência</p>
+                <p class="text-slate-800 font-bold text-sm">{{ insightsConsumo()?.diasNaMeta }} de {{ insightsConsumo()?.totalDias }} dias na meta</p>
               </div>
-              <div class="lg:col-span-1">
-                  <app-distribuicao-tipos titulo="Distribuição de Refeições" [itens]="dadosEstatisticas().distribuicaoRefeicoesEnriquecida" corPrincipal="bg-emerald-500"></app-distribuicao-tipos>
+            </div>
+            <div class="bg-rose-50 border border-rose-100 p-4 rounded-3xl flex items-center space-x-4">
+              <div class="w-12 h-12 bg-rose-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-rose-200">📈</div>
+              <div>
+                <p class="text-[10px] font-black text-rose-600 uppercase tracking-widest">Pico de Ingestão</p>
+                <p class="text-slate-800 font-bold text-sm">{{ insightsConsumo()?.maiorIngestao }} kcal <span class="text-slate-400 font-normal text-xs">(Dia {{ insightsConsumo()?.diaMaiorIngestao }})</span></p>
               </div>
             </div>
           </div>
 
-          <!-- GASTO STATISTICS SECTION -->
-          <div *ngIf="abaMenu() === 'estatisticas-gasto'" class="space-y-6">
-            <h2 class="text-xl font-black text-slate-800 -mb-2">Resumo de Gasto</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" *ngIf="dadosEstatisticas()">
-              <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Gasto no Período</p>
-                  <p class="text-3xl font-black text-orange-500">{{ dadosEstatisticas().totalGasto.toFixed(0) }} <span class="text-xs font-medium">kcal</span></p>
-              </div>
-              <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Média Diária de Queima</p>
-                  <p class="text-3xl font-black text-slate-800">{{ dadosEstatisticas().mediaGastoDiario.toFixed(0) }} <span class="text-xs font-medium">kcal/dia</span></p>
-              </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+            <div class="lg:col-span-2">
+                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-semanal>
+                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos"></app-grafico-mensal>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
-              <div class="lg:col-span-2">
-                  <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-semanal>
-                  <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-mensal>
-              </div>
-              <div class="lg:col-span-1">
-                  <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>
-              </div>
+            <div class="lg:col-span-1">
+                <app-distribuicao-tipos titulo="Distribuição de Refeições" [itens]="dadosEstatisticas().distribuicaoRefeicoesEnriquecida" corPrincipal="bg-emerald-500"></app-distribuicao-tipos>
             </div>
           </div>
+        </div>
+
+        <!-- GASTO STATISTICS SECTION -->
+        <div *ngIf="abaMenu() === 'estatisticas-gasto'" class="space-y-6">
+          <h2 class="text-xl font-black text-slate-800 mb-4">Resumo de Gasto</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4" *ngIf="dadosEstatisticas() && insightsGasto()">
+            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-center">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total no Período</p>
+                <p class="text-3xl font-black text-orange-500">{{ dadosEstatisticas().totalGasto.toFixed(0) }} <span class="text-xs font-medium text-slate-400">kcal</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-center border-l-4 border-l-emerald-500">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Frequência Ativa</p>
+              <p class="text-2xl font-black text-slate-800">{{ insightsGasto()?.diasAtivos }} <span class="text-xs font-medium text-slate-400">de {{ insightsGasto()?.totalDias }} dias</span></p>
+            </div>
+            <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col justify-center">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Exercício Principal</p>
+              <p class="text-xl font-black text-emerald-600 truncate">{{ insightsGasto()?.exercicioPrincipal }}</p>
+            </div>
+          </div>
+
+          <!-- Melhor dia de treino -->
+          <div class="bg-orange-50 border border-orange-100 p-4 rounded-3xl flex items-center space-x-4" *ngIf="insightsGasto()">
+            <div class="w-12 h-12 bg-orange-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-orange-200">⚡</div>
+            <div>
+              <p class="text-[10px] font-black text-orange-600 uppercase tracking-widest">Melhor Desempenho</p>
+              <p class="text-slate-800 font-bold text-sm">Você queimou {{ insightsGasto()?.maiorGasto }} kcal no dia {{ insightsGasto()?.diaMaiorGasto }}!</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+            <div class="lg:col-span-2">
+                <app-grafico-semanal *ngIf="periodoEstatisticas() === 'semanal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-semanal>
+                <app-grafico-mensal *ngIf="periodoEstatisticas() === 'mensal'" [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-mensal>
+            </div>
+            <div class="lg:col-span-1">
+                <app-distribuicao-tipos titulo="Esforço por Exercício" [itens]="dadosEstatisticas().distribuicaoExerciciosEnriquecida" corPrincipal="bg-orange-500"></app-distribuicao-tipos>
+            </div>
+          </div>
+        </div>
 
           <!-- NUTRIENTES STATISTICS SECTION -->
           <div *ngIf="abaMenu() === 'estatisticas-nutrientes'">

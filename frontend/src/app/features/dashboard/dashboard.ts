@@ -51,6 +51,46 @@ export class Dashboard implements OnInit {
   periodoEstatisticas = signal<'semanal' | 'mensal'>('semanal');
   dadosEstatisticas = signal<any>(null);
 
+  // Insights de Estatísticas (Calculados automaticamente quando dadosEstatisticas muda)
+  insightsConsumo = computed(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados || !dados.pontos || dados.pontos.length === 0) return null;
+
+    const pontos = dados.pontos;
+    const diasNaMeta = pontos.filter((p: any) => p.caloriasConsumidas > 0 && p.caloriasConsumidas <= dados.metaCaloricaDiaria).length;
+    const maiorIngestao = Math.max(...pontos.map((p: any) => p.caloriasConsumidas));
+    const diaMaiorIngestao = pontos.find((p: any) => p.caloriasConsumidas === maiorIngestao)?.legenda || '-';
+
+    return {
+      diasNaMeta,
+      totalDias: dados.pontos.length,
+      maiorIngestao,
+      diaMaiorIngestao
+    };
+  });
+
+  insightsGasto = computed(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados || !dados.pontos || dados.pontos.length === 0) return null;
+
+    const pontos = dados.pontos;
+    const diasAtivos = pontos.filter((p: any) => p.caloriasGastas > 0).length;
+    const maiorGasto = Math.max(...pontos.map((p: any) => p.caloriasGastas));
+    const diaMaiorGasto = pontos.find((p: any) => p.caloriasGastas === maiorGasto)?.legenda || '-';
+    
+    // Exercício favorito (o de maior valor total no período)
+    const exercicioPrincipal = [...(dados.distribuicaoExerciciosEnriquecida || [])]
+      .sort((a, b) => b.valor - a.valor)[0]?.displayNome || 'Nenhum';
+
+    return {
+      diasAtivos,
+      totalDias: dados.pontos.length,
+      maiorGasto,
+      diaMaiorGasto,
+      exercicioPrincipal
+    };
+  });
+
   // Dados Dashboard
   metaCalorias = signal<number>(0);
   caloriasConsumidas = signal<number>(0);
