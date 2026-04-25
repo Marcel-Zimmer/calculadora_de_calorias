@@ -46,6 +46,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
     {
         public string Nome { get; set; } = string.Empty;
         public int Valor { get; set; }
+        public int Media { get; set; }
         public double Percentual { get; set; }
     }
 

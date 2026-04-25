@@ -185,6 +185,7 @@ namespace CalculadoraCalorias.Application.Features
                     {
                         Nome = ((int)tipo).ToString(),
                         Valor = (int)soma,
+                        Media = diasComDados > 0 ? (int)(soma / diasComDados) : 0,
                         Percentual = totalConsumido > 0 ? (soma / (double)totalConsumido) * 100 : 0
                     };
                 }).ToList();
