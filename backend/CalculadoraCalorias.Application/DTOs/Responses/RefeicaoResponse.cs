@@ -45,6 +45,9 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
     public class DistribuicaoItemResponse
     {
         public string Nome { get; set; } = string.Empty;
+        public string DisplayNome { get; set; } = string.Empty;
+        public string Icone { get; set; } = string.Empty;
+        public string CorCss { get; set; } = string.Empty;
         public int Valor { get; set; }
         public int Media { get; set; }
         public double Percentual { get; set; }

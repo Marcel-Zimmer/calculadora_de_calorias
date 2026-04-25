@@ -171,7 +171,7 @@ namespace CalculadoraCalorias.Application.Features
                 .GroupBy(a => a.TipoExercicio)
                 .Select(g => new DistribuicaoItemResponse
                 {
-                    Nome = g.Key.ToString(),
+                    Nome = ((int)g.Key).ToString(),
                     Valor = (int)g.Sum(x => x.CaloriasEstimadas ?? 0),
                     Percentual = totalGasto > 0 ? (double)g.Sum(x => x.CaloriasEstimadas ?? 0) / totalGasto * 100 : 0
                 }).ToList();
