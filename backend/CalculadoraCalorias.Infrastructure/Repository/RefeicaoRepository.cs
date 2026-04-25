@@ -9,13 +9,13 @@ namespace CalculadoraCalorias.Infrastructure.Repository
 {
     public class RefeicaoRepository(AppDbContext context) : RepositoryBase<Refeicao>(context), IRefeicaoRepository
     {
-        public async Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId)
+        public async Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null)
         {
-            var dataHoje = FusoHorario.ObterDataHojeBrasilia();
+            var dataFiltro = data ?? FusoHorario.ObterDataHojeBrasilia();
 
             return await _dbSet
                 .AsNoTracking()
-                .Where(x => x.UsuarioId == usuarioId && x.Data == dataHoje)
+                .Where(x => x.UsuarioId == usuarioId && x.Data == dataFiltro)
                 .Select(x => new RefeicaoDTO{
                     Id = x.Id,
                     Calorias = (int?)x.Calorias,

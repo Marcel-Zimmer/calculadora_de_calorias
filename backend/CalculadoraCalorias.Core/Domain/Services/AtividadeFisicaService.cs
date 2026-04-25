@@ -63,9 +63,9 @@ public class AtividadeFisicaService(
        return atividade;
     }
 
-    public async Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId)
+    public async Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null)
     {
-        return await _atividadeFisicaRepository.ObterDiariasPorUsuarioId(usuarioId);
+        return await _atividadeFisicaRepository.ObterDiariasPorUsuarioId(usuarioId, data);
     }
 
     public async Task<List<ExercicioDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim)

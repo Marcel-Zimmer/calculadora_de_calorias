@@ -10,12 +10,12 @@ namespace CalculadoraCalorias.Infrastructure.Repository
 {
     public class AtividadeFisicaRepository(AppDbContext context) : RepositoryBase<AtividadeFisica>(context), IAtividadeFisicaRepository
     {
-        public async Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId)
+        public async Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null)
         {
-            var dataHoje = FusoHorario.ObterDataHojeBrasilia();
+            var dataFiltro = data ?? FusoHorario.ObterDataHojeBrasilia();
             return await _dbSet
                 .AsNoTracking()
-                .Where(x => x.UsuarioId == usuarioId && x.DataExercicio == dataHoje)
+                .Where(x => x.UsuarioId == usuarioId && x.DataExercicio == dataFiltro)
                 .Select(x => new ExercicioDTO
                 {
                     Id = x.Id,

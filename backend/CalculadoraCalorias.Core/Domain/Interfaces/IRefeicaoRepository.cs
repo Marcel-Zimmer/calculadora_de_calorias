@@ -6,7 +6,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
     public interface IRefeicaoRepository : IRepositoryBase<Refeicao>
     {
-        Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId);
+        Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null);
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
         Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId);
     }

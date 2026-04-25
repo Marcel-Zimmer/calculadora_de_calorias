@@ -17,7 +17,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         Task<AtividadeFisica?> ObterPorId(int id);
         Task<AtividadeFisica?> Atualizar(long id, TipoExercicioEnum tipo, int kilometragemPercorrida, TimeSpan tempoDeExercicio);
         Task<AtividadeFisica?> Adicionar(long usuarioId, decimal caloriasEstimadas, TipoExercicioEnum tipo, TimeSpan tempoDeExercicio, DateOnly dataDoExercicio);
-        Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId);
+        Task<List<ExercicioDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null);
         Task<List<ExercicioDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
     }
 }

@@ -13,15 +13,15 @@ namespace CalculadoraCalorias.Application.Features
         IRegistroFisicoService _registroFisicoService) : IGraficoAppService
     {
        
-        public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId)
+        public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId, DateOnly? data = null)
         {
             if(usuarioId == 0) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
 
             var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
             if (registroFisico == null) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
 
-            var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId);
-            var atividades = await _atividadeFisicaService.ObterDiariasPorUsuarioId(usuarioId);
+            var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId, data);
+            var atividades = await _atividadeFisicaService.ObterDiariasPorUsuarioId(usuarioId, data);
 
             var totalConsumido = refeicoes?.Sum(x => x.Calorias ?? 0) ?? 0;
             var totalGasto = atividades?.Sum(y => y.CaloriasEstimadas ?? 0) ?? 0;
@@ -39,11 +39,11 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<RefeicaoGraficoDiarioResponse>.Success(informacoesDiarias);
         }
 
-        public async Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long idUsuario)
+        public async Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long idUsuario, DateOnly? data = null)
         {
-            var hoje = DateTime.Today;
-            int diff = (7 + (hoje.DayOfWeek - DayOfWeek.Monday)) % 7;
-            var inicioSemana = DateOnly.FromDateTime(hoje.AddDays(-1 * diff));
+            var dataRef = data?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
+            int diff = (7 + (dataRef.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var inicioSemana = DateOnly.FromDateTime(dataRef.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
@@ -57,10 +57,10 @@ namespace CalculadoraCalorias.Application.Features
             });
         }
 
-        public async Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long idUsuario)
+        public async Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long idUsuario, DateOnly? data = null)
         {
-            var hoje = DateTime.Today;
-            var inicioMes = new DateOnly(hoje.Year, hoje.Month, 1);
+            var dataRef = data ?? DateOnly.FromDateTime(DateTime.Today);
+            var inicioMes = new DateOnly(dataRef.Year, dataRef.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
@@ -74,20 +74,20 @@ namespace CalculadoraCalorias.Application.Features
             });
         }
 
-        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId)
+        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId, DateOnly? data = null)
         {
-            var hoje = DateTime.Today;
-            int diff = (7 + (hoje.DayOfWeek - DayOfWeek.Monday)) % 7;
-            var inicioSemana = DateOnly.FromDateTime(hoje.AddDays(-1 * diff));
+            var dataRef = data?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
+            int diff = (7 + (dataRef.DayOfWeek - DayOfWeek.Monday)) % 7;
+            var inicioSemana = DateOnly.FromDateTime(dataRef.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
             return Resultado<EstatisticasDetalhadasResponse>.Success(await ObterDadosPorPeriodo(usuarioId, inicioSemana, fimSemana, true));
         }
 
-        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(long usuarioId)
+        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(long usuarioId, DateOnly? data = null)
         {
-            var hoje = DateTime.Today;
-            var inicioMes = new DateOnly(hoje.Year, hoje.Month, 1);
+            var dataRef = data ?? DateOnly.FromDateTime(DateTime.Today);
+            var inicioMes = new DateOnly(dataRef.Year, dataRef.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             return Resultado<EstatisticasDetalhadasResponse>.Success(await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false));
