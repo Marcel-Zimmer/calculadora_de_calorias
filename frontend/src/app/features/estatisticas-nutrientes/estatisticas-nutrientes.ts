@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NutrientesService, NutrientesResponse } from '../../core/services/nutrientes.service';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
@@ -13,8 +13,18 @@ export class EstatisticasNutrientesComponent implements OnInit {
   private nutrientesService = inject(NutrientesService);
   private autenticacao = inject(AutenticacaoService);
 
+  dataSelecionada = input<string>(new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' }));
   periodo = signal<'diario' | 'semanal' | 'mensal'>('diario');
   dados = signal<NutrientesResponse | null>(null);
+
+  constructor() {
+    effect(() => {
+      // Reage a mudanças na data selecionada ou no período
+      this.dataSelecionada();
+      this.periodo();
+      this.carregarDados();
+    }, { allowSignalWrites: true });
+  }
 
   // --- CÁLCULOS AVANÇADOS (COMPUTED SIGNALS) ---
 
@@ -112,24 +122,23 @@ export class EstatisticasNutrientesComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.carregarDados();
   }
 
   alterarPeriodo(novoPeriodo: 'diario' | 'semanal' | 'mensal') {
     this.periodo.set(novoPeriodo);
-    this.carregarDados();
   }
 
   carregarDados() {
     const userId = this.autenticacao.obterId();
+    const data = this.dataSelecionada();
     let obs;
 
     if (this.periodo() === 'diario') {
-      obs = this.nutrientesService.obterNutrientesDiario(userId);
+      obs = this.nutrientesService.obterNutrientesDiario(userId, data);
     } else if (this.periodo() === 'semanal') {
-      obs = this.nutrientesService.obterNutrientesSemanal(userId);
+      obs = this.nutrientesService.obterNutrientesSemanal(userId, data);
     } else {
-      obs = this.nutrientesService.obterNutrientesMensal(userId);
+      obs = this.nutrientesService.obterNutrientesMensal(userId, data);
     }
 
     obs.subscribe({

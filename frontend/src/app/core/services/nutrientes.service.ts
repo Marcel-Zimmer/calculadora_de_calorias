@@ -24,15 +24,21 @@ export class NutrientesService {
   private http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/Nutrientes`;
 
-  obterNutrientesDiario(usuarioId: number): Observable<NutrientesResponse> {
-    return this.http.get<NutrientesResponse>(`${this.baseUrl}/diario/${usuarioId}`);
+  obterNutrientesDiario(usuarioId: number, data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/diario/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get<NutrientesResponse>(url);
   }
 
-  obterNutrientesSemanal(usuarioId: number): Observable<NutrientesResponse> {
-    return this.http.get<NutrientesResponse>(`${this.baseUrl}/semanal/${usuarioId}`);
+  obterNutrientesSemanal(usuarioId: number, data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/semanal/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get<NutrientesResponse>(url);
   }
 
-  obterNutrientesMensal(usuarioId: number): Observable<NutrientesResponse> {
-    return this.http.get<NutrientesResponse>(`${this.baseUrl}/mensal/${usuarioId}`);
+  obterNutrientesMensal(usuarioId: number, data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/mensal/${usuarioId}`;
+    if (data) url += `?data=${data}`;
+    return this.http.get<NutrientesResponse>(url);
   }
 }
