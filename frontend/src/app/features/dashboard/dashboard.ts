@@ -21,11 +21,12 @@ import { UsuarioService } from '../../core/services/usuario.service';
 import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-tipos';
 import { EstatisticasNutrientesComponent } from '../estatisticas-nutrientes/estatisticas-nutrientes';
 import { NotificacaoService } from '../../core/services/notificacao.service';
+import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -55,6 +56,33 @@ export class Dashboard implements OnInit {
   // Estatísticas
   periodoEstatisticas = signal<'semanal' | 'mensal'>('semanal');
   dadosEstatisticas = signal<any>(null);
+
+  // Computed Signals para o componente BsHistoricoMensal
+  dadosHistoricoSaldoMensal = computed<DadoHistorico[]>(() => {
+    const pontos = this.dadosGraficoMensal();
+    return pontos.map(p => ({
+      legenda: p.legenda,
+      valor: p.saldoCalorico // Agora vem calculado do backend
+    }));
+  });
+
+  dadosHistoricoConsumoMensal = computed<DadoHistorico[]>(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados || this.periodoEstatisticas() !== 'mensal') return [];
+    return dados.pontos.map((p: any) => ({
+      legenda: p.legenda,
+      valor: p.caloriasConsumidas
+    }));
+  });
+
+  dadosHistoricoGastoMensal = computed<DadoHistorico[]>(() => {
+    const dados = this.dadosEstatisticas();
+    if (!dados || this.periodoEstatisticas() !== 'mensal') return [];
+    return dados.pontos.map((p: any) => ({
+      legenda: p.legenda,
+      valor: p.caloriasGastas
+    }));
+  });
 
   // Insights de Estatísticas (Calculados automaticamente quando dadosEstatisticas muda)
   insightsConsumo = computed(() => {

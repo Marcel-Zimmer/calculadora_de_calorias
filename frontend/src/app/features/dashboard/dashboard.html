@@ -171,22 +171,12 @@
                       <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()" tipoVisualizacao="liquido"></app-grafico-semanal>
                   }
                   @case ('mensal') {
-                      <!-- Histórico Detalhado no lugar do gráfico de linha mensal -->
-                      <div class="bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
-                          <h3 class="font-black text-slate-800 mb-6 text-lg tracking-tight">Histórico Mensal Diário</h3>
-                          <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
-                              @for (dia of dadosGraficoMensal(); track dia.data) {
-                                  <div class="flex flex-col p-2 bg-slate-50 rounded-xl border border-slate-100 transition-all hover:bg-white hover:shadow-md group">
-                                      <span class="text-[8px] font-black text-slate-400 uppercase mb-0.5">Dia {{dia.legenda}}</span>
-                                      <p class="text-xs font-black transition-colors" 
-                                         [ngClass]="(dia.caloriasConsumidas - dia.caloriasGastas) > metaCalorias() ? 'text-rose-500' : ((dia.caloriasConsumidas - dia.caloriasGastas) > 0 ? 'text-emerald-500' : 'text-slate-400')">
-                                          {{dia.caloriasConsumidas - dia.caloriasGastas}} 
-                                          <span class="text-[8px] font-bold opacity-60">kcal</span>
-                                      </p>
-                                  </div>
-                              }
-                          </div>
-                      </div>
+                      <app-bs-historico-mensal 
+                          titulo="Histórico Mensal Diário"
+                          [dados]="dadosHistoricoSaldoMensal()"
+                          [metaDiaria]="metaCalorias()"
+                          [pintarPorMeta]="true">
+                      </app-bs-historico-mensal>
                   }
               }
             </div>
@@ -272,21 +262,12 @@
             </div>
 
             <!-- Histórico Detalhado (Apenas na visão mensal) -->
-            <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-full" *ngIf="periodoEstatisticas() === 'mensal'">
-                <h3 class="font-black text-slate-800 mb-6 text-lg tracking-tight">Histórico Diário</h3>
-                <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
-                        @for (dia of dadosEstatisticas().pontos; track dia.data) {
-                            <div class="flex flex-col p-2 bg-slate-50 rounded-xl border border-slate-100 transition-all hover:bg-white hover:shadow-md group">
-                                <span class="text-[8px] font-black text-slate-400 uppercase mb-0.5">Dia {{dia.legenda}}</span>
-                                <p class="text-xs font-black text-indigo-500">
-                                    {{dia.caloriasConsumidas}} 
-                                    <span class="text-[9px] font-bold opacity-60">kcal</span>
-                                </p>
-                            </div>
-                        }
-                    </div>
-                </div>
+            <div class="lg:col-span-2" *ngIf="periodoEstatisticas() === 'mensal'">
+                <app-bs-historico-mensal 
+                    titulo="Histórico Diário de Consumo"
+                    [dados]="dadosHistoricoConsumoMensal()"
+                    [pintarPorMeta]="false">
+                </app-bs-historico-mensal>
             </div>
 
             <!-- Distribuição (Sempre visível) -->
@@ -354,22 +335,12 @@
             </div>
 
             <!-- Histórico Diário de Gasto (Apenas na visão mensal) -->
-            <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-full" *ngIf="periodoEstatisticas() === 'mensal'">
-                <h3 class="font-black text-slate-800 mb-6 text-lg tracking-tight">Histórico de Queima</h3>
-                <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
-                        @for (dia of dadosEstatisticas().pontos; track dia.data) {
-                            <div class="flex flex-col p-2 bg-slate-50 rounded-xl border border-slate-100 transition-all hover:bg-white hover:shadow-md group">
-                                <span class="text-[8px] font-black text-slate-400 uppercase mb-0.5">Dia {{dia.legenda}}</span>
-                                <p class="text-xs font-black transition-colors" 
-                                   [ngClass]="dia.caloriasGastas > 0 ? 'text-orange-500' : 'text-slate-400'">
-                                    {{dia.caloriasGastas}} 
-                                    <span class="text-[9px] font-bold opacity-60">kcal</span>
-                                </p>
-                            </div>
-                        }
-                    </div>
-                </div>
+            <div class="lg:col-span-2" *ngIf="periodoEstatisticas() === 'mensal'">
+                <app-bs-historico-mensal 
+                    titulo="Histórico de Queima"
+                    [dados]="dadosHistoricoGastoMensal()"
+                    [pintarPorMeta]="false">
+                </app-bs-historico-mensal>
             </div>
 
             <!-- Distribuição -->
