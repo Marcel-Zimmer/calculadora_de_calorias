@@ -59,7 +59,14 @@ namespace CalculadoraCalorias.Api.BackgroundServices
 
                     var estimativaCalorica = await llmService.SimularCaloriasRefeicao(imagemBytes, refeicao.Peso);
 
-                    refeicao.AtualizarEstimativa(estimativaCalorica.Alimento ?? "alimento não identificado", estimativaCalorica.Calorias, estimativaCalorica.Carboidratos,estimativaCalorica.Proteinas, estimativaCalorica.Gorduras, estimativaCalorica.Acucares, estimativaCalorica.Fibras);
+                    refeicao.AtualizarEstimativa(
+                        estimativaCalorica.Alimento ?? "alimento não identificado", 
+                        estimativaCalorica.Calorias, 
+                        estimativaCalorica.Proteinas,
+                        estimativaCalorica.Carboidratos, 
+                        estimativaCalorica.Gorduras, 
+                        estimativaCalorica.Acucares, 
+                        estimativaCalorica.Fibras);
 
 
                     var json = JsonSerializer.Serialize(estimativaCalorica, new JsonSerializerOptions { WriteIndented = true });
