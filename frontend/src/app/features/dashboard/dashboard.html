@@ -168,7 +168,12 @@
                       </app-grafico-diario>
                   }
                   @case ('semanal') {
-                      <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()" tipoVisualizacao="liquido"></app-grafico-semanal>
+                      <app-bs-grafico-media-semanal 
+                          titulo="Saldo de Calorias"
+                          [dados]="dadosGraficoSemanalSaldo()" 
+                          [metaDiaria]="metaCalorias()"
+                          [pintarPorMeta]="true">
+                      </app-bs-grafico-media-semanal>
                   }
                   @case ('mensal') {
                       <app-bs-historico-mensal 
@@ -258,7 +263,11 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
             <!-- Gráfico Semanal (Apenas na visão semanal) -->
             <div class="lg:col-span-2" *ngIf="periodoEstatisticas() === 'semanal'">
-                <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" corOverride="bg-indigo-400"></app-grafico-semanal>
+                <app-bs-grafico-media-semanal 
+                    titulo="Consumo Semanal" 
+                    [dados]="dadosHistoricoConsumo()" 
+                    corPadrao="bg-indigo-400">
+                </app-bs-grafico-media-semanal>
             </div>
 
             <!-- Histórico Detalhado (Apenas na visão mensal) -->
@@ -331,7 +340,11 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
             <!-- Gráfico Semanal -->
             <div class="lg:col-span-2" *ngIf="periodoEstatisticas() === 'semanal'">
-                <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosEstatisticas().pontos" tipoVisualizacao="gasto"></app-grafico-semanal>
+                <app-bs-grafico-media-semanal 
+                    titulo="Desempenho Semanal" 
+                    [dados]="dadosHistoricoGasto()" 
+                    corPadrao="bg-orange-400">
+                </app-bs-grafico-media-semanal>
             </div>
 
             <!-- Histórico Diário de Gasto (Apenas na visão mensal) -->

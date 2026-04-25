@@ -1,0 +1,27 @@
+<div class="grafico-container">
+    <div class="grafico-header">
+        <h3 class="grafico-titulo">{{ titulo() }}</h3>
+        
+        <div class="grafico-legenda-container" *ngIf="pintarPorMeta()">
+            <span class="legenda-item">
+                <div class="legenda-cor-box bg-emerald-400"></div> Na Meta
+            </span>
+            <span class="legenda-item">
+                <div class="legenda-cor-box bg-rose-400"></div> Acima da Meta
+            </span>
+        </div>
+    </div>
+
+    <div class="grafico-corpo">
+        @for (item of dados(); track item.legenda) {
+            <div class="bar-wrapper">
+                <span class="bar-valor-topo">{{ item.valor > 0 ? item.valor : '' }}</span>
+                <div class="bar-elemento"
+                     [ngClass]="obterClasseCor(item.valor)"
+                     [style.height]="obterAltura(item.valor)">
+                </div>
+                <span class="bar-legenda-bottom">{{ formatarLegenda(item.legenda) }}</span>
+            </div>
+        }
+    </div>
+</div>

@@ -22,11 +22,12 @@ import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-
 import { EstatisticasNutrientesComponent } from '../estatisticas-nutrientes/estatisticas-nutrientes';
 import { NotificacaoService } from '../../core/services/notificacao.service';
 import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { BsGraficoMediaSemanalComponent } from '../../shared/bs-grafico-media-semanal/bs-grafico-media-semanal';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent],
+  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, GraficoSemanal, GraficoMensal, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -57,7 +58,7 @@ export class Dashboard implements OnInit {
   periodoEstatisticas = signal<'semanal' | 'mensal'>('semanal');
   dadosEstatisticas = signal<any>(null);
 
-  // Computed Signals para o componente BsHistoricoMensal
+  // Computed Signals para os componentes de Histórico/Gráfico
   dadosHistoricoSaldoMensal = computed<DadoHistorico[]>(() => {
     const pontos = this.dadosGraficoMensal();
     return pontos.map(p => ({
@@ -66,18 +67,26 @@ export class Dashboard implements OnInit {
     }));
   });
 
-  dadosHistoricoConsumoMensal = computed<DadoHistorico[]>(() => {
+  dadosGraficoSemanalSaldo = computed<DadoHistorico[]>(() => {
+    const pontos = this.dadosGraficoSemanal();
+    return pontos.map(p => ({
+      legenda: p.legenda,
+      valor: p.saldoCalorico
+    }));
+  });
+
+  dadosHistoricoConsumo = computed<DadoHistorico[]>(() => {
     const dados = this.dadosEstatisticas();
-    if (!dados || this.periodoEstatisticas() !== 'mensal') return [];
+    if (!dados) return [];
     return dados.pontos.map((p: any) => ({
       legenda: p.legenda,
       valor: p.caloriasConsumidas
     }));
   });
 
-  dadosHistoricoGastoMensal = computed<DadoHistorico[]>(() => {
+  dadosHistoricoGasto = computed<DadoHistorico[]>(() => {
     const dados = this.dadosEstatisticas();
-    if (!dados || this.periodoEstatisticas() !== 'mensal') return [];
+    if (!dados) return [];
     return dados.pontos.map((p: any) => ({
       legenda: p.legenda,
       valor: p.caloriasGastas
