@@ -1,6 +1,8 @@
 ﻿using CalculadoraCalorias.Application.Filas;
 using CalculadoraCalorias.Core.Domain.Interfaces;
 using CalculadoraCalorias.Infrastructure.Repository;
+using Microsoft.AspNetCore.SignalR;
+using CalculadoraCalorias.Api.Hubs;
 using System.Text.Json;
 
 namespace CalculadoraCalorias.Api.BackgroundServices
@@ -10,15 +12,18 @@ namespace CalculadoraCalorias.Api.BackgroundServices
         private readonly FilaEstimativaIa _fila;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<WorkerEstimativaIa> _logger;
+        private readonly IHubContext<NotificacaoHub> _hubContext;
 
         public WorkerEstimativaIa(
             FilaEstimativaIa fila,
             IServiceScopeFactory scopeFactory,
-            ILogger<WorkerEstimativaIa> logger)
+            ILogger<WorkerEstimativaIa> logger,
+            IHubContext<NotificacaoHub> hubContext)
         {
             _fila = fila;
             _scopeFactory = scopeFactory;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -73,6 +78,11 @@ namespace CalculadoraCalorias.Api.BackgroundServices
                     Console.WriteLine(json);
 
                     await unitOfWork.CommitAsync();
+
+                    // Notificar o Frontend em Tempo Real
+                    await _hubContext.Clients.Group(refeicao.UsuarioId.ToString())
+                        .SendAsync("RefeicaoProcessada", refeicao.Id, stoppingToken);
+
                     try
                     {
                         if (File.Exists(caminhoFisicoCompleto))

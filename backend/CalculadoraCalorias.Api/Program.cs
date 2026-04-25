@@ -1,5 +1,6 @@
 using CalculadoraCalorias.Api.BackgroundServices;
 using CalculadoraCalorias.Api.Middlewares;
+using CalculadoraCalorias.Api.Hubs;
 using CalculadoraCalorias.Application;
 using CalculadoraCalorias.Core;
 using CalculadoraCalorias.Infrastructure;
@@ -17,7 +18,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:4200", "http://52.67.253.161", "https://marcel-zimmer.online")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -76,6 +78,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddCore();
+builder.Services.AddSignalR();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrEmpty(connectionString))
@@ -121,5 +124,6 @@ app.UseCors("PermitirFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<NotificacaoHub>("/api/hubs/notificacoes");
 
 app.Run();
