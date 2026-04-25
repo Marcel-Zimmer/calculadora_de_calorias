@@ -81,10 +81,10 @@
                     </app-grafico-diario>
                 }
                 @case ('semanal') {
-                    <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()"></app-grafico-semanal>
+                    <app-grafico-semanal [meta]="metaCalorias()" [dados]="dadosGraficoSemanal()" tipoVisualizacao="liquido"></app-grafico-semanal>
                 }
                 @case ('mensal') {
-                    <app-grafico-mensal [meta]="metaCalorias()" [dados]="dadosGraficoMensal()"></app-grafico-mensal>
+                    <app-grafico-mensal [meta]="metaCalorias()" [dados]="dadosGraficoMensal()" tipoVisualizacao="liquido"></app-grafico-mensal>
                 }
             }
           </div>
