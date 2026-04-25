@@ -1,0 +1,14 @@
+<div class="historico-container">
+    <h3 class="historico-titulo">{{ titulo() }}</h3>
+    <div class="historico-grid">
+        @for (dia of dados(); track dia.legenda) {
+            <div class="historico-card">
+                <span class="historico-legenda">Dia {{ dia.legenda }}</span>
+                <p class="historico-valor-container" [ngClass]="obterClasseCor(dia.valor)">
+                    {{ dia.valor }}
+                    <span class="historico-unidade">kcal</span>
+                </p>
+            </div>
+        }
+    </div>
+</div>
