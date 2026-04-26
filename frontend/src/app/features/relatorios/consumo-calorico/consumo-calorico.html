@@ -1,0 +1,31 @@
+<div class="animate-fade-in space-y-6">
+  <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-2">
+    <h2 class="text-xl font-black text-slate-800">Relatório de Consumo</h2>
+    <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+      <button (click)="alterarPeriodo('semanal')" [class]="periodoEstatisticas() === 'semanal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
+      <button (click)="alterarPeriodo('mensal')" [class]="periodoEstatisticas() === 'mensal' ? 'bg-white shadow-sm text-emerald-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" *ngIf="dadosEstatisticas()">
+    @for (card of cardsMediaConsumo(); track card.titulo) { 
+      <app-bs-card-media-item [icone]="card.icone" [corCss]="card.corCss" [titulo]="card.titulo" [valor]="card.valor" [legenda]="card.legenda"></app-bs-card-media-item> 
+    }
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="periodoEstatisticas() === 'mensal' && dadosEstatisticas()?.consumoInsights">
+    <app-bs-card-maior-ingestao [maiorIngestao]="dadosEstatisticas()!.consumoInsights!.maiorIngestao" [diaMaiorIngestao]="dadosEstatisticas()!.consumoInsights!.diaMaiorIngestao"></app-bs-card-maior-ingestao>
+    <app-bs-grafico-media-por-semana titulo="Média Ingestão Semanal" corBarra="bg-indigo-400" [semanas]="dadosEstatisticas()!.consumoInsights!.mediasSemanais"></app-bs-grafico-media-por-semana>
+    <app-bs-grafico-maiores-consumos titulo="Maiores Consumos" corBarra="bg-indigo-400" [picos]="dadosEstatisticas()!.consumoInsights!.topPicos" [maximo]="dadosEstatisticas()!.consumoInsights!.maiorIngestao"></app-bs-grafico-maiores-consumos>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
+    <div class="lg:col-span-2">
+      <app-bs-grafico-media-semanal *ngIf="periodoEstatisticas() === 'semanal'" titulo="Consumo Semanal" [dados]="dadosHistoricoConsumo()" corPadrao="bg-indigo-500"></app-bs-grafico-media-semanal>
+      <app-bs-grafico-historico-mensal *ngIf="periodoEstatisticas() === 'mensal'" titulo="Histórico Consumo" [dados]="dadosHistoricoConsumo()" [pintarPorMeta]="false"></app-bs-grafico-historico-mensal>
+    </div>
+    <div class="lg:col-span-1">
+      <app-bs-grafico-distribuicao-itens titulo="Distribuição" [itens]="dadosEstatisticas()!.distribuicaoRefeicoes" corPrincipal="bg-indigo-500"></app-bs-grafico-distribuicao-itens>
+    </div>
+  </div>
+</div>

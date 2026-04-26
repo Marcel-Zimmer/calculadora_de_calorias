@@ -1,0 +1,21 @@
+<div class="animate-fade-in space-y-6">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+    <h2 class="text-xl font-black text-slate-800">Relatório de Nutrientes</h2>
+    <div class="flex bg-slate-200/50 p-1 rounded-2xl w-full md:w-auto">
+      <button (click)="alterarPeriodo('diario')" [class]="periodo() === 'diario' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Dia</button>
+      <button (click)="alterarPeriodo('semanal')" [class]="periodo() === 'semanal' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Semana</button>
+      <button (click)="alterarPeriodo('mensal')" [class]="periodo() === 'mensal' ? 'bg-white shadow-sm text-blue-600 font-bold' : 'text-slate-500'" class="flex-1 md:px-6 py-2 text-xs rounded-xl transition-all uppercase tracking-widest">Mês</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dados()">
+    <app-bs-grafico-divisao-calorias class="lg:col-span-2" [macros]="dados()?.macros || null"></app-bs-grafico-divisao-calorias>
+    <app-bs-card-perfil-anabolico [veredito]="dados()?.veredito || null"></app-bs-card-perfil-anabolico>
+
+    <div class="lg:col-span-3 grid grid-cols-2 md:grid-cols-5 gap-6 mt-4">
+      @for (item of progressoNutrientes(); track item.nome) {
+        <app-bs-card-nutrientes [nome]="item.nome" [icone]="item.icone" [valor]="item.valor" [meta]="item.meta" [cor]="item.cor" [bg]="item.bg" [isLimite]="item.isLimite"></app-bs-card-nutrientes>
+      }
+    </div>
+  </div>
+</div>

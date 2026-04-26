@@ -14,6 +14,10 @@ export class RegistroFisicoService {
     return this.http.get(`${this.baseUrl}/usuario/${usuarioId}`);
   }
 
+  adicionar(registro: any) {
+    return this.http.post(this.baseUrl, registro);
+  }
+
   atualizar(usuarioId: number, registro: any) {
     return this.http.put(`${this.baseUrl}/usuario/${usuarioId}`, registro);
   }

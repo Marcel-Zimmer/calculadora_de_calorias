@@ -14,6 +14,10 @@ export class PerfilBiometricoService {
     return this.http.get(`${this.baseUrl}/usuario/${usuarioId}`);
   }
 
+  adicionar(perfil: any) {
+    return this.http.post(this.baseUrl, perfil);
+  }
+
   atualizar(usuarioId: number, perfil: any) {
     return this.http.put(`${this.baseUrl}/usuario/${usuarioId}`, perfil);
   }
