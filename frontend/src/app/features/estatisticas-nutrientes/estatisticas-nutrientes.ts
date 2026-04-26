@@ -4,11 +4,13 @@ import { NutrientesService, NutrientesResponse } from '../../core/services/nutri
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
 import { BsCardNutrientesComponent } from '../../shared/bs-card-nutrientes/bs-card-nutrientes';
 import { NutrientesEnum } from '../../core/models/nutrientes.enum';
+import { BsGraficoDivisaoCaloriasComponent } from '../../shared/bs-grafico-divisao-calorias/bs-grafico-divisao-calorias';
+import { BsCardPerfilAnabolicoComponent } from '../../shared/bs-card-perfil-anabolico/bs-card-perfil-anabolico';
 
 @Component({
   selector: 'app-estatisticas-nutrientes',
   standalone: true,
-  imports: [CommonModule, BsCardNutrientesComponent],
+  imports: [CommonModule, BsCardNutrientesComponent, BsGraficoDivisaoCaloriasComponent, BsCardPerfilAnabolicoComponent],
   templateUrl: './estatisticas-nutrientes.html',
 })
 export class EstatisticasNutrientesComponent implements OnInit {
@@ -32,34 +34,7 @@ export class EstatisticasNutrientesComponent implements OnInit {
 
   // --- CÁLCULOS AVANÇADOS (COMPUTED SIGNALS) ---
 
-  // 1. Distribuição Calórica dos Macronutrientes
-  distribuicaoMacros = computed(() => {
-    const d = this.dados();
-    if (!d) return null;
-
-    const calProt = (d.consumoProteinas || 0) * 4;
-    const calCarb = (d.consumoCarboidratos || 0) * 4;
-    const calGord = (d.consumoGorduras || 0) * 9;
-    const total = calProt + calCarb + calGord || 1;
-
-    const percProt = (calProt / total) * 100;
-    const percCarb = (calCarb / total) * 100;
-    const percGord = (calGord / total) * 100;
-
-    // Lógica para o Donut SVG (Circunferência = 2 * PI * r = 2 * 3.14 * 15.915 ≈ 100)
-    // Usamos r=15.915 para que a circunferência seja exatamente 100, facilitando o uso de porcentagens.
-    const offsetProt = 0;
-    const offsetCarb = percProt;
-    const offsetGord = percProt + percCarb;
-
-    return { 
-      calProt, calCarb, calGord, total,
-      percProt, percCarb, percGord,
-      offsetProt, offsetCarb, offsetGord
-    };
-  });
-
-  // 2. Metas Individuais (Anéis)
+  // 1. Metas Individuais (Anéis)
   progressoNutrientes = computed(() => {
     const d = this.dados();
     if (!d || !d.detalhes) return [];
@@ -75,48 +50,6 @@ export class EstatisticasNutrientesComponent implements OnInit {
             bg: (item.tipo === NutrientesEnum.Acucar && item.valor > item.meta) ? 'text-rose-200' : info.bg
         };
     });
-  });
-
-  // 3. Análise de Perfil Nutricional (Veredito Inteligente)
-  perfilNutricional = computed(() => {
-    const macros = this.distribuicaoMacros();
-    if (!macros || macros.total < 100) return null; // Só analisa se houver consumo relevante
-
-    const { percProt, percCarb, percGord } = macros;
-
-    if (percProt > 25) {
-      return { 
-        titulo: 'Perfil Anabólico', 
-        descricao: 'Sua dieta está priorizando a regeneração e construção muscular.', 
-        cor: 'text-rose-600 bg-rose-50',
-        icone: '💪' 
-      };
-    }
-    
-    if (percGord > 35) {
-      return { 
-        titulo: 'Perfil Lipídico', 
-        descricao: 'Consumo elevado de gorduras. Atente-se à qualidade das fontes.', 
-        cor: 'text-orange-600 bg-orange-50',
-        icone: '🥑' 
-      };
-    }
-
-    if (percCarb > 60) {
-      return { 
-        titulo: 'Perfil Energético', 
-        descricao: 'Foco alto em carboidratos, ideal para dias de treinos intensos.', 
-        cor: 'text-amber-600 bg-amber-50',
-        icone: '⚡' 
-      };
-    }
-
-    return { 
-      titulo: 'Perfil Equilibrado', 
-      descricao: 'Excelente harmonia entre proteínas, carbos e gorduras.', 
-      cor: 'text-emerald-600 bg-emerald-50',
-      icone: '⚖️' 
-    };
   });
 
   ngOnInit(): void {
@@ -147,11 +80,5 @@ export class EstatisticasNutrientesComponent implements OnInit {
         console.error('Falha ao carregar nutrientes', erro);
       }
     });
-  }
-
-  obterPercentual(consumo: number, meta: number): number {
-    if (!meta || meta === 0) return 0;
-    const perc = (consumo / meta) * 100;
-    return perc > 100 ? 100 : perc;
   }
 }

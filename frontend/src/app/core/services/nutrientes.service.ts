@@ -12,6 +12,23 @@ export interface NutrienteDetalhe {
   isLimite: boolean;
 }
 
+export interface MacrosResponse {
+  caloriasProteinas: number;
+  caloriasCarboidratos: number;
+  caloriasGorduras: number;
+  totalCalorias: number;
+  percentualProteinas: number;
+  percentualCarboidratos: number;
+  percentualGorduras: number;
+}
+
+export interface VereditoResponse {
+  titulo: string;
+  descricao: string;
+  icone: string;
+  corCss: string;
+}
+
 export interface NutrientesResponse {
   periodo: string;
   metaProteinas: number;
@@ -25,6 +42,8 @@ export interface NutrientesResponse {
   limiteAcucares: number;
   consumoAcucares: number;
   detalhes: NutrienteDetalhe[];
+  macros?: MacrosResponse;
+  veredito?: VereditoResponse;
 }
 
 @Injectable({
