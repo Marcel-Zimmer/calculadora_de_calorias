@@ -24,6 +24,27 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public double ConsumoAcucares { get; set; }
 
         public List<NutrienteDetalheResponse> Detalhes { get; set; } = new();
+        public MacrosResponse? Macros { get; set; }
+        public VereditoResponse? Veredito { get; set; }
+    }
+
+    public class MacrosResponse
+    {
+        public double CaloriasProteinas { get; set; }
+        public double CaloriasCarboidratos { get; set; }
+        public double CaloriasGorduras { get; set; }
+        public double TotalCalorias { get; set; }
+        public double PercentualProteinas { get; set; }
+        public double PercentualCarboidratos { get; set; }
+        public double PercentualGorduras { get; set; }
+    }
+
+    public class VereditoResponse
+    {
+        public string Titulo { get; set; } = string.Empty;
+        public string Descricao { get; set; } = string.Empty;
+        public string Icone { get; set; } = string.Empty;
+        public string CorCss { get; set; } = string.Empty;
     }
 
     public class NutrienteDetalheResponse

@@ -101,6 +101,50 @@ namespace CalculadoraCalorias.Application.Features
                 });
             }
 
+            // Cálculos de Macros (Usa totais brutos para o IF para evitar problemas com arredondamento)
+            var bProt = CalcularValorFinal(NutrientesEnum.Proteina);
+            var bCarb = CalcularValorFinal(NutrientesEnum.Carboidrato);
+            var bGord = CalcularValorFinal(NutrientesEnum.Gordura);
+            
+            var calProt = bProt * 4.0;
+            var calCarb = bCarb * 4.0;
+            var calGord = bGord * 9.0;
+            var totalCalMacros = calProt + calCarb + calGord;
+
+            // Se houver qualquer consumo de macronutrientes, gera o objeto de Macros e Veredito
+            if (totalCalMacros > 0.1)
+            {
+                response.Macros = new MacrosResponse
+                {
+                    CaloriasProteinas = Math.Round(calProt, 1),
+                    CaloriasCarboidratos = Math.Round(calCarb, 1),
+                    CaloriasGorduras = Math.Round(calGord, 1),
+                    TotalCalorias = Math.Round(totalCalMacros, 0),
+                    PercentualProteinas = Math.Round((calProt / totalCalMacros) * 100, 1),
+                    PercentualCarboidratos = Math.Round((calCarb / totalCalMacros) * 100, 1),
+                    PercentualGorduras = Math.Round((calGord / totalCalMacros) * 100, 1)
+                };
+
+                // Cálculo do Veredito baseado nos percentuais calculados
+                var pProt = response.Macros.PercentualProteinas;
+                var pCarb = response.Macros.PercentualCarboidratos;
+                var pGord = response.Macros.PercentualGorduras;
+
+                if (pProt > 25)
+                    response.Veredito = new VereditoResponse { Titulo = "Perfil Anabólico", Descricao = "Sua dieta está priorizando a regeneração e construção muscular.", CorCss = "text-rose-600 bg-rose-50", Icone = "💪" };
+                else if (pGord > 35)
+                    response.Veredito = new VereditoResponse { Titulo = "Perfil Lipídico", Descricao = "Consumo elevado de gorduras. Atente-se à qualidade das fontes.", CorCss = "text-orange-600 bg-orange-50", Icone = "🥑" };
+                else if (pCarb > 60)
+                    response.Veredito = new VereditoResponse { Titulo = "Perfil Energético", Descricao = "Foco alto em carboidratos, ideal para dias de treinos intensos.", CorCss = "text-amber-600 bg-amber-50", Icone = "⚡" };
+                else
+                    response.Veredito = new VereditoResponse { Titulo = "Perfil Equilibrado", Descricao = "Excelente harmonia entre proteínas, carbos e gorduras.", CorCss = "text-emerald-600 bg-emerald-50", Icone = "⚖️" };
+            }
+            else if (periodo == "diario")
+            {
+                // Se for diário e não houver dados, podemos retornar um objeto vazio de veredito para não quebrar o layout se preferível
+                // Mas o frontend já trata com *ngIf, então manter null está correto.
+            }
+
             return Resultado<NutrientesResponse>.Success(response);
         }
     }
