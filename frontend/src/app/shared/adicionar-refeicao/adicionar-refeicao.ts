@@ -118,7 +118,11 @@ export class AdicionarRefeicao {
     let novaRefeicao: FormData = new FormData();
     novaRefeicao.append("Tipo", this.tipoRefeicao().toString());
     novaRefeicao.append("Data", this.dataRefeicao());
-    novaRefeicao.append("PesoEmGramas", this.pesoRefeicao()?.toString() ?? "");
+    
+    // Garantir ponto como separador decimal para o Peso
+    const peso = this.pesoRefeicao();
+    novaRefeicao.append("PesoEmGramas", peso !== null ? peso.toString().replace(',', '.') : "");
+    
     novaRefeicao.append("UsuarioId", this.autenticacao.obterId().toString());
     
     if (this.modoEntrada() === 'modelo' && this.idModeloSelecionado()) {
@@ -127,11 +131,13 @@ export class AdicionarRefeicao {
       novaRefeicao.append("Apelido", this.apelidoRefeicao());
       novaRefeicao.append("AlimentoManual", this.alimentoManual());
       novaRefeicao.append("CaloriasManuais", this.caloriasManuais()?.toString() ?? "");
-      if (this.proteinasManuais() !== null) novaRefeicao.append("ProteinasManuais", this.proteinasManuais()!.toString());
-      if (this.carboidratosManuais() !== null) novaRefeicao.append("CarboidratosManuais", this.carboidratosManuais()!.toString());
-      if (this.gordurasManuais() !== null) novaRefeicao.append("GordurasManuais", this.gordurasManuais()!.toString());
-      if (this.acucaresManuais() !== null) novaRefeicao.append("AcucaresManuais", this.acucaresManuais()!.toString());
-      if (this.fibrasManuais() !== null) novaRefeicao.append("FibrasManuais", this.fibrasManuais()!.toString());
+      
+      // Garantir ponto para os macros manuais
+      if (this.proteinasManuais() !== null) novaRefeicao.append("ProteinasManuais", this.proteinasManuais()!.toString().replace(',', '.'));
+      if (this.carboidratosManuais() !== null) novaRefeicao.append("CarboidratosManuais", this.carboidratosManuais()!.toString().replace(',', '.'));
+      if (this.gordurasManuais() !== null) novaRefeicao.append("GordurasManuais", this.gordurasManuais()!.toString().replace(',', '.'));
+      if (this.acucaresManuais() !== null) novaRefeicao.append("AcucaresManuais", this.acucaresManuais()!.toString().replace(',', '.'));
+      if (this.fibrasManuais() !== null) novaRefeicao.append("FibrasManuais", this.fibrasManuais()!.toString().replace(',', '.'));
     } else {
       novaRefeicao.append("Apelido", this.apelidoRefeicao());
       const foto = this.fotoReal();

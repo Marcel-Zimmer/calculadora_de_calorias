@@ -9,8 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar Cultura Global
+var cultureInfo = CultureInfo.InvariantCulture;
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 builder.Services.AddCors(options =>
 {
