@@ -1,9 +1,7 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using CalculadoraCalorias.Application.DTOs.Responses;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Core.Domain.Common;
+using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
