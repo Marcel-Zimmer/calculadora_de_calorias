@@ -1,4 +1,4 @@
-﻿using CalculadoraCalorias.Core.Domain.Entities;
+using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.InternalDTO;
 
@@ -53,6 +53,29 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public double Percentual { get; set; }
     }
 
+    public class SemanaMediaResponse
+    {
+        public string Nome { get; set; } = string.Empty;
+        public double Valor { get; set; }
+    }
+
+    public class ConsumoMensalInsightsResponse
+    {
+        public int MaiorIngestao { get; set; }
+        public string DiaMaiorIngestao { get; set; } = string.Empty;
+        public List<SemanaMediaResponse> MediasSemanais { get; set; } = [];
+        public List<GraficoPontoResponse> TopPicos { get; set; } = [];
+    }
+
+    public class GastoMensalInsightsResponse
+    {
+        public int MaiorGasto { get; set; }
+        public string DiaMaiorGasto { get; set; } = string.Empty;
+        public string ExercicioPrincipal { get; set; } = string.Empty;
+        public List<SemanaMediaResponse> MediasSemanais { get; set; } = [];
+        public List<GraficoPontoResponse> TopGasto { get; set; } = [];
+    }
+
     public class EstatisticasDetalhadasResponse
     {
         public decimal MetaCaloricaDiaria { get; set; }
@@ -65,5 +88,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public List<DistribuicaoItemResponse> DistribuicaoExercicios { get; set; } = [];
         public List<DistribuicaoItemResponse> DistribuicaoRefeicoes { get; set; } = [];
         public DashboardInsightsResponse? Insights { get; set; }
+        public ConsumoMensalInsightsResponse? ConsumoInsights { get; set; }
+        public GastoMensalInsightsResponse? GastoInsights { get; set; }
     }
 }

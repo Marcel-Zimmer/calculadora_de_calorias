@@ -121,6 +121,70 @@ namespace CalculadoraCalorias.Application.Features
 
             var dados = await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false);
             dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            
+            // Novos Insights de Consumo Mensal
+            var pontosConsumo = dados.Pontos.Where(p => p.CaloriasConsumidas > 0).ToList();
+            if (pontosConsumo.Count > 0)
+            {
+                var maiorIngestao = pontosConsumo.Max(p => p.CaloriasConsumidas);
+                var diaMaiorIngestao = pontosConsumo.First(p => p.CaloriasConsumidas == maiorIngestao).Legenda;
+
+                var topPicos = pontosConsumo
+                    .OrderByDescending(p => p.CaloriasConsumidas)
+                    .Take(5)
+                    .ToList();
+
+                var mediasSemanais = new List<SemanaMediaResponse>();
+                for (int i = 0; i < dados.Pontos.Count; i += 7)
+                {
+                    var lote = dados.Pontos.Skip(i).Take(7).ToList();
+                    var media = lote.Average(p => p.CaloriasConsumidas);
+                    mediasSemanais.Add(new SemanaMediaResponse { Nome = $"Semana {Math.Floor((double)i / 7) + 1}", Valor = media });
+                }
+
+                dados.ConsumoInsights = new ConsumoMensalInsightsResponse
+                {
+                    MaiorIngestao = maiorIngestao,
+                    DiaMaiorIngestao = diaMaiorIngestao,
+                    TopPicos = topPicos,
+                    MediasSemanais = mediasSemanais
+                };
+            }
+
+            // Novos Insights de Gasto Mensal
+            var pontosGasto = dados.Pontos.Where(p => p.CaloriasGastas > 0).ToList();
+            if (pontosGasto.Count > 0)
+            {
+                var maiorGasto = pontosGasto.Max(p => p.CaloriasGastas);
+                var diaMaiorGasto = pontosGasto.First(p => p.CaloriasGastas == maiorGasto).Legenda;
+
+                var topGasto = pontosGasto
+                    .OrderByDescending(p => p.CaloriasGastas)
+                    .Take(5)
+                    .ToList();
+
+                var mediasSemanaisGasto = new List<SemanaMediaResponse>();
+                for (int i = 0; i < dados.Pontos.Count; i += 7)
+                {
+                    var lote = dados.Pontos.Skip(i).Take(7).ToList();
+                    var soma = lote.Sum(p => p.CaloriasGastas);
+                    mediasSemanaisGasto.Add(new SemanaMediaResponse { Nome = $"Sem {Math.Floor((double)i / 7) + 1}", Valor = soma });
+                }
+
+                var exercicioFavorito = dados.DistribuicaoExercicios
+                    .OrderByDescending(x => x.Valor)
+                    .FirstOrDefault();
+
+                dados.GastoInsights = new GastoMensalInsightsResponse
+                {
+                    MaiorGasto = maiorGasto,
+                    DiaMaiorGasto = diaMaiorGasto,
+                    ExercicioPrincipal = exercicioFavorito?.Nome ?? "Nenhum",
+                    TopGasto = topGasto,
+                    MediasSemanais = mediasSemanaisGasto
+                };
+            }
+
             return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
         }
 
