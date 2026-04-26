@@ -9,13 +9,11 @@ import { GraficoService } from '../../core/services/grafico.service';
 import { AdicionarRefeicao } from '../../shared/adicionar-refeicao/adicionar-refeicao';
 import { AdicionarExercicio } from "../../shared/adicionar-exercicio/adicionar-exercicio";
 import { GraficoDiario } from "../../shared/grafico-diario/grafico-diario";
-import { GraficoMensal } from "../../shared/grafico-mensal/grafico-mensal";
 import { AtividadeFisicaService } from '../../core/services/atividade-fisica.service';
 import Swal from 'sweetalert2';
 import { PerfilBiometricoService } from '../../core/services/perfil-biometrico.service';
 import { RegistroFisicoService } from '../../core/services/registro-fisico.service';
 import { UsuarioService } from '../../core/services/usuario.service';
-import { DistribuicaoTipos } from '../../shared/distribuicao-tipos/distribuicao-tipos';
 import { EstatisticasNutrientesComponent } from '../estatisticas-nutrientes/estatisticas-nutrientes';
 import { NotificacaoService } from '../../core/services/notificacao.service';
 import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
@@ -25,11 +23,24 @@ import { BsCardEquilibrioEnergeticoComponent } from '../../shared/bs-card-equili
 import { BsCardImpactoEstimadoComponent } from '../../shared/bs-card-impacto-estimado/bs-card-impacto-estimado';
 import { BsCardMediaItemComponent } from '../../shared/bs-card-media-item/bs-card-media-item';
 import { BsGraficoDistribuicaoItensComponent } from '../../shared/bs-grafico-distribuicao-itens/bs-grafico-distribuicao-itens';
+import { BsCardMaiorIngestaoComponent } from '../../shared/bs-card-maior-ingestao/bs-card-maior-ingestao';
+import { BsGraficoMediaPorSemanaComponent } from '../../shared/bs-grafico-media-por-semana/bs-grafico-media-por-semana';
+import { BsGraficoMaioresConsumosComponent } from '../../shared/bs-grafico-maiores-consumos/bs-grafico-maiores-consumos';
+import { BsCardMaiorGastoComponent } from '../../shared/bs-card-maior-gasto/bs-card-maior-gasto';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, GraficoDiario, Menu, DistribuicaoTipos, EstatisticasNutrientesComponent, BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, BsCardImpactoEstimadoComponent, BsCardMediaItemComponent, BsGraficoDistribuicaoItensComponent],
+  imports: [
+    CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, 
+    GraficoDiario, Menu, EstatisticasNutrientesComponent, 
+    BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, 
+    BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, 
+    BsCardImpactoEstimadoComponent, BsCardMediaItemComponent, 
+    BsGraficoDistribuicaoItensComponent, BsCardMaiorIngestaoComponent, 
+    BsGraficoMediaPorSemanaComponent, BsGraficoMaioresConsumosComponent,
+    BsCardMaiorGastoComponent
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -78,34 +89,15 @@ export class Dashboard implements OnInit {
     return dados.pontos.map((p: any) => ({ legenda: p.legenda, valor: p.caloriasGastas }));
   });
 
-  // Novos Cards de Média de Consumo (Gerados dinamicamente)
   cardsMediaConsumo = computed(() => {
     const dados = this.dadosEstatisticas();
     if (!dados) return [];
-
     const lista = [];
-    
-    // 1. Média Diária Geral
-    lista.push({
-      icone: '📊',
-      corCss: 'bg-slate-50 text-indigo-500',
-      titulo: 'Média Diária',
-      valor: dados.mediaConsumoDiario || 0,
-      legenda: 'no período'
-    });
-
-    // 2. Médias por Refeição (Vindas do Backend)
+    lista.push({ icone: '📊', corCss: 'bg-slate-50 text-indigo-500', titulo: 'Média Diária', valor: dados.mediaConsumoDiario || 0, legenda: 'no período' });
     const refeicoesEnriquecidas = dados.distribuicaoRefeicoes || [];
     refeicoesEnriquecidas.forEach((refeicao: any) => {
-        lista.push({
-            icone: refeicao.icone,
-            corCss: refeicao.corCss,
-            titulo: refeicao.displayNome,
-            valor: refeicao.media || 0,
-            legenda: 'média diária'
-        });
+        lista.push({ icone: refeicao.icone, corCss: refeicao.corCss, titulo: refeicao.displayNome, valor: refeicao.media || 0, legenda: 'média diária' });
     });
-
     return lista;
   });
 
@@ -119,7 +111,7 @@ export class Dashboard implements OnInit {
     const diasNaMeta = pontos.filter((p: any) => p.caloriasConsumidas > 0 && p.caloriasConsumidas <= dados.metaCaloricaDiaria).length;
     const maiorIngestao = Math.max(...pontos.map((p: any) => p.caloriasConsumidas));
     const diaMaiorIngestao = pontos.find((p: any) => p.caloriasConsumidas === maiorIngestao)?.legenda || '-';
-    return { diasNaMeta, totalDias: dados.pontos.length, maiorIngestao, diaMaiorIngestao };
+    return { maiorIngestao, diaMaiorIngestao, diasNaMeta, totalDias: pontos.length };
   });
 
   insightsGasto = computed(() => {
@@ -128,38 +120,9 @@ export class Dashboard implements OnInit {
     const pontos = dados.pontos;
     const diasAtivos = pontos.filter((p: any) => p.caloriasGastas > 0).length;
     const maiorGasto = Math.max(...pontos.map((p: any) => p.caloriasGastas));
-    const exercicioPrincipal = [...(dados.distribuicaoExerciciosEnriquecida || [])].sort((a, b) => b.valor - a.valor)[0]?.displayNome || 'Nenhum';
-    return { diasAtivos, totalDias: dados.pontos.length, maiorGasto, exercicioPrincipal };
-  });
-
-  insightsMensaisConsumo = computed(() => {
-    const dados = this.dadosEstatisticas();
-    if (!dados || this.periodoEstatisticas() !== 'mensal') return null;
-    const pontos = [...dados.pontos];
-    const topPicos = [...pontos].sort((a, b) => b.caloriasConsumidas - a.caloriasConsumidas).slice(0, 5).filter(p => p.caloriasConsumidas > 0);
-    const semanas = [];
-    for (let i = 0; i < pontos.length; i += 7) {
-      const lote = pontos.slice(i, i + 7);
-      const media = lote.reduce((acc, curr) => acc + curr.caloriasConsumidas, 0) / lote.length;
-      semanas.push({ nome: `Semana ${Math.floor(i/7) + 1}`, valor: media });
-    }
-    const maiorIngestao = Math.max(...pontos.map((p: any) => p.caloriasConsumidas));
-    const diaMaiorIngestao = pontos.find((p: any) => p.caloriasConsumidas === maiorIngestao)?.legenda || '-';
-    return { topPicos, semanas, maiorIngestao, diaMaiorIngestao };
-  });
-
-  insightsMensaisGasto = computed(() => {
-    const dados = this.dadosEstatisticas();
-    if (!dados || this.periodoEstatisticas() !== 'mensal') return null;
-    const pontos = [...dados.pontos];
-    const topGasto = [...pontos].sort((a, b) => b.caloriasGastas - a.caloriasGastas).slice(0, 5).filter(p => p.caloriasGastas > 0);
-    const semanas = [];
-    for (let i = 0; i < pontos.length; i += 7) {
-      const lote = pontos.slice(i, i + 7);
-      const soma = lote.reduce((acc, curr) => acc + curr.caloriasGastas, 0);
-      semanas.push({ nome: `Sem ${Math.floor(i/7) + 1}`, valor: soma });
-    }
-    return { topGasto, semanas };
+    const diaMaiorGasto = pontos.find((p: any) => p.caloriasGastas === maiorGasto)?.legenda || '-';
+    const exercicioPrincipal = dados.gastoInsights?.exercicioPrincipal || 'Nenhum';
+    return { diasAtivos, totalDias: pontos.length, maiorGasto, diaMaiorGasto, exercicioPrincipal };
   });
 
   metaCalorias = signal<number>(0);
@@ -246,6 +209,7 @@ export class Dashboard implements OnInit {
     this.periodoEstatisticas.set(periodo);
     this.carregarEstatisticas();
   }
+
   carregarEstatisticas() {
     const userId = this.autenticacao.obterId();
     const obs = this.periodoEstatisticas() === 'semanal' 
@@ -254,28 +218,14 @@ export class Dashboard implements OnInit {
 
     obs.subscribe({
       next: (res: any) => {
-        // Enriquecer dados de exercícios
         res.distribuicaoExercicios = res.distribuicaoExercicios.map((item: any) => {
           const info = this.mapaExercicios[Number(item.nome)];
-          return {
-            ...item,
-            displayNome: info?.nome || 'Outro',
-            icone: info?.icone || '🔥',
-            corCss: info?.cor || 'bg-slate-50 text-slate-500'
-          };
+          return { ...item, displayNome: info?.nome || 'Outro', icone: info?.icone || '🔥', corCss: info?.cor || 'bg-slate-50 text-slate-500' };
         });
-
-        // Enriquecer dados de refeições
         res.distribuicaoRefeicoes = res.distribuicaoRefeicoes.map((item: any) => {
           const info = this.mapaRefeicoes[Number(item.nome)];
-          return {
-            ...item,
-            displayNome: info?.nome || 'Outro',
-            icone: info?.icone || '🍽️',
-            corCss: info?.cor || 'bg-slate-50 text-slate-500'
-          };
+          return { ...item, displayNome: info?.nome || 'Outro', icone: info?.icone || '🍽️', corCss: info?.cor || 'bg-slate-50 text-slate-500' };
         });
-
         this.dadosEstatisticas.set(res);
       }
     });

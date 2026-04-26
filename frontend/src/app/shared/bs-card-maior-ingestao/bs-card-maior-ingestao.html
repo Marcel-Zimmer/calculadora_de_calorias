@@ -1,0 +1,11 @@
+<div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-between h-full">
+  <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Recorde de Ingestão</h3>
+  <div class="flex-1 flex items-center space-x-4">
+    <div class="w-14 h-14 bg-indigo-50 text-indigo-500 rounded-[1.5rem] flex items-center justify-center text-2xl shadow-sm">🥘</div>
+    <div>
+      <p class="text-2xl font-black text-slate-800">{{ maiorIngestao() }} <span class="text-xs text-slate-400">kcal</span></p>
+      <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mt-1">Dia {{ diaMaiorIngestao() }}</p>
+    </div>
+  </div>
+  <p class="text-[9px] text-slate-400 font-bold mt-4 italic">* Maior volume calórico registrado no mês</p>
+</div>
