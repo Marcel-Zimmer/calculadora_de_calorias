@@ -49,45 +49,59 @@ namespace CalculadoraCalorias.Application.Features
             
             var metaCaloricaBase = (double)(registroFisico.MetaCaloricaDiaria ?? 0);
 
-            // Cálculos básicos (Meta diária)
-            var metaProteinasDiaria = (metaCaloricaBase * 0.30) / 4.0;
-            var metaCarboDiaria = (metaCaloricaBase * 0.50) / 4.0;
-            var metaGorduraDiaria = (metaCaloricaBase * 0.20) / 9.0;
-            var metaFibraDiaria = 25.0; // Padrão geral de mercado
-            var limiteAcucarDiario = (metaCaloricaBase * 0.10) / 4.0; // 10% máximo da caloria diária
+            // Cálculos de Metas usando NutrientesEnum como referência conceitual
+            var metas = new Dictionary<NutrientesEnum, double>
+            {
+                { NutrientesEnum.Proteina, (metaCaloricaBase * 0.30) / 4.0 },
+                { NutrientesEnum.Carboidrato, (metaCaloricaBase * 0.50) / 4.0 },
+                { NutrientesEnum.Gordura, (metaCaloricaBase * 0.20) / 9.0 },
+                { NutrientesEnum.Fibra, 25.0 },
+                { NutrientesEnum.Acucar, (metaCaloricaBase * 0.10) / 4.0 }
+            };
             
-            double totalConsumoProteinas = refeicoes.Sum(r => r.Proteinas ?? 0);
-            double totalConsumoCarbo = refeicoes.Sum(r => r.Carboidratos ?? 0);
-            double totalConsumoGordura = refeicoes.Sum(r => r.Gorduras ?? 0);
-            double totalConsumoFibras = refeicoes.Sum(r => r.Fibras ?? 0);
-            double totalConsumoAcucares = refeicoes.Sum(r => r.Acucares ?? 0);
+            var totais = new Dictionary<NutrientesEnum, double>
+            {
+                { NutrientesEnum.Proteina, refeicoes.Sum(r => r.Proteinas ?? 0) },
+                { NutrientesEnum.Carboidrato, refeicoes.Sum(r => r.Carboidratos ?? 0) },
+                { NutrientesEnum.Gordura, refeicoes.Sum(r => r.Gorduras ?? 0) },
+                { NutrientesEnum.Fibra, refeicoes.Sum(r => r.Fibras ?? 0) },
+                { NutrientesEnum.Acucar, refeicoes.Sum(r => r.Acucares ?? 0) }
+            };
 
             var diasComRefeicao = refeicoes.Select(r => r.Data).Distinct().Count();
             
-            // Para as médias de consumo e a meta diária (quando semanal/mensal for analisado usando médias)
-            var mediaConsumoProteinas = diasComRefeicao > 0 ? (totalConsumoProteinas / diasComRefeicao) : 0;
-            var mediaConsumoCarbo = diasComRefeicao > 0 ? (totalConsumoCarbo / diasComRefeicao) : 0;
-            var mediaConsumoGordura = diasComRefeicao > 0 ? (totalConsumoGordura / diasComRefeicao) : 0;
-            var mediaConsumoFibras = diasComRefeicao > 0 ? (totalConsumoFibras / diasComRefeicao) : 0;
-            var mediaConsumoAcucares = diasComRefeicao > 0 ? (totalConsumoAcucares / diasComRefeicao) : 0;
+            // Função auxiliar para calcular consumo final (valor ou média)
+            double CalcularValorFinal(NutrientesEnum tipo) 
+                => periodo == "diario" ? totais[tipo] : (diasComRefeicao > 0 ? totais[tipo] / diasComRefeicao : 0);
 
             var response = new NutrientesResponse
             {
                 Periodo = periodo,
-                MetaProteinas = Math.Round(metaProteinasDiaria, 1),
-                MetaCarboidratos = Math.Round(metaCarboDiaria, 1),
-                MetaGorduras = Math.Round(metaGorduraDiaria, 1),
-                MetaFibras = Math.Round(metaFibraDiaria, 1),
-                LimiteAcucares = Math.Round(limiteAcucarDiario, 1),
+                MetaProteinas = Math.Round(metas[NutrientesEnum.Proteina], 1),
+                MetaCarboidratos = Math.Round(metas[NutrientesEnum.Carboidrato], 1),
+                MetaGorduras = Math.Round(metas[NutrientesEnum.Gordura], 1),
+                MetaFibras = Math.Round(metas[NutrientesEnum.Fibra], 1),
+                LimiteAcucares = Math.Round(metas[NutrientesEnum.Acucar], 1),
 
-                // Para visualização clara em todos os quadros (Diário, Semanal, Mensal), usaremos a MÉDIA diária
-                // Isso padroniza com a mesma decisão tomada para o total de consumo/gastos nos outros relatórios
-                ConsumoProteinas = periodo == "diario" ? Math.Round(totalConsumoProteinas, 1) : Math.Round(mediaConsumoProteinas, 1),
-                ConsumoCarboidratos = periodo == "diario" ? Math.Round(totalConsumoCarbo, 1) : Math.Round(mediaConsumoCarbo, 1),
-                ConsumoGorduras = periodo == "diario" ? Math.Round(totalConsumoGordura, 1) : Math.Round(mediaConsumoGordura, 1),
-                ConsumoFibras = periodo == "diario" ? Math.Round(totalConsumoFibras, 1) : Math.Round(mediaConsumoFibras, 1),
-                ConsumoAcucares = periodo == "diario" ? Math.Round(totalConsumoAcucares, 1) : Math.Round(mediaConsumoAcucares, 1),
+                ConsumoProteinas = Math.Round(CalcularValorFinal(NutrientesEnum.Proteina), 1),
+                ConsumoCarboidratos = Math.Round(CalcularValorFinal(NutrientesEnum.Carboidrato), 1),
+                ConsumoGorduras = Math.Round(CalcularValorFinal(NutrientesEnum.Gordura), 1),
+                ConsumoFibras = Math.Round(CalcularValorFinal(NutrientesEnum.Fibra), 1),
+                ConsumoAcucares = Math.Round(CalcularValorFinal(NutrientesEnum.Acucar), 1),
             };
+
+            // Preenche a lista detalhada usando a Enum
+            foreach (NutrientesEnum nutriente in Enum.GetValues(typeof(NutrientesEnum)))
+            {
+                response.Detalhes.Add(new NutrienteDetalheResponse
+                {
+                    Tipo = nutriente,
+                    Nome = nutriente.ToString(),
+                    Meta = Math.Round(metas[nutriente], 1),
+                    Valor = Math.Round(CalcularValorFinal(nutriente), 1),
+                    IsLimite = nutriente == NutrientesEnum.Acucar
+                });
+            }
 
             return Resultado<NutrientesResponse>.Success(response);
         }

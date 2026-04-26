@@ -1,4 +1,6 @@
+using CalculadoraCalorias.Core.Domain.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace CalculadoraCalorias.Application.DTOs.Responses
 {
@@ -20,5 +22,16 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
 
         public double LimiteAcucares { get; set; }
         public double ConsumoAcucares { get; set; }
+
+        public List<NutrienteDetalheResponse> Detalhes { get; set; } = new();
+    }
+
+    public class NutrienteDetalheResponse
+    {
+        public NutrientesEnum Tipo { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public double Valor { get; set; }
+        public double Meta { get; set; }
+        public bool IsLimite { get; set; }
     }
 }
