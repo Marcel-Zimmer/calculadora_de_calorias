@@ -1,0 +1,17 @@
+<div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center">
+  <div class="relative w-20 h-20 mb-4">
+    <svg viewBox="0 0 40 40" class="w-full h-full transform -rotate-90">
+      <!-- Background Circle -->
+      <circle cx="20" cy="20" r="16" fill="transparent" [class]="bg()" stroke-width="4" stroke="currentColor" />
+      <!-- Progress Circle -->
+      <circle cx="20" cy="20" r="16" fill="transparent" [class]="cor()" stroke-width="4" stroke-linecap="round"
+        stroke="currentColor" [attr.stroke-dasharray]="strokeDasharray()" />
+    </svg>
+    <div class="absolute inset-0 flex items-center justify-center text-xl">
+      {{ icone() }}
+    </div>
+  </div>
+  <h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{{ nome() }}</h5>
+  <p class="text-sm font-black text-slate-800">{{ valor().toFixed(1) }}g <span class="text-[10px] text-slate-400 font-bold">/ {{ meta().toFixed(0) }}g</span></p>
+  <p class="text-[8px] font-bold text-slate-400 mt-1 uppercase">{{ percentual().toFixed(0) }}% do {{ isLimite() ? 'limite' : 'objetivo' }}</p>
+</div>

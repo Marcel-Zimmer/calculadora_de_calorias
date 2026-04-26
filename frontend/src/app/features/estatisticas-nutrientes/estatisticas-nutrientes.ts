@@ -2,11 +2,13 @@ import { Component, inject, OnInit, signal, computed, input, effect } from '@ang
 import { CommonModule } from '@angular/common';
 import { NutrientesService, NutrientesResponse } from '../../core/services/nutrientes.service';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
+import { BsCardNutrientesComponent } from '../../shared/bs-card-nutrientes/bs-card-nutrientes';
+import { NutrientesEnum } from '../../core/models/nutrientes.enum';
 
 @Component({
   selector: 'app-estatisticas-nutrientes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, BsCardNutrientesComponent],
   templateUrl: './estatisticas-nutrientes.html',
 })
 export class EstatisticasNutrientesComponent implements OnInit {
@@ -16,6 +18,8 @@ export class EstatisticasNutrientesComponent implements OnInit {
   dataSelecionada = input<string>(new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' }));
   periodo = signal<'diario' | 'semanal' | 'mensal'>('diario');
   dados = signal<NutrientesResponse | null>(null);
+
+  mapaNutrientes = this.nutrientesService.obterMapaNutrientes();
 
   constructor() {
     effect(() => {
@@ -58,25 +62,19 @@ export class EstatisticasNutrientesComponent implements OnInit {
   // 2. Metas Individuais (Anéis)
   progressoNutrientes = computed(() => {
     const d = this.dados();
-    if (!d) return null;
+    if (!d || !d.detalhes) return [];
 
-    const items = [
-      { nome: 'Proteína', valor: d.consumoProteinas, meta: d.metaProteinas, icone: '🥩', cor: 'stroke-rose-500', bg: 'text-rose-100' },
-      { nome: 'Carbo', valor: d.consumoCarboidratos, meta: d.metaCarboidratos, icone: '🍞', cor: 'stroke-amber-400', bg: 'text-amber-100' },
-      { nome: 'Gordura', valor: d.consumoGorduras, meta: d.metaGorduras, icone: '🥑', cor: 'stroke-indigo-500', bg: 'text-indigo-100' },
-      { nome: 'Fibras', valor: d.consumoFibras, meta: d.metaFibras, icone: '🥦', cor: 'stroke-emerald-500', bg: 'text-emerald-100' },
-      { nome: 'Açúcar', valor: d.consumoAcucares, meta: d.limiteAcucares, icone: '🍭', 
-        cor: d.consumoAcucares > d.limiteAcucares ? 'stroke-rose-600' : 'stroke-sky-400', 
-        bg: d.consumoAcucares > d.limiteAcucares ? 'text-rose-200' : 'text-sky-100',
-        isLimite: true
-      },
-    ];
-
-    return items.map(item => ({
-      ...item,
-      percentual: this.obterPercentual(item.valor, item.meta),
-      strokeDasharray: `${this.obterPercentual(item.valor, item.meta)} 100`
-    }));
+    return d.detalhes.map(item => {
+        const info = this.mapaNutrientes[item.tipo];
+        return {
+            ...info,
+            valor: item.valor,
+            meta: item.meta,
+            // Sobrescreve cor se for açúcar e estourou
+            cor: (item.tipo === NutrientesEnum.Acucar && item.valor > item.meta) ? 'stroke-rose-600' : info.cor,
+            bg: (item.tipo === NutrientesEnum.Acucar && item.valor > item.meta) ? 'text-rose-200' : info.bg
+        };
+    });
   });
 
   // 3. Análise de Perfil Nutricional (Veredito Inteligente)
