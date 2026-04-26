@@ -14,8 +14,8 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         public string? Apelido { get; set; } 
 
         [Required(ErrorMessage = "O peso em gramas deve ser informado.")]
-        [Range(1, 10000, ErrorMessage = "O peso deve estar entre 1g e 10kg.")]
-        public int PesoEmGramas { get; set; }
+        [Range(0.1, 10000, ErrorMessage = "O peso deve estar entre 0.1g e 10kg.")]
+        public double PesoEmGramas { get; set; }
 
         [Required(ErrorMessage = "O tipo de refeição deve ser informado.")]
         [EnumDataType(typeof(TipoRefeicaoEnum), ErrorMessage = "Tipo de refeição inválido.")]

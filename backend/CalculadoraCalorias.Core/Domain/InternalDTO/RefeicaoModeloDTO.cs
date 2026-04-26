@@ -8,6 +8,6 @@ namespace CalculadoraCalorias.Core.Domain.InternalDTO
         public double? Proteinas { get; set; }
         public double? Carboidratos { get; set; }
         public double? Gorduras { get; set; }
-        public int PesoOriginal { get; set; }
+        public double PesoOriginal { get; set; }
     }
 }

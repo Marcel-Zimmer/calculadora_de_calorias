@@ -16,7 +16,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
             _configuration = configuration;
         }
 
-        public async Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(byte[] imagemBase64, int pesoEmGramas)
+        public async Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(byte[] imagemBase64, double pesoEmGramas)
         {
             var apiKey = _configuration["Gemini:ApiKey"];
             if (string.IsNullOrEmpty(apiKey))
@@ -45,7 +45,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
 
         }
 
-        private static List<Content> ObterContentsParaLLM(byte[] imagemBase64, int pesoEmGramas)
+        private static List<Content> ObterContentsParaLLM(byte[] imagemBase64, double pesoEmGramas)
         {
             return
                 [
@@ -68,7 +68,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
                 ];
         }
 
-        private static string ObterPromptEstimativaCalorias(int pesoEmGramas)
+        private static string ObterPromptEstimativaCalorias(double pesoEmGramas)
         {
             return $$"""
                 Analise a imagem deste prato de comida que pesa exatamente {{pesoEmGramas}} gramas.

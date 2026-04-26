@@ -8,7 +8,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
 
         public Refeicao(long usuarioId, 
                         string? apelido, 
-                        int peso, 
+                        double peso, 
                         TipoRefeicaoEnum tipo, 
                         DateOnly data, 
                         Guid guidArquivo)
@@ -26,7 +26,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         public long Id { get; private set; }
         public long UsuarioId { get; private set; }
         public string? Apelido { get; private set; }
-        public int Peso {  get; private set; }
+        public double Peso {  get; private set; }
         public TipoRefeicaoEnum Tipo {  get; private set; }
         public DateOnly Data {  get; private set; }
         public Guid GuidArquivo { get; private set; }
