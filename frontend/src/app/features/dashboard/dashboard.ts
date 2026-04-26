@@ -226,6 +226,21 @@ export class Dashboard implements OnInit {
           const info = this.mapaRefeicoes[Number(item.nome)];
           return { ...item, displayNome: info?.nome || 'Outro', icone: info?.icone || '🍽️', corCss: info?.cor || 'bg-slate-50 text-slate-500' };
         });
+
+        if (res.consumoInsights?.topPicos) {
+          res.consumoInsights.topPicos = res.consumoInsights.topPicos.map((p: any) => ({
+            legenda: p.legenda,
+            valor: p.caloriasConsumidas
+          }));
+        }
+
+        if (res.gastoInsights?.topGasto) {
+          res.gastoInsights.topGasto = res.gastoInsights.topGasto.map((p: any) => ({
+            legenda: p.legenda,
+            valor: p.caloriasGastas
+          }));
+        }
+
         this.dadosEstatisticas.set(res);
       }
     });
