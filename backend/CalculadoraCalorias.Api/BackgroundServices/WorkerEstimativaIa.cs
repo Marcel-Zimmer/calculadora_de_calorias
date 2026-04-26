@@ -28,81 +28,90 @@ namespace CalculadoraCalorias.Api.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("Worker de Estimativa IA iniciado.");
+
             await foreach (var request in _fila.LerFilaAsync(stoppingToken))
             {
-                try
+                int tentativas = 0;
+                const int maxTentativas = 3;
+                bool processadoComSucesso = false;
+
+                while (tentativas < maxTentativas && !processadoComSucesso)
                 {
-                    Console.WriteLine($"Iniciando processamento da Refeição ID: {request.RefeicaoId}");
-                    using var scope = _scopeFactory.CreateScope();
-
-                    var dbContext = scope.ServiceProvider.GetRequiredService<IRefeicaoRepository>();
-
-                    var llmService = scope.ServiceProvider.GetRequiredService<ILlmService>();
-
-                    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
-                    var refeicao = await dbContext.ObterPorId(request.RefeicaoId);
-
-                    if (refeicao == null)
-                    {
-                        Console.WriteLine($"Refeição {request.RefeicaoId} não encontrada no banco.");
-                        continue;
-                    }
-
-                    var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
-                    var padraoDeBusca = $"{request.GuidArquivo}.*";
-                    var arquivosEncontrados = Directory.GetFiles(caminhoBase, padraoDeBusca);
-
-                    if (arquivosEncontrados.Length == 0)
-                    {
-                        Console.WriteLine($"Imagem não encontrada no disco para a Refeição ID: {request.RefeicaoId}");
-                        continue;
-                    }
-
-                    var caminhoFisicoCompleto = arquivosEncontrados[0];
-                    byte[] imagemBytes = await File.ReadAllBytesAsync(caminhoFisicoCompleto, stoppingToken);
-
-                    var estimativaCalorica = await llmService.SimularCaloriasRefeicao(imagemBytes, refeicao.Peso);
-
-                    refeicao.AtualizarEstimativa(
-                        estimativaCalorica.Alimento ?? "alimento não identificado", 
-                        estimativaCalorica.Calorias, 
-                        estimativaCalorica.Proteinas,
-                        estimativaCalorica.Carboidratos, 
-                        estimativaCalorica.Gorduras, 
-                        estimativaCalorica.Acucares, 
-                        estimativaCalorica.Fibras);
-
-
-                    var json = JsonSerializer.Serialize(estimativaCalorica, new JsonSerializerOptions { WriteIndented = true });
-                    Console.WriteLine(json);
-
-                    await unitOfWork.CommitAsync();
-
-                    // Notificar o Frontend em Tempo Real
-                    await _hubContext.Clients.Group(refeicao.UsuarioId.ToString())
-                        .SendAsync("RefeicaoProcessada", refeicao.Id, stoppingToken);
-
                     try
                     {
-                        if (File.Exists(caminhoFisicoCompleto))
+                        tentativas++;
+                        _logger.LogInformation($"Processando Refeição ID: {request.RefeicaoId} (Tentativa {tentativas}/{maxTentativas})");
+
+                        using var scope = _scopeFactory.CreateScope();
+                        var dbContext = scope.ServiceProvider.GetRequiredService<IRefeicaoRepository>();
+                        var llmService = scope.ServiceProvider.GetRequiredService<ILlmService>();
+                        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+                        var refeicao = await dbContext.ObterPorId(request.RefeicaoId);
+                        if (refeicao == null)
                         {
-                            File.Delete(caminhoFisicoCompleto);
-                            _logger.LogInformation($"Imagem deletada com sucesso: {caminhoFisicoCompleto}");
+                            _logger.LogWarning($"Refeição {request.RefeicaoId} não encontrada no banco. Abortando item.");
+                            processadoComSucesso = true; // Marca como "sucesso" para tirar da fila já que não existe
+                            continue;
+                        }
+
+                        var caminhoBase = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "refeicoes");
+                        var padraoDeBusca = $"{request.GuidArquivo}.*";
+                        var arquivosEncontrados = Directory.GetFiles(caminhoBase, padraoDeBusca);
+
+                        if (arquivosEncontrados.Length == 0)
+                        {
+                            _logger.LogWarning($"Imagem não encontrada no disco para a Refeição ID: {request.RefeicaoId}");
+                            processadoComSucesso = true;
+                            continue;
+                        }
+
+                        var caminhoFisicoCompleto = arquivosEncontrados[0];
+                        byte[] imagemBytes = await File.ReadAllBytesAsync(caminhoFisicoCompleto, stoppingToken);
+
+                        // Chamada à LLM
+                        var estimativaCalorica = await llmService.SimularCaloriasRefeicao(imagemBytes, refeicao.Peso);
+
+                        refeicao.AtualizarEstimativa(
+                            estimativaCalorica.Alimento ?? "alimento não identificado", 
+                            estimativaCalorica.Calorias, 
+                            estimativaCalorica.Proteinas,
+                            estimativaCalorica.Carboidratos, 
+                            estimativaCalorica.Gorduras, 
+                            estimativaCalorica.Acucares, 
+                            estimativaCalorica.Fibras);
+
+                        await unitOfWork.CommitAsync();
+
+                        // Notificar o Frontend
+                        await _hubContext.Clients.Group(refeicao.UsuarioId.ToString())
+                            .SendAsync("RefeicaoProcessada", refeicao.Id, stoppingToken);
+
+                        // Limpeza
+                        try { if (File.Exists(caminhoFisicoCompleto)) File.Delete(caminhoFisicoCompleto); }
+                        catch (Exception exFile) { _logger.LogWarning(exFile, "Falha ao deletar imagem órfã."); }
+
+                        processadoComSucesso = true;
+                        _logger.LogInformation($"Refeição {request.RefeicaoId} processada com sucesso.");
+                        
+                        // Pequeno fôlego para a API após sucesso (opcional, mas ajuda na estabilidade)
+                        await Task.Delay(2000, stoppingToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Erro na tentativa {tentativas} para RefeicaoId: {request.RefeicaoId}");
+                        
+                        if (tentativas < maxTentativas)
+                        {
+                            _logger.LogInformation("Aguardando 40 segundos para nova tentativa devido a possível Rate Limit...");
+                            await Task.Delay(TimeSpan.FromSeconds(40), stoppingToken);
+                        }
+                        else
+                        {
+                            _logger.LogCritical($"Máximo de tentativas atingido para RefeicaoId: {request.RefeicaoId}. O item será descartado para não travar a fila.");
                         }
                     }
-                    catch (Exception exFile)
-                    {
-                        _logger.LogWarning(exFile, $"Falha ao deletar a imagem no disco (ela ficará órfã): {caminhoFisicoCompleto}");
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"Erro ao processar estimativa da IA para RefeicaoId: {request.RefeicaoId}");
-                    await Task.Delay(TimeSpan.FromMinutes(2));
-                    await _fila.EnviarParaFilaAsync(request);
                 }
             }
         }
