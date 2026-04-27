@@ -48,5 +48,14 @@ namespace CalculadoraCalorias.Application.Features
 
             return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registro));
         }
+
+        public async Task<Resultado<bool>> Excluir(long id)
+        {
+            var excluiu = await _registroFisicoService.Excluir(id);
+            if (!excluiu) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Registro não encontrado");
+
+            await _unitOfWork.CommitAsync();
+            return Resultado<bool>.Success(true);
+        }
     }
 }

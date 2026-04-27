@@ -69,6 +69,11 @@ public class RegistroFisicoService : IRegistroFisicoService
         return await _registroFisicoRepository.ObterPorIdUsuario(idUsuario);
     }
 
+    public async Task<List<RegistroFisico>> ObterHistorico(long usuarioId)
+    {
+        return await _registroFisicoRepository.ObterHistoricoPorUsuario(usuarioId);
+    }
+
     public async Task<RegistroFisico?> Atualizar(long usuarioId, decimal pesoKg, decimal? metaCaloricaDiaria)
     {
         var registro = await _registroFisicoRepository.ObterPorIdUsuario(usuarioId);
@@ -80,6 +85,11 @@ public class RegistroFisicoService : IRegistroFisicoService
 
         registro.Atualizar(pesoKg, imcCalculado, taxaMetabolica, metaCaloricaDiaria);
         return registro;
+    }
+
+    public async Task<bool> Excluir(long id)
+    {
+        return await _registroFisicoRepository.Excluir(id);
     }
 }
 

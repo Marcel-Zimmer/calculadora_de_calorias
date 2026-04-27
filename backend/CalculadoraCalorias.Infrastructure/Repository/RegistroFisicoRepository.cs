@@ -14,5 +14,13 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .OrderByDescending(x => x.DataRegistro)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<RegistroFisico>> ObterHistoricoPorUsuario(long idUsuario)
+        {
+            return await _dbSet
+                .Where(x => x.UsuarioId == idUsuario)
+                .OrderBy(x => x.DataRegistro)
+                .ToListAsync();
+        }
     }
 }

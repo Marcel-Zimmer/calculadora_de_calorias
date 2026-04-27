@@ -10,8 +10,10 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
                                             decimal? MetaCaloricaDiaria,
                                             PerfilBiometrico? perfil = null);
         Task<RegistroFisico?> ObterPorIdUsuario(long idUsuario);
+        Task<List<RegistroFisico>> ObterHistorico(long usuarioId);
         Task<RegistroFisico?> Atualizar(long usuarioId,
                                             decimal pesoKg,
                                             decimal? MetaCaloricaDiaria);
+        Task<bool> Excluir(long id);
     }
 }

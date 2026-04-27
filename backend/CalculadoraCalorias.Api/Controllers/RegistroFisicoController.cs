@@ -28,5 +28,11 @@ namespace CalculadoraCalorias.Api.Controllers
         {
             return ProcessarResultado(await _registroFisicoAppService.Atualizar(usuarioId, requisicao));
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Excluir(long id)
+        {
+            return ProcessarResultado(await _registroFisicoAppService.Excluir(id));
+        }
     }
 }

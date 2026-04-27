@@ -10,7 +10,8 @@ namespace CalculadoraCalorias.Application.Features
     public class GraficoAppService(
         IRefeicaoService _refeicaoService, 
         IAtividadeFisicaService _atividadeFisicaService,
-        IRegistroFisicoService _registroFisicoService) : IGraficoAppService
+        IRegistroFisicoService _registroFisicoService,
+        IPerfilBiometricoService _perfilBiometricoService) : IGraficoAppService
     {
        
         public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId, DateOnly? data = null)
@@ -186,6 +187,58 @@ namespace CalculadoraCalorias.Application.Features
             }
 
             return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
+        }
+
+        public async Task<Resultado<EstatisticasPesoResponse>> ObterEstatisticasPeso(long usuarioId)
+        {
+            var historico = await _registroFisicoService.ObterHistorico(usuarioId);
+            if (historico == null || historico.Count == 0)
+                return Resultado<EstatisticasPesoResponse>.Failure(TipoDeErro.NotFound, "Nenhum registro de peso encontrado.");
+
+            var perfil = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
+
+            var historicoAgrupado = historico
+                .GroupBy(h => h.DataRegistro.Date)
+                .Select(g => g.OrderByDescending(x => x.DataRegistro).First())
+                .OrderBy(x => x.DataRegistro)
+                .ToList();
+
+            var pontos = historicoAgrupado.Select(h => new PesoPontoResponse
+            {
+                Id = h.Id,
+                Data = h.DataRegistro.ToString("yyyy-MM-dd"),
+                Legenda = h.DataRegistro.ToString("dd/MM"),
+                Peso = (double)h.PesoKg
+            }).ToList();
+
+            var pesoAtual = (double)historicoAgrupado.Last().PesoKg;
+            var pesoInicial = (double)historicoAgrupado.First().PesoKg;
+            var maiorPeso = (double)historicoAgrupado.Max(h => h.PesoKg);
+            var menorPeso = (double)historicoAgrupado.Min(h => h.PesoKg);
+            var imcAtual = (double)historico.Last().ImcCalculado;
+            var tmbAtual = (double)historico.Last().TaxaMetabolicaBasal;
+
+            var objetivoDescricao = perfil?.Objetivo switch
+            {
+                ObjetivoEnum.PerdaPesoAgressiva => "Perda de Peso (Foco)",
+                ObjetivoEnum.PerdaPesoLeve => "Perda de Peso Leve",
+                ObjetivoEnum.ManterPeso => "Manutenção",
+                _ => "Não Definido"
+            };
+
+            return Resultado<EstatisticasPesoResponse>.Success(new EstatisticasPesoResponse
+            {
+                PesoAtual = pesoAtual,
+                PesoInicial = pesoInicial,
+                MaiorPeso = maiorPeso,
+                MenorPeso = menorPeso,
+                VariacaoTotal = Math.Round(pesoAtual - pesoInicial, 2),
+                ImcAtual = Math.Round(imcAtual, 2),
+                TmbAtual = Math.Round(tmbAtual, 2),
+                Objetivo = objetivoDescricao,
+                ObjetivoId = (int)(perfil?.Objetivo ?? 0),
+                Historico = pontos
+            });
         }
 
         private async Task<EstatisticasDetalhadasResponse> ObterDadosPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim, bool usarNomeDia)

@@ -12,5 +12,6 @@ namespace CalculadoraCalorias.Application.Interfaces
         Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long usuarioId, DateOnly? data = null);
         Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId, DateOnly? data = null);
         Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(long usuarioId, DateOnly? data = null);
+        Task<Resultado<EstatisticasPesoResponse>> ObterEstatisticasPeso(long usuarioId);
     }
 }

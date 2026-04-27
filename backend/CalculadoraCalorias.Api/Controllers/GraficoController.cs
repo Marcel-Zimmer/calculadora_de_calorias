@@ -73,5 +73,12 @@ namespace CalculadoraCalorias.Api.Controllers
             }
             return ProcessarResultado(await _graficoAppService.EstatisticasMensais(usuarioId, dataFiltro));
         }
+
+        [HttpGet]
+        [Route("estatisticas-peso/{usuarioId}")]
+        public async Task<IActionResult> EstatisticasPeso(long usuarioId)
+        {
+            return ProcessarResultado(await _graficoAppService.ObterEstatisticasPeso(usuarioId));
+        }
     }
 }

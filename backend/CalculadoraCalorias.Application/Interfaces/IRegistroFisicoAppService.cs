@@ -10,5 +10,6 @@ namespace CalculadoraCalorias.Application.Interfaces
         public Task<Resultado<CriarRegistroFisicoResponse>> Adicionar(CriarRegistroFisicoRequest requisicao);
         public Task<Resultado<CriarRegistroFisicoResponse>> ObterUltimoPorUsuarioId(long usuarioId);
         public Task<Resultado<CriarRegistroFisicoResponse>> Atualizar(long usuarioId, CriarRegistroFisicoRequest requisicao);
+        public Task<Resultado<bool>> Excluir(long id);
     }
 }
