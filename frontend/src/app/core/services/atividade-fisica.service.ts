@@ -36,4 +36,8 @@ export class AtividadeFisicaService {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
+  atualizar(atividade: any) {
+    return this.http.put(`${this.baseUrl}`, atividade);
+  }
+
 }

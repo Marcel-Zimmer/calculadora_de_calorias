@@ -1,68 +1,107 @@
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-        <h3 class="font-black text-slate-800 mb-6 flex items-center justify-between text-lg">
-            Refeições de Hoje
-        </h3>
-        <div class="space-y-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+    
+    <!-- Seção de Refeições -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between px-2">
+            <h3 class="font-black text-slate-800 text-lg tracking-tight flex items-center gap-2">
+                <span class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">🥗</span>
+                Refeições do Dia
+            </h3>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ refeicoes().length }} registros</span>
+        </div>
+
+        <div class="space-y-3">
             @for (refeicao of refeicoes(); track refeicao.id) {
-            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100 group">
-                <div class="flex items-center space-x-4">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl" [class]="mapaRefeicoes()[refeicao.tipoRefeicao]?.cor">
+                <div (click)="abrirDetalheRefeicao(refeicao)" 
+                     class="bg-white p-4 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] active:scale-95 cursor-pointer group flex items-center gap-4 relative overflow-hidden">
+                    
+                    <div [class]="mapaRefeicoes()[refeicao.tipoRefeicao]?.cor" 
+                         class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0">
                         {{ mapaRefeicoes()[refeicao.tipoRefeicao]?.icone }}
                     </div>
-                    <div>
-                        <h4 class="font-bold text-slate-800 text-sm italic">{{ mapaRefeicoes()[refeicao.tipoRefeicao]?.nome }}</h4>
+
+                    <div class="flex-1 min-w-0">
+                        <p class="font-black text-slate-800 truncate">{{ refeicao.apelido || refeicao.alimento }}</p>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ mapaRefeicoes()[refeicao.tipoRefeicao]?.nome }}</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-200"></span>
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase">{{ refeicao.peso }}g</span>
+                        </div>
+                    </div>
+
+                    <div class="text-right shrink-0 px-2">
+                        <p class="text-lg font-black text-slate-800 leading-none">{{ refeicao.calorias }}</p>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">kcal</p>
+                    </div>
+
+                    <!-- Indicador visual de hover -->
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="font-black text-slate-800 text-lg">
-                        {{ refeicao.calorias ?? "Calculando calorias..." }}
-                        <span class="text-[10px] text-slate-400">{{ refeicao.calorias ? "KCAL" : ""}}</span>
-                    </span>
-                    <button (click)="excluirRefeicao(refeicao.id)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all" title="Excluir">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </div>
-            </div>
             } @empty {
-            <div class="p-6 text-center text-slate-500 text-lg border-2 border-dashed border-slate-100 rounded-2xl">
-                Nenhuma refeição registrada hoje
-            </div>
+                <div class="py-12 bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center px-6">
+                    <span class="text-4xl mb-4 grayscale">🍽️</span>
+                    <p class="text-slate-400 font-bold text-sm">Nenhuma refeição registrada para hoje.</p>
+                </div>
             }
         </div>
     </div>
 
-    <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-        <h3 class="font-black text-slate-800 mb-6 flex items-center justify-between text-lg">
-            Exercícios de Hoje
-        </h3>
-        <div class="space-y-4">
+    <!-- Seção de Exercícios -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between px-2">
+            <h3 class="font-black text-slate-800 text-lg tracking-tight flex items-center gap-2">
+                <span class="w-8 h-8 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center">⚡</span>
+                Atividades Físicas
+            </h3>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ exercicios().length }} registros</span>
+        </div>
+
+        <div class="space-y-3">
             @for (exercicio of exercicios(); track exercicio.id) {
-            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors rounded-2xl border border-transparent hover:border-slate-100 group">
-                <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-                    <div class="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl" [class]="mapaExercicios()[exercicio.tipoExercicio]?.cor">
+                <div (click)="abrirEditarExercicio(exercicio)"
+                     class="bg-white p-4 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] active:scale-95 cursor-pointer group flex items-center gap-4 relative overflow-hidden">
+                    
+                    <div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl shrink-0">
                         {{ mapaExercicios()[exercicio.tipoExercicio]?.icone }}
                     </div>
-                    <div class="flex flex-col justify-center min-w-0">
-                        <h4 class="font-bold text-slate-800 text-sm italic truncate">{{ mapaExercicios()[exercicio.tipoExercicio]?.nome }}</h4>
-                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 truncate">{{ formatarTempo(exercicio.tempoDeExercicio) }}</p>
+
+                    <div class="flex-1 min-w-0">
+                        <p class="font-black text-slate-800 truncate">{{ exercicio.descricao }}</p>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ formatarTempo(exercicio.tempoFormatado) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="text-right shrink-0 px-2">
+                        <p class="text-lg font-black text-orange-500 leading-none">-{{ exercicio.caloriasEstimadas }}</p>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">kcal</p>
+                    </div>
+
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <div class="font-black text-slate-800 text-lg whitespace-nowrap flex-shrink-0">
-                        {{ exercicio.caloriasEstimadas }}
-                        <span class="text-[10px] text-slate-400">{{ exercicio.caloriasEstimadas ? "KCAL" : "" }}</span>
-                    </div>
-                    <button (click)="excluirExercicio(exercicio.id)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-all" title="Excluir">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </div>
-            </div>
             } @empty {
-            <div class="p-6 text-center text-slate-500 text-lg border-2 border-dashed border-slate-100 rounded-2xl">
-                Nenhum Exercicio registrado hoje
-            </div>
+                <div class="py-12 bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-center px-6">
+                    <span class="text-4xl mb-4 grayscale">👟</span>
+                    <p class="text-slate-400 font-bold text-sm">Nenhum exercício registrado para hoje.</p>
+                </div>
             }
         </div>
     </div>
 </div>
+
+<!-- Modais de Detalhe / Edição -->
+<app-detalhe-refeicao 
+    [(mostrarModal)]="mostrarModalRefeicao" 
+    [refeicao]="refeicaoSelecionada()" 
+    (refeicaoAlterada)="refeicaoAlterada()">
+</app-detalhe-refeicao>
+
+<app-editar-exercicio 
+    [(mostrarModal)]="mostrarModalExercicio" 
+    [exercicio]="exercicioSelecionado()" 
+    (exercicioAlterado)="exercicioAlterado()">
+</app-editar-exercicio>

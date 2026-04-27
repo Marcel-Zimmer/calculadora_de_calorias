@@ -92,7 +92,7 @@
 
           <div class="w-full">
             @switch (graficoDashboard()) {
-                @case ('diario') { <app-grafico-diario [refeicoes]="refeicoesDeHoje()" [exercicios]="exerciciosDeHoje()" [mapaRefeicoes]="mapaRefeicoes" [mapaExercicios]="mapaExercicios" (onExcluirRefeicao)="excluirRefeicao($event)" (onExcluirExercicio)="excluirExercicio($event)"></app-grafico-diario> }
+                @case ('diario') { <app-grafico-diario [refeicoes]="refeicoesDeHoje()" [exercicios]="exerciciosDeHoje()" [mapaRefeicoes]="mapaRefeicoes" [mapaExercicios]="mapaExercicios" (onRefeicaoAlterada)="obterGraficoDiario()" (onExercicioAlterado)="obterGraficoDiario()"></app-grafico-diario> }
                 @case ('semanal') { <app-bs-grafico-media-semanal titulo="Saldo de Calorias" [dados]="dadosGraficoSemanalSaldo()" [metaDiaria]="metaCalorias()" [pintarPorMeta]="true"></app-bs-grafico-media-semanal> }
                 @case ('mensal') { <app-bs-grafico-historico-mensal titulo="Histórico Mensal Diário" [dados]="dadosHistoricoSaldoMensal()" [metaDiaria]="metaCalorias()" [pintarPorMeta]="true"></app-bs-grafico-historico-mensal> }
             }

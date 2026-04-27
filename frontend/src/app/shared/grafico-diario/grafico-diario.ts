@@ -1,10 +1,12 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DetalheRefeicaoComponent } from '../detalhe-refeicao/detalhe-refeicao';
+import { EditarExercicioComponent } from '../editar-exercicio/editar-exercicio';
 
 @Component({
   selector: 'app-grafico-diario',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DetalheRefeicaoComponent, EditarExercicioComponent],
   templateUrl: './grafico-diario.html'
 })
 export class GraficoDiario {
@@ -13,15 +15,31 @@ export class GraficoDiario {
   mapaRefeicoes = input<Record<number, any>>({});
   mapaExercicios = input<Record<number, any>>({});
 
-  onExcluirRefeicao = output<number>();
-  onExcluirExercicio = output<number>();
+  onRefeicaoAlterada = output<void>();
+  onExercicioAlterado = output<void>();
 
-  excluirRefeicao(id: number) {
-    this.onExcluirRefeicao.emit(id);
+  refeicaoSelecionada = signal<any>(null);
+  mostrarModalRefeicao = signal<boolean>(false);
+
+  exercicioSelecionado = signal<any>(null);
+  mostrarModalExercicio = signal<boolean>(false);
+
+  abrirDetalheRefeicao(refeicao: any) {
+    this.refeicaoSelecionada.set(refeicao);
+    this.mostrarModalRefeicao.set(true);
   }
 
-  excluirExercicio(id: number) {
-    this.onExcluirExercicio.emit(id);
+  abrirEditarExercicio(exercicio: any) {
+    this.exercicioSelecionado.set(exercicio);
+    this.mostrarModalExercicio.set(true);
+  }
+
+  refeicaoAlterada() {
+    this.onRefeicaoAlterada.emit();
+  }
+
+  exercicioAlterado() {
+    this.onExercicioAlterado.emit();
   }
 
   formatarTempo(tempo: string | null | undefined): string {

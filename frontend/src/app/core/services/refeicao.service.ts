@@ -35,4 +35,10 @@ export class RefeicaoService {
   excluir(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
+  atualizarApelido(id: number, apelido: string) {
+    return this.http.patch(`${this.baseUrl}/${id}/apelido`, `"${apelido}"`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 }
