@@ -64,5 +64,14 @@ namespace CalculadoraCalorias.Core.Domain.Services
         {
             return await _refeicaoRepository.Excluir(id);
         }
+
+        public async Task<bool> AtualizarApelido(long id, string apelido)
+        {
+            var refeicao = await _refeicaoRepository.ObterPorId(id);
+            if (refeicao == null) return false;
+
+            refeicao.AtualizarApelido(apelido);
+            return true;
+        }
     }
 }

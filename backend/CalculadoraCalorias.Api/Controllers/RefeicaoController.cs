@@ -26,9 +26,17 @@ namespace CalculadoraCalorias.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> Excluir([FromRoute] long id)
         {
             return ProcessarResultado(await _refeicaoAppService.Excluir(id));
+        }
+
+        [HttpPatch]
+        [Route("{id}/apelido")]
+        public async Task<IActionResult> AtualizarApelido([FromRoute] long id, [FromBody] string apelido)
+        {
+            return ProcessarResultado(await _refeicaoAppService.AtualizarApelido(id, apelido));
         }
     }
 }

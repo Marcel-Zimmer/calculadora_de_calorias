@@ -92,6 +92,15 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<bool>.Success(true);
         }
 
+        public async Task<Resultado<bool>> AtualizarApelido(long id, string apelido)
+        {
+            var atualizado = await _refeicaoService.AtualizarApelido(id, apelido);
+            if (!atualizado) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Refeição não encontrada");
+
+            await _unitOfWork.CommitAsync();
+            return Resultado<bool>.Success(true);
+        }
+
         public async Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId)
         {
             var modelos = await _refeicaoService.ObterModelosFrequentes(usuarioId);

@@ -70,6 +70,11 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             CodigoRefeicaoModelo = modeloId;
             StatusProcessamento = StatusProcessamentoEnum.Concluido;
         }
+
+        public void AtualizarApelido(string apelido)
+        {
+            Apelido = apelido;
+        }
     }
 
 

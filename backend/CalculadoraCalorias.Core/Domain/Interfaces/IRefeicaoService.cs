@@ -14,5 +14,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
         Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId);
         Task<bool> Excluir(long id);
+        Task<bool> AtualizarApelido(long id, string apelido);
     }
 }
