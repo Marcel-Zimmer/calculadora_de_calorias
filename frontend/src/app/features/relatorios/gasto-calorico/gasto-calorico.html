@@ -10,7 +10,7 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4" *ngIf="dadosEstatisticas()">
     <div class="bg-white p-6 rounded-[2rem] border border-slate-100 flex flex-col justify-center">
       <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total</p>
-      <p class="text-3xl font-black text-indigo-500">{{ dadosEstatisticas()!.totalGasto.toFixed(0) }} kcal</p>
+      <p class="text-3xl font-black text-slate-800">{{ dadosEstatisticas()!.totalGasto.toFixed(0) }} <span class="text-xs font-medium text-slate-400">kcal</span></p>
     </div>
     <div class="bg-white p-6 rounded-[2rem] border border-slate-100 flex flex-col justify-center">
       <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Ativos</p>
@@ -23,8 +23,8 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" *ngIf="periodoEstatisticas() === 'mensal' && dadosEstatisticas()?.gastoInsights">
-    <app-bs-grafico-media-por-semana titulo="Média Queima Semanal" corBarra="bg-orange-400" [semanas]="dadosEstatisticas()!.gastoInsights!.mediasSemanais"></app-bs-grafico-media-por-semana>
-    <app-bs-grafico-maiores-consumos titulo="Recordes de Queima" corBarra="bg-orange-400" [picos]="dadosEstatisticas()!.gastoInsights!.topGasto" [maximo]="dadosEstatisticas()!.gastoInsights!.maiorGasto"></app-bs-grafico-maiores-consumos>
+    <app-bs-grafico-media-por-semana titulo="Média Queima Semanal" corBarra="bg-indigo-400" [semanas]="dadosEstatisticas()!.gastoInsights!.mediasSemanais"></app-bs-grafico-media-por-semana>
+    <app-bs-grafico-maiores-consumos titulo="Recordes de Queima" corBarra="bg-indigo-400" [picos]="dadosEstatisticas()!.gastoInsights!.topGasto" [maximo]="dadosEstatisticas()!.gastoInsights!.maiorGasto"></app-bs-grafico-maiores-consumos>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" *ngIf="dadosEstatisticas()">
@@ -33,7 +33,7 @@
       <app-bs-grafico-historico-mensal *ngIf="periodoEstatisticas() === 'mensal'" titulo="Histórico Queima" [dados]="dadosHistoricoGasto()" [pintarPorMeta]="false"></app-bs-grafico-historico-mensal>
     </div>
     <div class="lg:col-span-1">
-      <app-bs-grafico-distribuicao-itens titulo="Esforço" [itens]="dadosEstatisticas()!.distribuicaoExercicios" corPrincipal="bg-orange-500"></app-bs-grafico-distribuicao-itens>
+      <app-bs-grafico-distribuicao-itens titulo="Esforço" [itens]="dadosEstatisticas()!.distribuicaoExercicios" corPrincipal="bg-indigo-500"></app-bs-grafico-distribuicao-itens>
     </div>
   </div>
 </div>
