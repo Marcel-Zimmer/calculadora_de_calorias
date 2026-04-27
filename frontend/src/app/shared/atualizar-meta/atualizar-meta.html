@@ -1,0 +1,63 @@
+<div *ngIf="mostrarModal()" class="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
+    <div (click)="fechar()" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
+  
+    <div class="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in duration-300">
+      
+      <!-- Header -->
+      <div class="bg-indigo-600 p-8 text-white relative">
+        <button (click)="fechar()" class="absolute top-6 right-6 p-2 hover:bg-white/10 rounded-full transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div class="flex items-center space-x-4 mb-2">
+          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl">🎯</div>
+          <h2 class="text-2xl font-black">Ajustar Objetivo</h2>
+        </div>
+        <p class="text-indigo-100 text-sm">Altere seu foco para recalcularmos suas metas.</p>
+      </div>
+  
+      <div class="p-8 space-y-6">
+        <!-- Dropdown de Objetivo -->
+        <div>
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">Qual seu foco agora?</label>
+          
+          <div class="relative">
+            <select 
+              [(ngModel)]="objetivoSelecionado"
+              class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-4 text-sm font-bold text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer"
+            >
+              <option [value]="1">🔥 Perda de Peso Agressiva (Foco total)</option>
+              <option [value]="2">🍃 Perda de Peso Leve (Déficit moderado)</option>
+              <option [value]="3">⚖️ Manutenção (Equilibrar peso)</option>
+            </select>
+            
+            <!-- Ícone customizado do dropdown -->
+            <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Informativo -->
+        <div class="p-5 bg-indigo-50 rounded-[2rem] border border-indigo-100 flex items-start gap-4">
+            <span class="text-xl">💡</span>
+            <p class="text-xs text-indigo-700 leading-relaxed">
+                Ao alterar seu objetivo, o sistema irá recalcular sua <strong>Taxa Metabólica Basal</strong> e sugerir uma nova <strong>Meta Calórica</strong> baseada na sua fisiologia atual.
+            </p>
+        </div>
+  
+        <!-- Footer / Actions -->
+        <div class="flex space-x-3 pt-4">
+          <button (click)="fechar()" class="flex-1 px-6 py-4 rounded-3xl font-bold text-slate-500 hover:bg-slate-50 transition-colors">
+            Cancelar
+          </button>
+          <button 
+            (click)="salvar()" 
+            [disabled]="carregando()"
+            class="flex-[2] bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white px-6 py-4 rounded-3xl font-bold shadow-lg shadow-indigo-100 transition-all active:scale-95 flex items-center justify-center space-x-2">
+            <span *ngIf="!carregando()">Atualizar Plano</span>
+            <span *ngIf="carregando()">Salvando...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

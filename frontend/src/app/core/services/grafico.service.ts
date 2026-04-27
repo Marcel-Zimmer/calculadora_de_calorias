@@ -42,4 +42,8 @@ export class GraficoService {
     return this.http.get(url);
   }
 
+  obterEstatisticasPeso(usuarioId: number) {
+    return this.http.get(`${this.baseUrl}/estatisticas-peso/${usuarioId}`);
+  }
+
 }

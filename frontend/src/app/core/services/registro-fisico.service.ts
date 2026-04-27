@@ -21,4 +21,8 @@ export class RegistroFisicoService {
   atualizar(usuarioId: number, registro: any) {
     return this.http.put(`${this.baseUrl}/usuario/${usuarioId}`, registro);
   }
+
+  excluir(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 }

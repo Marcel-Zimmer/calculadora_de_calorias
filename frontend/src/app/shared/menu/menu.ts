@@ -16,11 +16,11 @@ export class Menu {
   private autenticacaoService = inject(AutenticacaoService);
   private router = inject(Router);
 
-  abaAtiva = input<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil'>('dashboard');
+  abaAtiva = input<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'estatisticas-peso' | 'perfil'>('dashboard');
   menuAberto = model<boolean>(false);
-  abaSelecionada = output<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil'>();
+  abaSelecionada = output<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'estatisticas-peso' | 'perfil'>();
 
-  selecionarAba(aba: 'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil') {
+  selecionarAba(aba: 'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'estatisticas-peso' | 'perfil') {
       this.abaSelecionada.emit(aba);
       this.menuAberto.set(false);
       this.ui.fecharMenu();

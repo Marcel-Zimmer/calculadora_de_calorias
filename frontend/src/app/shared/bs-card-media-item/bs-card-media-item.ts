@@ -11,6 +11,7 @@ export class BsCardMediaItemComponent {
   icone = input.required<string>();
   corCss = input.required<string>();
   titulo = input.required<string>();
-  valor = input.required<number>();
+  valor = input.required<number | string>();
   legenda = input<string>('média diária');
+  isText = input<boolean>(false);
 }

@@ -22,6 +22,7 @@ import { BsCardImpactoEstimadoComponent } from '../../shared/bs-card-impacto-est
 import { ConsumoCaloricoComponent } from '../relatorios/consumo-calorico/consumo-calorico';
 import { GastoCaloricoComponent } from '../relatorios/gasto-calorico/gasto-calorico';
 import { NutrientesComponent } from '../relatorios/nutrientes/nutrientes';
+import { AcompanhamentoPesoComponent } from '../relatorios/acompanhamento-peso/acompanhamento-peso';
 import { PerfilComponent } from '../perfil/perfil/perfil';
 
 @Component({
@@ -33,7 +34,7 @@ import { PerfilComponent } from '../perfil/perfil/perfil';
     BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, 
     BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, 
     BsCardImpactoEstimadoComponent,
-    ConsumoCaloricoComponent, GastoCaloricoComponent, NutrientesComponent, PerfilComponent
+    ConsumoCaloricoComponent, GastoCaloricoComponent, NutrientesComponent, AcompanhamentoPesoComponent, PerfilComponent
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
@@ -48,7 +49,7 @@ export class Dashboard implements OnInit {
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   dataSelecionada = signal<string>(this.todayDate);
 
-  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'perfil'>('dashboard');
+  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'estatisticas-peso' | 'perfil'>('dashboard');
   menuAberto = signal<boolean>(false);
   graficoDashboard = signal<'diario' | 'semanal' | 'mensal'>('diario');
 

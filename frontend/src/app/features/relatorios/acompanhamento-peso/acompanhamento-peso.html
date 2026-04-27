@@ -1,0 +1,65 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    
+    <!-- Título da Página -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-black text-slate-800">Acompanhamento da Evolução</h2>
+            <p class="text-slate-400 text-sm font-bold uppercase tracking-widest mt-1">Sua jornada física em detalhes</p>
+        </div>
+    </div>
+
+    <!-- Linha de Destaque: 4 Cards e Coluna de Botões -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-stretch">
+        <!-- Cards de Estatísticas -->
+        @for (card of cardsPeso(); track card.titulo) {
+            <div class="h-full">
+                <app-bs-card-media-item 
+                    [icone]="card.icone" 
+                    [corCss]="card.corCss" 
+                    [titulo]="card.titulo" 
+                    [valor]="card.valor" 
+                    [isText]="card.isText || false"
+                    [legenda]="card.legenda">
+                </app-bs-card-media-item>
+            </div>
+        }
+
+        <!-- Coluna de Botões -->
+        <div class="flex flex-col gap-3 h-full min-h-[160px]">
+            <button (click)="mostrarModalAdicionar.set(true)" 
+                    class="flex-1 bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-[2rem] font-black transition-all hover:scale-[1.02] active:scale-95 shadow-md flex items-center justify-center gap-2 group">
+                <span class="text-xl group-hover:rotate-90 transition-transform">+</span>
+                <span class="text-[10px] uppercase tracking-widest">Registrar Peso</span>
+            </button>
+            
+            <button (click)="mostrarModalMeta.set(true)" 
+                    class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-[2rem] font-black transition-all hover:scale-[1.02] active:scale-95 shadow-md flex items-center justify-center gap-2 group">
+                <span class="text-xl group-hover:rotate-12 transition-transform">🎯</span>
+                <span class="text-[10px] uppercase tracking-widest">Trocar Meta</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Gráfico Criativo com Interatividade -->
+    <app-bs-grafico-peso-criativo 
+        [dados]="historicoParaGrafico()"
+        (pontoSelecionado)="abrirEditar($event)">
+    </app-bs-grafico-peso-criativo>
+
+</div>
+
+<app-adicionar-peso 
+    [(mostrarModal)]="mostrarModalAdicionar" 
+    (pesoAdicionado)="carregarEstatisticas()">
+</app-adicionar-peso>
+
+<app-atualizar-meta 
+    [(mostrarModal)]="mostrarModalMeta" 
+    (metaAtualizada)="carregarEstatisticas()">
+</app-atualizar-meta>
+
+<app-editar-peso
+    [(mostrarModal)]="mostrarModalEditar"
+    [registro]="pontoSelecionado()"
+    (registroAlterado)="carregarEstatisticas()">
+</app-editar-peso>

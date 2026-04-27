@@ -1,8 +1,15 @@
-<div class="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center transition-all hover:-translate-y-1">
-    <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-3 text-xl" [class]="corCss()">
+<div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center group hover:bg-slate-50 transition-all duration-300 h-full">
+    <div [class]="corCss() + ' w-12 h-12 rounded-2xl flex items-center justify-center mb-3 text-2xl transition-transform group-hover:scale-110 duration-300'">
         {{ icone() }}
     </div>
-    <p class="text-[9px] font-black text-slate-400 uppercase tracking-tighter mb-1">{{ titulo() }}</p>
-    <p class="text-lg font-black text-slate-800">{{ valor() }} <span class="text-[10px] font-medium text-slate-400">kcal</span></p>
-    <p class="text-[8px] font-bold text-slate-300 mt-1">{{ legenda() }}</p>
+    
+    <span class="text-[10px] text-slate-400 uppercase font-bold mb-2 tracking-widest">{{ titulo() }}</span>
+    
+    <div class="flex items-center justify-center min-h-[40px]">
+        <span [class]="isText() ? 'text-sm leading-tight' : 'text-2xl'" class="font-black text-slate-800">
+            {{ valor() }}
+        </span>
+    </div>
+    
+    <span class="text-[10px] text-slate-400 font-bold mt-2 opacity-60 uppercase">{{ legenda() }}</span>
 </div>

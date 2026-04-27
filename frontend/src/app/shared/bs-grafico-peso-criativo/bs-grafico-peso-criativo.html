@@ -1,0 +1,82 @@
+<div class="relative w-full overflow-hidden bg-white/50 backdrop-blur-sm p-6 md:p-8 rounded-[3rem] border border-slate-100 shadow-sm min-h-[400px]">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
+        <div>
+            <h3 class="text-xl font-black text-slate-800">Trilha do Peso</h3>
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Visualização Orgânica</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="text-[10px] font-black text-slate-500 uppercase">Perda</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <span class="text-[10px] font-black text-slate-500 uppercase">Ganho</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERSÃO DESKTOP -->
+    <div class="hidden md:block relative w-full overflow-x-auto pb-6 hide-scrollbar">
+        <div class="min-w-[800px] h-[250px] flex items-center justify-center">
+            <svg viewBox="0 0 800 250" class="w-full h-full overflow-visible">
+                <path [attr.d]="caminhoSvg()" fill="none" stroke="#e2e8f0" stroke-linecap="round" class="journey-path path-bg opacity-30" />
+                <path [attr.d]="caminhoSvg()" fill="none" stroke="url(#gradientPathH)" stroke-linecap="round" stroke-dasharray="10, 15" class="journey-path path-main" />
+                <defs>
+                    <linearGradient id="gradientPathH" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="100%" stop-color="#10b981" />
+                    </linearGradient>
+                </defs>
+                @for (no of nosCalculados(); track no.x) {
+                    <g class="node-bounce node-group cursor-pointer" [style.animation-delay]="($index * 0.2) + 's'" (click)="selecionarPonto(no)">
+                        <!-- Glow de Hover -->
+                        <circle [attr.cx]="no.x" [attr.cy]="no.y" r="26" [attr.fill]="no.cor" class="opacity-0 group-hover:opacity-20" />
+                        <!-- Sombra Estática -->
+                        <circle [attr.cx]="no.x" [attr.cy]="no.y" r="24" [attr.fill]="no.cor" class="opacity-10" />
+                        <!-- Círculo Principal -->
+                        <circle [attr.cx]="no.x" [attr.cy]="no.y" r="18" [attr.fill]="no.cor" class="main-circle shadow-xl" />
+                        
+                        <text [attr.x]="no.x" [attr.y]="no.y + 4" text-anchor="middle" fill="white" class="text-[9px] font-black pointer-events-none">{{ no.peso }}</text>
+                        <text [attr.x]="no.x" [attr.y]="no.y + 40" text-anchor="middle" fill="#94a3b8" class="text-[8px] font-black uppercase tracking-tighter">{{ no.legenda }}</text>
+                    </g>
+                }
+            </svg>
+        </div>
+    </div>
+
+    <!-- VERSÃO MOBILE -->
+    <div class="md:hidden relative w-full flex justify-center py-4">
+        <div class="w-full max-w-[300px]">
+            <svg [attr.viewBox]="'0 0 200 ' + (50 + (dados().length * 100))" class="w-full overflow-visible">
+                <path [attr.d]="caminhoVerticalSvg()" fill="none" stroke="#e2e8f0" stroke-linecap="round" class="journey-path path-bg opacity-30" />
+                <path [attr.d]="caminhoVerticalSvg()" fill="none" stroke="url(#gradientPathV)" stroke-linecap="round" stroke-dasharray="8, 12" class="journey-path path-main" />
+                <defs>
+                    <linearGradient id="gradientPathV" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="100%" stop-color="#10b981" />
+                    </linearGradient>
+                </defs>
+                @for (no of nosVerticalCalculados(); track no.y) {
+                    <g class="node-bounce node-group cursor-pointer" [style.animation-delay]="($index * 0.2) + 's'" (click)="selecionarPonto(no)">
+                        <circle [attr.cx]="no.x" [attr.cy]="no.y" r="24" [attr.fill]="no.cor" class="opacity-0 group-hover:opacity-20" />
+                        <circle [attr.cx]="no.x" [attr.cy]="no.y" r="22" [attr.fill]="no.cor" class="opacity-10" />
+                        <circle [attr.cx]="no.x" [attr.cy]="no.y" r="17" [attr.fill]="no.cor" class="main-circle" />
+                        <text [attr.x]="no.x" [attr.y]="no.y + 4" text-anchor="middle" fill="white" class="text-[9px] font-black pointer-events-none">{{ no.peso }}</text>
+                        
+                        <text [attr.x]="no.x + (no.x > 100 ? -35 : 35)" [attr.y]="no.y + 4" 
+                              [attr.text-anchor]="no.x > 100 ? 'end' : 'start'"
+                              fill="#94a3b8" class="text-[8px] font-black uppercase tracking-widest pointer-events-none">
+                            {{ no.legenda }}
+                        </text>
+                    </g>
+                }
+            </svg>
+        </div>
+    </div>
+
+    <div *ngIf="dados().length === 0" class="absolute inset-0 flex flex-col items-center justify-center text-slate-300">
+        <span class="text-6xl mb-4">🏔️</span>
+        <p class="font-black uppercase tracking-widest text-sm">Comece sua jornada</p>
+    </div>
+</div>

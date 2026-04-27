@@ -103,6 +103,7 @@
         <app-consumo-calorico *ngIf="abaMenu() === 'estatisticas-consumo'" [dataSelecionada]="dataSelecionada()"></app-consumo-calorico>
         <app-gasto-calorico *ngIf="abaMenu() === 'estatisticas-gasto'" [dataSelecionada]="dataSelecionada()"></app-gasto-calorico>
         <app-nutrientes *ngIf="abaMenu() === 'estatisticas-nutrientes'" [dataSelecionada]="dataSelecionada()"></app-nutrientes>
+        <app-acompanhamento-peso *ngIf="abaMenu() === 'estatisticas-peso'"></app-acompanhamento-peso>
         
         <!-- ABA: PERFIL (COMPONENTIZADO) -->
         <app-perfil *ngIf="abaMenu() === 'perfil'"></app-perfil>
