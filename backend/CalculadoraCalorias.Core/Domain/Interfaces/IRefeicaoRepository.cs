@@ -1,5 +1,6 @@
 ﻿using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
+using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.InternalDTO;
 
 namespace CalculadoraCalorias.Core.Domain.Interfaces
@@ -8,6 +9,6 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
     {
         Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null);
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
-        Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId);
+        Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null);
     }
 }

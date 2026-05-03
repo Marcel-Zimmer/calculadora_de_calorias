@@ -55,9 +55,9 @@ namespace CalculadoraCalorias.Core.Domain.Services
             return await _refeicaoRepository.ObterPorPeriodo(usuarioId, inicio, fim);
         }
 
-        public async Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId)
+        public async Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null)
         {
-            return await _refeicaoRepository.ObterModelosFrequentes(usuarioId);
+            return await _refeicaoRepository.ObterModelosFrequentes(usuarioId, tipo);
         }
 
         public async Task<bool> Excluir(long id)

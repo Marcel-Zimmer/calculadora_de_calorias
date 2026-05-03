@@ -12,7 +12,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         Task<Refeicao?> AdicionarBaseadoEmModelo(long usuarioId, long modeloId, double pesoEmGramas, TipoRefeicaoEnum tipo, DateOnly data);
         Task<List<RefeicaoDTO>> ObterDiariasPorUsuarioId(long usuarioId, DateOnly? data = null);
         Task<List<RefeicaoDTO>> ObterPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim);
-        Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId);
+        Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null);
         Task<bool> Excluir(long id);
         Task<bool> AtualizarApelido(long id, string apelido);
     }

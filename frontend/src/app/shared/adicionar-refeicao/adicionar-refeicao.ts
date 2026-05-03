@@ -33,6 +33,13 @@ export class AdicionarRefeicao {
         this.dataRefeicao.set(data);
       }
     });
+
+    // Efeito para carregar modelos quando o tipo ou o modo de entrada mudar
+    effect(() => {
+      if (this.modoEntrada() === 'modelo') {
+        this.carregarModelos(this.tipoRefeicao());
+      }
+    });
   }
   
   obterTipoRefeicaoAtual(): number {
@@ -84,8 +91,8 @@ export class AdicionarRefeicao {
     return null;
   });
 
-  carregarModelos() {
-    this.refeicaoService.obterModelosFrequentes(this.autenticacao.obterId()).subscribe({
+  carregarModelos(tipo?: number) {
+    this.refeicaoService.obterModelosFrequentes(this.autenticacao.obterId(), tipo).subscribe({
       next: (modelos) => this.modelosFrequentes.set(modelos),
       error: (err) => console.error('Erro ao carregar modelos', err)
     });
@@ -93,9 +100,6 @@ export class AdicionarRefeicao {
 
   toggleModoEntrada(modo: 'foto' | 'modelo' | 'manual') {
     this.modoEntrada.set(modo);
-    if (modo === 'modelo' && this.modelosFrequentes().length === 0) {
-      this.carregarModelos();
-    }
   }
 
   closeMealModal() {

@@ -1,5 +1,6 @@
 using CalculadoraCalorias.Application.DTOs.Requests;
 using CalculadoraCalorias.Application.Interfaces;
+using CalculadoraCalorias.Core.Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCalorias.Api.Controllers
@@ -20,9 +21,9 @@ namespace CalculadoraCalorias.Api.Controllers
 
         [HttpGet]
         [Route("modelos-frequentes/{usuarioId}")]
-        public async Task<IActionResult> ObterModelosFrequentes([FromRoute] long usuarioId)
+        public async Task<IActionResult> ObterModelosFrequentes([FromRoute] long usuarioId, [FromQuery] TipoRefeicaoEnum? tipo)
         {
-            return ProcessarResultado(await _refeicaoAppService.ObterModelosFrequentes(usuarioId));
+            return ProcessarResultado(await _refeicaoAppService.ObterModelosFrequentes(usuarioId, tipo));
         }
 
         [HttpDelete("{id}")]

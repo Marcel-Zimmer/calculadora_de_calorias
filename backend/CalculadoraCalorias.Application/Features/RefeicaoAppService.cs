@@ -5,6 +5,7 @@ using CalculadoraCalorias.Application.Filas;
 using CalculadoraCalorias.Application.Interfaces;
 using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
+using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
@@ -101,9 +102,9 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<bool>.Success(true);
         }
 
-        public async Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId)
+        public async Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null)
         {
-            var modelos = await _refeicaoService.ObterModelosFrequentes(usuarioId);
+            var modelos = await _refeicaoService.ObterModelosFrequentes(usuarioId, tipo);
             var response = modelos.Select(x => new RefeicaoModeloResponse
             {
                 Id = x.Id,

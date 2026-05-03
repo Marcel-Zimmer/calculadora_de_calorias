@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
@@ -6,18 +6,21 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class RefeicaoService {
-  http = inject(HttpClient); 
-  
-  private readonly baseUrl = `${environment.apiUrl}/Refeicao`; 
+  http = inject(HttpClient);
+
+  private readonly baseUrl = `${environment.apiUrl}/Refeicao`;
 
   adicionar(refeicao: FormData) {
     return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
   }
 
-  obterModelosFrequentes(usuarioId: number) {
-    return this.http.get<any[]>(`${this.baseUrl}/modelos-frequentes/${usuarioId}`);
+  obterModelosFrequentes(usuarioId: number, tipo?: number) {
+    let params = new HttpParams();
+    if (tipo) {
+      params = params.set('tipo', tipo.toString());
+    }
+    return this.http.get<any[]>(`${this.baseUrl}/modelos-frequentes/${usuarioId}`, { params });
   }
-
   obterMapaRefeicoes(): Record<number, any> {
     return {
       1: { id: 1, nome: 'Café da Manhã', icone: '☕', cor: 'bg-amber-50 text-amber-500' },

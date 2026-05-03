@@ -1,5 +1,6 @@
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Interfaces;
+using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.InternalDTO;
 using CalculadoraCalorias.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -49,19 +50,30 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .ToListAsync();
         }
 
-        public async Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId)
+        public async Task<List<RefeicaoModeloDTO>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null)
         {
-            var agrupado = await _dbSet
+            var query = _dbSet
                 .AsNoTracking()
-                .Where(x => x.UsuarioId == usuarioId && x.Apelido != null && x.Calorias != null)
+                .Where(x => x.UsuarioId == usuarioId && x.Apelido != null && x.Calorias != null);
+
+            if (tipo.HasValue)
+            {
+                query = query.Where(x => x.Tipo == tipo.Value);
+            }
+
+            var agrupado = await query
                 .GroupBy(x => x.Apelido)
                 .Select(g => new
                 {
                     Apelido = g.Key,
                     Count = g.Count(),
-                    UltimaRefeicao = g.OrderByDescending(x => x.Data).ThenByDescending(x => x.Id).FirstOrDefault()
+                    UltimaRefeicao = g.OrderByDescending(x => x.Data).ThenByDescending(x => x.Id).FirstOrDefault(),
+                    UltimaData = g.Max(x => x.Data),
+                    UltimoId = g.Max(x => x.Id)
                 })
                 .OrderByDescending(x => x.Count)
+                .ThenByDescending(x => x.UltimaData)
+                .ThenByDescending(x => x.UltimoId)
                 .Take(10)
                 .ToListAsync();
 
