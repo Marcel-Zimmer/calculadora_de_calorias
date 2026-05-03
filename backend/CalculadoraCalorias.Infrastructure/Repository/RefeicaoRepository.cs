@@ -19,8 +19,11 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .Where(x => x.UsuarioId == usuarioId && x.Data == dataFiltro)
                 .Select(x => new RefeicaoDTO{
                     Id = x.Id,
+                    Apelido = x.Apelido,
+                    Alimento = x.Alimento,
                     Calorias = (int?)x.Calorias,
                     TipoRefeicao = x.Tipo,
+                    Peso = x.Peso,
                     Data = x.Data,
                     Proteinas = (double?)x.Proteinas,
                     Carboidratos = (double?)x.Carboidratos,
@@ -38,8 +41,11 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 .Where(x => x.UsuarioId == usuarioId && x.Data >= inicio && x.Data <= fim)
                 .Select(x => new RefeicaoDTO{
                     Id = x.Id,
+                    Apelido = x.Apelido,
+                    Alimento = x.Alimento,
                     Calorias = (int?)x.Calorias,
                     TipoRefeicao = x.Tipo,
+                    Peso = x.Peso,
                     Data = x.Data,
                     Proteinas = (double?)x.Proteinas,
                     Carboidratos = (double?)x.Carboidratos,

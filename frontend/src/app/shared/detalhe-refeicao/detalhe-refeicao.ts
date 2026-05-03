@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class DetalheRefeicaoComponent {
   private refeicaoService = inject(RefeicaoService);
+  protected Math = Math;
 
   refeicao = input.required<any>(); // Refeicao completa
   mostrarModal = input.required<boolean>();
@@ -21,6 +22,10 @@ export class DetalheRefeicaoComponent {
   novoApelido = signal<string>('');
   editandoApelido = signal<boolean>(false);
   carregando = signal<boolean>(false);
+
+  isMobile(): boolean {
+    return window.innerWidth < 640;
+  }
 
   constructor() {
     effect(() => {
@@ -35,10 +40,11 @@ export class DetalheRefeicaoComponent {
     const r = this.refeicao();
     if (!r) return [];
     return [
-      { nome: 'Proteínas', valor: r.proteinas, cor: 'bg-rose-500', unidade: 'g' },
-      { nome: 'Carbos', valor: r.carboidratos, cor: 'bg-amber-500', unidade: 'g' },
-      { nome: 'Gorduras', valor: r.gorduras, cor: 'bg-emerald-500', unidade: 'g' },
-      { nome: 'Fibras', valor: r.fibras, cor: 'bg-indigo-500', unidade: 'g' }
+      { nome: 'Proteínas', valor: Math.round(r.proteinas || 0), cor: 'bg-rose-500', unidade: 'g' },
+      { nome: 'Carbos', valor: Math.round(r.carboidratos || 0), cor: 'bg-amber-500', unidade: 'g' },
+      { nome: 'Gorduras', valor: Math.round(r.gorduras || 0), cor: 'bg-emerald-500', unidade: 'g' },
+      { nome: 'Açúcares', valor: Math.round(r.acucares || 0), cor: 'bg-red-400', unidade: 'g' },
+      { nome: 'Fibras', valor: Math.round(r.fibras || 0), cor: 'bg-indigo-500', unidade: 'g' }
     ];
   });
 

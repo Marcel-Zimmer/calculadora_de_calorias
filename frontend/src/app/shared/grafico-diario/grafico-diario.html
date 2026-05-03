@@ -1,3 +1,13 @@
+<style>
+    @keyframes loading-bar {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    .animate-loading-bar {
+        animation: loading-bar 1.5s infinite linear;
+    }
+</style>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
     
     <!-- Seção de Refeições -->
@@ -29,9 +39,18 @@
                         </div>
                     </div>
 
-                    <div class="text-right shrink-0 px-2">
-                        <p class="text-lg font-black text-slate-800 leading-none">{{ refeicao.calorias }}</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">kcal</p>
+                    <div class="text-right shrink-0 px-2 min-w-[70px]">
+                        @if (refeicao.calorias) {
+                            <p class="text-lg font-black text-slate-800 leading-none">{{ refeicao.calorias }}</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">kcal</p>
+                        } @else {
+                            <div class="flex flex-col items-end">
+                                <span class="text-[9px] font-black text-emerald-600 uppercase tracking-tighter animate-pulse">Calculando...</span>
+                                <div class="w-12 h-1 bg-slate-100 rounded-full mt-1 overflow-hidden">
+                                    <div class="w-full h-full bg-emerald-500 animate-loading-bar"></div>
+                                </div>
+                            </div>
+                        }
                     </div>
 
                     <!-- Indicador visual de hover -->

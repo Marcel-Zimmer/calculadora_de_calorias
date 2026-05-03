@@ -25,16 +25,17 @@
                       <button (click)="salvarApelido()" [disabled]="carregando()" class="bg-white text-emerald-600 px-3 py-1 rounded-xl font-bold text-xs">Salvar</button>
                   </div>
               }
-              <p class="text-emerald-100 text-xs font-bold uppercase tracking-widest">{{ refeicao()?.peso }}g • {{ refeicao()?.calorias }} kcal</p>
+              <p class="text-emerald-100 text-xs font-bold uppercase tracking-widest">{{ refeicao()?.peso }}g • {{ Math.round(refeicao()?.calorias || 0) }} kcal</p>
           </div>
         </div>
       </div>
   
       <div class="p-8 space-y-8">
         <!-- Grid de Macros -->
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
             @for (macro of macros(); track macro.nome) {
-                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100 flex items-center gap-4">
+                <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100 flex items-center gap-4"
+                     [class.col-span-2]="macro.nome === 'Açúcares' && macros().length % 2 !== 0 && !isMobile()">
                     <div [class]="macro.cor" class="w-2 h-10 rounded-full"></div>
                     <div>
                         <span class="block text-[10px] font-black text-slate-400 uppercase">{{ macro.nome }}</span>
@@ -48,7 +49,7 @@
         <div class="bg-emerald-50/50 p-6 rounded-3xl border border-emerald-100">
             <label class="block text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">Composição Estimada</label>
             <p class="text-slate-600 text-sm leading-relaxed italic">
-                "{{ refeicao()?.alimento }}"
+                "{{ refeicao()?.alimento || 'Processando composição detalhada...' }}"
             </p>
         </div>
   
