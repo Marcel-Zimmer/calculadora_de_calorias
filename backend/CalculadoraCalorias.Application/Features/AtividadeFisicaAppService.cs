@@ -79,8 +79,8 @@ namespace CalculadoraCalorias.Application.Features
         {
             var atividade = await _atividadeFisicaService.Atualizar(requisicao.Id,
                                                                         requisicao.Tipo,
-                                                                        requisicao.KilometragemPercorrida,
-                                                                        requisicao.TempoDeExercicio);
+                                                                        requisicao.TempoDeExercicio,
+                                                                        requisicao.CaloriasEstimadas);
 
             if (atividade == null)
             {

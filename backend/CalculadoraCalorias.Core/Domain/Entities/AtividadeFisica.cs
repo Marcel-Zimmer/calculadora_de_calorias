@@ -68,11 +68,11 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             return metCalculado * (decimal)PesoSnapshot * (decimal)TempoExercicio.TotalHours;
         }
 
-        public void Atualizar(int tipo, int kilometragemPercorrida, TimeSpan tempoDeExercicio)
+        public void Atualizar(int tipo, TimeSpan tempoDeExercicio, decimal caloriasEstimadas)
         {
             TipoAtividadeId = tipo;
-            VelocidadeMedia = CalcularVelocidade(kilometragemPercorrida, tempoDeExercicio);
-            CaloriasEstimadas = CalcularCalorias();
+            TempoExercicio = tempoDeExercicio;
+            CaloriasEstimadas = caloriasEstimadas;
         }
     }
 }

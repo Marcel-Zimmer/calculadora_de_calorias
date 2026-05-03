@@ -18,17 +18,20 @@ export class EditarExercicioComponent {
   @Output() mostrarModalChange = new EventEmitter<boolean>();
   @Output() exercicioAlterado = new EventEmitter<void>();
 
-  descricao = signal<string>('');
+  tipoExercicio = signal<number>(1);
   duracao = signal<number>(0);
+  calorias = signal<number>(0);
   carregando = signal<boolean>(false);
 
   mapaExercicios = this.atividadeService.obterMapaExercicios();
+  listaExercicios = this.atividadeService.obterListaExercicios();
 
   constructor() {
     effect(() => {
       if (this.mostrarModal() && this.exercicio()) {
-        this.descricao.set(this.exercicio().descricao);
+        this.tipoExercicio.set(this.exercicio().tipoExercicio);
         this.duracao.set(this.exercicio().duracaoMinutos);
+        this.calorias.set(this.exercicio().caloriasEstimadas);
       }
     }, { allowSignalWrites: true });
   }
@@ -38,16 +41,21 @@ export class EditarExercicioComponent {
   }
 
   salvar() {
-    if (!this.descricao() || this.duracao() <= 0) return;
+    if (this.duracao() <= 0) return;
 
     this.carregando.set(true);
+    
+    // Converter minutos para TimeSpan HH:mm:ss
+    const horas = Math.floor(this.duracao() / 60);
+    const minutos = this.duracao() % 60;
+    const tempoFormatado = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:00`;
+
     const payload = {
       id: this.exercicio().id,
-      usuarioId: this.exercicio().usuarioId,
-      descricao: this.descricao(),
-      duracaoMinutos: this.duracao(),
-      tipoExercicio: this.exercicio().tipoExercicio,
-      data: this.exercicio().data
+      tipo: Number(this.tipoExercicio()),
+      tempoDeExercicio: tempoFormatado,
+      caloriasEstimadas: this.calorias(),
+      kilometragemPercorrida: 0 // Mantido por compatibilidade com o DTO
     };
 
     this.atividadeService.atualizar(payload).subscribe({

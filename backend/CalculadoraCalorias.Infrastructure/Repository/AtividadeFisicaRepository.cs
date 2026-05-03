@@ -22,6 +22,9 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                     TipoExercicio = (TipoExercicioEnum)x.TipoAtividadeId,
                     CaloriasEstimadas = (int)x.CaloriasEstimadas,
                     TempoDeExercicio = x.TempoExercicio,
+                    DuracaoMinutos = (int)x.TempoExercicio.TotalMinutes,
+                    TempoFormatado = $"{(int)x.TempoExercicio.TotalHours:D2}:{(int)x.TempoExercicio.Minutes:D2}",
+                    Descricao = ((TipoExercicioEnum)x.TipoAtividadeId).ToString(),
                     Data = x.DataExercicio
                 })
                 .ToListAsync();
@@ -39,6 +42,9 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                     TipoExercicio = (TipoExercicioEnum)x.TipoAtividadeId,
                     CaloriasEstimadas = (int)x.CaloriasEstimadas,
                     TempoDeExercicio = x.TempoExercicio,
+                    DuracaoMinutos = (int)x.TempoExercicio.TotalMinutes,
+                    TempoFormatado = $"{(int)x.TempoExercicio.TotalHours:D2}:{(int)x.TempoExercicio.Minutes:D2}",
+                    Descricao = ((TipoExercicioEnum)x.TipoAtividadeId).ToString(),
                     Data = x.DataExercicio
                 })
                 .ToListAsync();

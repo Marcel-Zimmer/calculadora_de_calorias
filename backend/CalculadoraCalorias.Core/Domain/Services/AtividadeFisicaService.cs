@@ -54,12 +54,12 @@ public class AtividadeFisicaService(
         return await _atividadeFisicaRepository.ObterPorId(id);
     }
 
-    public async Task<AtividadeFisica?> Atualizar(long id, TipoExercicioEnum tipo, int kilometragemPercorrida, TimeSpan tempoDeExercicio)
+    public async Task<AtividadeFisica?> Atualizar(long id, TipoExercicioEnum tipo, TimeSpan tempoDeExercicio, decimal caloriasEstimadas)
     {
        var atividade = await _atividadeFisicaRepository.ObterPorId(id);
        if(atividade == null) return null; 
 
-       atividade.Atualizar((int)tipo, kilometragemPercorrida, tempoDeExercicio);
+       atividade.Atualizar((int)tipo, tempoDeExercicio, caloriasEstimadas);
        return atividade;
     }
 

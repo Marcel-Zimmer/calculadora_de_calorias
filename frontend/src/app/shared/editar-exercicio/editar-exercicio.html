@@ -16,43 +16,44 @@
       </div>
   
       <div class="p-8 space-y-6">
-        <!-- Descrição -->
+        <!-- Modalidade -->
         <div>
-          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Descrição da Atividade</label>
-          <input 
-            type="text" 
-            [(ngModel)]="descricao"
-            placeholder="Ex: Corrida matinal"
-            class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-4 text-lg font-bold text-slate-800 focus:border-orange-500 focus:bg-white outline-none transition-all"
+          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Modalidade</label>
+          <select 
+            [(ngModel)]="tipoExercicio"
+            class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-4 text-lg font-bold text-slate-800 focus:border-orange-500 focus:bg-white outline-none transition-all appearance-none cursor-pointer"
           >
+            <option *ngFor="let ex of listaExercicios" [value]="ex.id">{{ex.icone}} {{ex.nome}}</option>
+          </select>
         </div>
 
-        <!-- Duração -->
-        <div>
-          <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Duração (minutos)</label>
-          <div class="relative">
+        <!-- Duração e Gasto -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Duração (min)</label>
             <input 
               type="number" 
               [(ngModel)]="duracao"
-              class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl pl-6 pr-20 py-4 text-xl font-black text-slate-800 focus:border-orange-500 focus:bg-white outline-none transition-all"
+              class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-4 text-xl font-black text-slate-800 focus:border-orange-500 focus:bg-white outline-none transition-all"
             >
-            <span class="absolute right-12 top-1/2 -translate-y-1/2 text-slate-400 font-bold pointer-events-none">min</span>
+          </div>
+          <div>
+            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Gasto (kcal)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="calorias"
+              class="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl px-6 py-4 text-xl font-black text-slate-800 focus:border-orange-500 focus:bg-white outline-none transition-all"
+            >
           </div>
         </div>
 
-        <div class="flex gap-4">
-            <div class="flex-1 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <span class="block text-[10px] font-black text-slate-400 uppercase">Gasto Estimado</span>
-                <span class="text-xl font-black text-slate-800">{{ exercicio()?.caloriasEstimadas }}<small class="text-xs ml-1">kcal</small></span>
+        <div class="bg-orange-50 p-4 rounded-3xl border border-orange-100 flex items-center gap-4">
+            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm">
+                {{ mapaExercicios[tipoExercicio()]?.icone }}
             </div>
-            <div class="flex-1 bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center gap-3">
-                <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-xl">
-                    {{ mapaExercicios[exercicio()?.tipoExercicio]?.icone }}
-                </div>
-                <div>
-                    <span class="block text-[10px] font-black text-slate-400 uppercase">Categoria</span>
-                    <span class="text-xs font-bold text-slate-700">{{ mapaExercicios[exercicio()?.tipoExercicio]?.nome }}</span>
-                </div>
+            <div>
+                <span class="block text-[10px] font-black text-orange-400 uppercase">Resumo da Atividade</span>
+                <span class="text-sm font-bold text-orange-800">{{ mapaExercicios[tipoExercicio()]?.nome }} • {{ duracao() }} min</span>
             </div>
         </div>
   

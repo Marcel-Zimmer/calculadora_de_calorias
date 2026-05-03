@@ -16,5 +16,7 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         public TipoExercicioEnum Tipo { get; set; }
 
         public TimeSpan TempoDeExercicio { get; set; }
+
+        public decimal CaloriasEstimadas { get; set; }
     }
 }

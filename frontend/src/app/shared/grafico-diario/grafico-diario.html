@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="flex-1 min-w-0">
-                        <p class="font-black text-slate-800 truncate">{{ exercicio.descricao }}</p>
+                        <p class="font-black text-slate-800 truncate">{{ exercicio.descricao || mapaExercicios()[exercicio.tipoExercicio]?.nome }}</p>
                         <div class="flex items-center gap-2 mt-0.5">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{{ formatarTempo(exercicio.tempoFormatado) }}</span>
                         </div>
