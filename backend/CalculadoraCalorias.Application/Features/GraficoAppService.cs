@@ -48,11 +48,12 @@ namespace CalculadoraCalorias.Application.Features
             var fimSemana = inicioSemana.AddDays(6);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
-            var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
 
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
+                TaxaMetabolicaBasal = dados.TaxaMetabolicaBasal,
                 TotalCaloriasConsumidas = dados.MediaConsumoDiario,
                 TotalCaloriasGastas = dados.MediaGastoDiario,
                 CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
@@ -68,11 +69,12 @@ namespace CalculadoraCalorias.Application.Features
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
-            var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
 
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
+                TaxaMetabolicaBasal = dados.TaxaMetabolicaBasal,
                 TotalCaloriasConsumidas = dados.MediaConsumoDiario,
                 TotalCaloriasGastas = dados.MediaGastoDiario,
                 CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
@@ -81,15 +83,17 @@ namespace CalculadoraCalorias.Application.Features
             });
         }
 
-        private DashboardInsightsResponse CalcularInsights(List<GraficoPontoResponse> pontos, decimal meta)
+        private DashboardInsightsResponse CalcularInsights(List<GraficoPontoResponse> pontos, decimal meta, decimal tmb)
         {
             var pontosComRegistro = pontos.Where(p => p.CaloriasConsumidas > 0 || p.CaloriasGastas > 0).ToList();
             if (pontosComRegistro.Count == 0) return new DashboardInsightsResponse();
 
             var diasNaMeta = pontosComRegistro.Count(p => (p.CaloriasConsumidas - p.CaloriasGastas) <= (int)meta);
             var saldoTotal = pontosComRegistro.Sum(p => p.CaloriasConsumidas - p.CaloriasGastas);
-            var metaTotal = (int)meta * pontosComRegistro.Count;
-            var diferencaAbsoluta = metaTotal - saldoTotal;
+            
+            // Impacto e Equilíbrio baseados na TMB (Gasto Energético Total Estimado)
+            var manutencaoTotal = (int)tmb * pontosComRegistro.Count;
+            var diferencaAbsoluta = manutencaoTotal - saldoTotal;
             var impactoPeso = (double)diferencaAbsoluta / 7700;
 
             return new DashboardInsightsResponse
@@ -110,7 +114,7 @@ namespace CalculadoraCalorias.Application.Features
             var fimSemana = inicioSemana.AddDays(6);
 
             var dados = await ObterDadosPorPeriodo(usuarioId, inicioSemana, fimSemana, true);
-            dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
             return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
         }
 
@@ -121,7 +125,7 @@ namespace CalculadoraCalorias.Application.Features
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
             var dados = await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false);
-            dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria);
+            dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
             
             // Novos Insights de Consumo Mensal
             var pontosConsumo = dados.Pontos.Where(p => p.CaloriasConsumidas > 0).ToList();
@@ -310,6 +314,7 @@ namespace CalculadoraCalorias.Application.Features
             return new EstatisticasDetalhadasResponse
             {
                 MetaCaloricaDiaria = registroFisico?.MetaCaloricaDiaria ?? 0,
+                TaxaMetabolicaBasal = registroFisico?.TaxaMetabolicaBasal ?? 0,
                 TotalConsumido = (int)totalConsumido,
                 TotalGasto = (int)totalGasto,
                 MediaConsumoDiario = diasComRefeicao > 0 ? (int)(totalConsumido / diasComRefeicao) : 0,
