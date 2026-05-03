@@ -11,7 +11,8 @@ namespace CalculadoraCalorias.Application.Features
         IRefeicaoService _refeicaoService, 
         IAtividadeFisicaService _atividadeFisicaService,
         IRegistroFisicoService _registroFisicoService,
-        IPerfilBiometricoService _perfilBiometricoService) : IGraficoAppService
+        IPerfilBiometricoService _perfilBiometricoService,
+        IRegistroAguaService _registroAguaService) : IGraficoAppService
     {
        
         public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId, DateOnly? data = null)
@@ -21,11 +22,14 @@ namespace CalculadoraCalorias.Application.Features
             var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
             if (registroFisico == null) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
 
+            var dataFiltro = data ?? FusoHorario.ObterDataHojeBrasilia();
             var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId, data);
             var atividades = await _atividadeFisicaService.ObterDiariasPorUsuarioId(usuarioId, data);
+            var registrosAgua = await _registroAguaService.ObterDiariosPorUsuarioId(usuarioId, data);
 
             var totalConsumido = refeicoes?.Sum(x => x.Calorias ?? 0) ?? 0;
             var totalGasto = atividades?.Sum(y => y.CaloriasEstimadas ?? 0) ?? 0;
+            var totalAgua = registrosAgua?.Sum(a => a.QuantidadeMl) ?? 0;
 
             var informacoesDiarias = new RefeicaoGraficoDiarioResponse
             {
@@ -33,8 +37,16 @@ namespace CalculadoraCalorias.Application.Features
                 TotalCaloriasConsumidas = totalConsumido,
                 TotalCaloriasGastas = totalGasto,
                 CaloriasCalculadas = Math.Max(0, totalConsumido - totalGasto),
+                TotalAguaMl = totalAgua,
                 Refeicoes = refeicoes ?? [], 
-                Exercicios = atividades ?? []
+                Exercicios = atividades ?? [],
+                RegistrosAgua = registrosAgua?.Select(a => new RegistroAguaResponse
+                {
+                    Id = a.Id,
+                    QuantidadeMl = a.QuantidadeMl,
+                    Data = a.Data.ToString("yyyy-MM-dd"),
+                    Hora = a.Hora.ToString("HH:mm")
+                }).ToList() ?? []
             };
 
             return Resultado<RefeicaoGraficoDiarioResponse>.Success(informacoesDiarias);
@@ -50,6 +62,9 @@ namespace CalculadoraCalorias.Application.Features
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
             var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
 
+            var totalAgua = dados.Pontos.Sum(p => p.AguaMl);
+            var mediaAgua = dados.DiasComDados > 0 ? totalAgua / dados.DiasComDados : 0;
+
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
@@ -57,6 +72,8 @@ namespace CalculadoraCalorias.Application.Features
                 TotalCaloriasConsumidas = dados.MediaConsumoDiario,
                 TotalCaloriasGastas = dados.MediaGastoDiario,
                 CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
+                TotalAguaMl = totalAgua,
+                MediaAguaDiaria = mediaAgua,
                 Pontos = dados.Pontos,
                 Insights = insights
             });
@@ -71,6 +88,9 @@ namespace CalculadoraCalorias.Application.Features
             var dados = await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
             var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
 
+            var totalAgua = dados.Pontos.Sum(p => p.AguaMl);
+            var mediaAgua = dados.DiasComDados > 0 ? totalAgua / dados.DiasComDados : 0;
+
             return Resultado<GraficoPeriodoResponse>.Success(new GraficoPeriodoResponse 
             { 
                 MetaCaloricaDiaria = dados.MetaCaloricaDiaria, 
@@ -78,6 +98,8 @@ namespace CalculadoraCalorias.Application.Features
                 TotalCaloriasConsumidas = dados.MediaConsumoDiario,
                 TotalCaloriasGastas = dados.MediaGastoDiario,
                 CaloriasCalculadas = Math.Max(0, dados.MediaConsumoDiario - dados.MediaGastoDiario),
+                TotalAguaMl = totalAgua,
+                MediaAguaDiaria = mediaAgua,
                 Pontos = dados.Pontos,
                 Insights = insights
             });
@@ -250,6 +272,7 @@ namespace CalculadoraCalorias.Application.Features
             var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
             var refeicoes = await _refeicaoService.ObterPorPeriodo(usuarioId, inicio, fim);
             var atividades = await _atividadeFisicaService.ObterPorPeriodo(usuarioId, inicio, fim);
+            var registrosAgua = await _registroAguaService.ObterPorPeriodo(usuarioId, inicio, fim);
 
             var pontos = new List<GraficoPontoResponse>();
             var cultura = new CultureInfo("pt-BR");
@@ -263,8 +286,9 @@ namespace CalculadoraCalorias.Application.Features
 
                 var consumidoDia = refeicoes.Where(r => r.Data == data).Sum(r => r.Calorias ?? 0);
                 var gastoDia = (double)atividades.Where(a => a.Data == data).Sum(a => a.CaloriasEstimadas ?? 0);
+                var aguaDia = registrosAgua.Where(a => a.Data == data).Sum(a => a.QuantidadeMl);
 
-                if (consumidoDia > 0 || gastoDia > 0) diasComDados++;
+                if (consumidoDia > 0 || gastoDia > 0 || aguaDia > 0) diasComDados++;
 
                 pontos.Add(new GraficoPontoResponse
                 {
@@ -272,7 +296,8 @@ namespace CalculadoraCalorias.Application.Features
                     Legenda = legenda,
                     CaloriasConsumidas = (int)consumidoDia,
                     CaloriasGastas = (int)gastoDia,
-                    SaldoCalorico = (int)(consumidoDia - gastoDia)
+                    SaldoCalorico = (int)(consumidoDia - gastoDia),
+                    AguaMl = aguaDia
                 });
             }
 

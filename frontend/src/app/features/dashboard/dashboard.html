@@ -56,31 +56,37 @@
         <!-- ABA: DASHBOARD PRINCIPAL (RESUMO) -->
         <div *ngIf="abaMenu() === 'dashboard'" class="space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div class="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center">
+            <div class="lg:col-span-8 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+              <div class="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-slate-100 flex flex-col items-center">
                 <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-3 text-xl">🎯</div>
                 <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Meta</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ metaCalorias() }}</span>
+                <span class="text-lg md:text-xl font-black text-slate-800">{{ metaCalorias() }}</span>
               </div>
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center">
-                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-3 text-xl">⚖️</div>
-                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Calculadas</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasCalculadas() }}</span>
+              <div class="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-slate-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-3 text-xl">⚖️</div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Cálculo</span>
+                <span class="text-lg md:text-xl font-black text-slate-800">{{ caloriasCalculadas() }}</span>
               </div>
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center">
+              <div class="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-slate-100 flex flex-col items-center">
                 <div class="w-10 h-10 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-3 text-xl">🥣</div>
-                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Ingeridas</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasConsumidas() }}</span>
+                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Comido</span>
+                <span class="text-lg md:text-xl font-black text-slate-800">{{ caloriasConsumidas() }}</span>
               </div>
-              <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col items-center">
+              <div class="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-slate-100 flex flex-col items-center">
                 <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-3 text-xl">🔥</div>
-                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Gastas</span>
-                <span class="text-lg md:text-2xl font-black text-slate-800">{{ caloriasQueimadas() }}</span>
+                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Gasto</span>
+                <span class="text-lg md:text-xl font-black text-slate-800">{{ caloriasQueimadas() }}</span>
+              </div>
+              <div class="bg-white rounded-3xl p-4 md:p-5 shadow-sm border border-slate-100 flex flex-col items-center">
+                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-3 text-xl">💧</div>
+                <span class="text-[10px] text-slate-400 uppercase font-bold mb-1">Água</span>
+                <span class="text-lg md:text-xl font-black text-slate-800">{{ graficoDashboard() === 'diario' ? totalAguaDiaria() : (graficoDashboard() === 'semanal' ? mediaAguaSemanal() : mediaAguaMensal()) }}ml</span>
               </div>
             </div>
-            <div class="lg:col-span-4 grid grid-cols-2 gap-3">
+            <div class="lg:col-span-4 grid grid-cols-2 md:grid-cols-3 gap-3">
               <button (click)="mostrarModalRefeicao.set(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-3xl shadow-lg transition-all hover:-translate-y-1 font-bold">+ Refeição</button>
               <button (click)="mostrarModalExercicio.set(true)" class="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-3xl shadow-lg transition-all hover:-translate-y-1 font-bold">+ Exercício</button>
+              <button (click)="mostrarModalAgua.set(true)" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-3xl shadow-lg transition-all hover:-translate-y-1 font-bold md:col-span-1 col-span-2">+ Água</button>
             </div>
           </div>
 
@@ -92,7 +98,44 @@
 
           <div class="w-full">
             @switch (graficoDashboard()) {
-                @case ('diario') { <app-grafico-diario [refeicoes]="refeicoesDeHoje()" [exercicios]="exerciciosDeHoje()" [mapaRefeicoes]="mapaRefeicoes" [mapaExercicios]="mapaExercicios" (onRefeicaoAlterada)="obterGraficoDiario()" (onExercicioAlterado)="obterGraficoDiario()"></app-grafico-diario> }
+                @case ('diario') { 
+                  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-8">
+                      <app-grafico-diario [refeicoes]="refeicoesDeHoje()" [exercicios]="exerciciosDeHoje()" [mapaRefeicoes]="mapaRefeicoes" [mapaExercicios]="mapaExercicios" (onRefeicaoAlterada)="obterGraficoDiario()" (onExercicioAlterado)="obterGraficoDiario()"></app-grafico-diario>
+                    </div>
+                    <div class="lg:col-span-4">
+                      <!-- Lista de Água do Dia -->
+                      <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 h-full">
+                        <div class="flex items-center justify-between mb-6">
+                          <h4 class="font-black text-slate-800 flex items-center gap-2">
+                            <span class="text-xl">💧</span> Registros de Água
+                          </h4>
+                          <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-bold">{{ totalAguaDiaria() }}ml</span>
+                        </div>
+
+                        <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                          <div *ngFor="let agua of registrosAguaDeHoje()" class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
+                            <div class="flex items-center gap-3">
+                              <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">💧</div>
+                              <div>
+                                <p class="text-sm font-black text-slate-800">{{ agua.quantidadeMl }}ml</p>
+                                <p class="text-[10px] text-slate-400 font-bold">{{ agua.hora }}</p>
+                              </div>
+                            </div>
+                            <button (click)="excluirAgua(agua.id)" class="opacity-0 group-hover:opacity-100 p-2 text-rose-400 hover:text-rose-600 transition-all hover:bg-rose-50 rounded-lg">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                          </div>
+
+                          <div *ngIf="registrosAguaDeHoje().length === 0" class="text-center py-12">
+                            <span class="text-4xl mb-3 block opacity-20">💧</span>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Nenhum registro</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
                 @case ('semanal') { <app-bs-grafico-media-semanal titulo="Saldo de Calorias" [dados]="dadosGraficoSemanalSaldo()" [metaDiaria]="metaCalorias()" [pintarPorMeta]="true"></app-bs-grafico-media-semanal> }
                 @case ('mensal') { <app-bs-grafico-historico-mensal titulo="Histórico Mensal Diário" [dados]="dadosHistoricoSaldoMensal()" [metaDiaria]="metaCalorias()" [pintarPorMeta]="true"></app-bs-grafico-historico-mensal> }
             }
@@ -103,6 +146,7 @@
         <app-consumo-calorico *ngIf="abaMenu() === 'estatisticas-consumo'" [dataSelecionada]="dataSelecionada()"></app-consumo-calorico>
         <app-gasto-calorico *ngIf="abaMenu() === 'estatisticas-gasto'" [dataSelecionada]="dataSelecionada()"></app-gasto-calorico>
         <app-nutrientes *ngIf="abaMenu() === 'estatisticas-nutrientes'" [dataSelecionada]="dataSelecionada()"></app-nutrientes>
+        <app-consumo-agua *ngIf="abaMenu() === 'estatisticas-agua'" [dataSelecionada]="dataSelecionada()"></app-consumo-agua>
         <app-acompanhamento-peso *ngIf="abaMenu() === 'estatisticas-peso'"></app-acompanhamento-peso>
         
         <!-- ABA: PERFIL (COMPONENTIZADO) -->
@@ -115,3 +159,4 @@
 
 <app-adicionar-refeicao [(mostrarModal)]="mostrarModalRefeicao" [dataPreSelecionada]="dataSelecionada()" (refeicaoAdicionada)="obterGraficoDiario()"></app-adicionar-refeicao>
 <app-adicionar-exercicio [(mostrarModal)]="mostrarModalExercicio" [dataPreSelecionada]="dataSelecionada()" (exercicioAdicionado)="obterGraficoDiario()"></app-adicionar-exercicio>
+<app-adicionar-agua [(mostrarModal)]="mostrarModalAgua" [dataPreSelecionada]="dataSelecionada()"></app-adicionar-agua>

@@ -8,8 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { GraficoService } from '../../core/services/grafico.service';
 import { AdicionarRefeicao } from '../../shared/adicionar-refeicao/adicionar-refeicao';
 import { AdicionarExercicio } from "../../shared/adicionar-exercicio/adicionar-exercicio";
+import { AdicionarAguaComponent } from "../../shared/adicionar-agua/adicionar-agua";
 import { GraficoDiario } from "../../shared/grafico-diario/grafico-diario";
 import { AtividadeFisicaService } from '../../core/services/atividade-fisica.service';
+import { AguaService } from '../../core/services/agua.service';
 import Swal from 'sweetalert2';
 import { NotificacaoService } from '../../core/services/notificacao.service';
 import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
@@ -23,18 +25,20 @@ import { ConsumoCaloricoComponent } from '../relatorios/consumo-calorico/consumo
 import { GastoCaloricoComponent } from '../relatorios/gasto-calorico/gasto-calorico';
 import { NutrientesComponent } from '../relatorios/nutrientes/nutrientes';
 import { AcompanhamentoPesoComponent } from '../relatorios/acompanhamento-peso/acompanhamento-peso';
+import { ConsumoAguaComponent } from '../relatorios/consumo-agua/consumo-agua';
 import { PerfilComponent } from '../perfil/perfil/perfil';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, 
+    CommonModule, Carregamento, FormsModule, AdicionarRefeicao, AdicionarExercicio, AdicionarAguaComponent,
     GraficoDiario, Menu, 
     BsGraficoHistoricoMensalComponent, BsGraficoMediaSemanalComponent, 
     BsCardConsistenciaComponent, BsCardEquilibrioEnergeticoComponent, 
     BsCardImpactoEstimadoComponent,
-    ConsumoCaloricoComponent, GastoCaloricoComponent, NutrientesComponent, AcompanhamentoPesoComponent, PerfilComponent
+    ConsumoCaloricoComponent, GastoCaloricoComponent, NutrientesComponent, AcompanhamentoPesoComponent, PerfilComponent,
+    ConsumoAguaComponent
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
@@ -49,7 +53,7 @@ export class Dashboard implements OnInit {
   todayDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
   dataSelecionada = signal<string>(this.todayDate);
 
-  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'estatisticas-peso' | 'perfil'>('dashboard');
+  abaMenu = signal<'dashboard' | 'estatisticas-consumo' | 'estatisticas-gasto' | 'estatisticas-nutrientes' | 'estatisticas-agua' | 'estatisticas-peso' | 'perfil'>('dashboard');
   menuAberto = signal<boolean>(false);
   graficoDashboard = signal<'diario' | 'semanal' | 'mensal'>('diario');
 
@@ -68,13 +72,22 @@ export class Dashboard implements OnInit {
   caloriasConsumidas = signal<number>(0);
   caloriasQueimadas = signal<number>(0);
   caloriasCalculadas = signal<number>(0);
+  totalAguaDiaria = signal<number>(0);
+  totalAguaSemanal = signal<number>(0);
+  totalAguaMensal = signal<number>(0);
+  mediaAguaSemanal = signal<number>(0);
+  mediaAguaMensal = signal<number>(0);
+
   refeicoesDeHoje = signal<any[]>([]);
   exerciciosDeHoje = signal<any[]>([]);
+  registrosAguaDeHoje = signal<any[]>([]);
   dadosGraficoSemanal = signal<any[]>([]);
   dadosGraficoMensal = signal<any[]>([]);
 
   mapaRefeicoes: Record<number, any> = this.refeicaoService.obterMapaRefeicoes(); 
   mapaExercicios: Record<number, any> = this.atividadeFisicaService.obterMapaExercicios();
+
+  private aguaService = inject(AguaService);
 
   ngOnInit(): void {
     this.obterGraficoDiario();
@@ -120,6 +133,7 @@ export class Dashboard implements OnInit {
 
   mostrarModalRefeicao = signal<boolean>(false);
   mostrarModalExercicio = signal<boolean>(false);
+  mostrarModalAgua = signal<boolean>(false);
 
   alterarAbaMenu(aba: any) {
     this.abaMenu.set(aba);
@@ -138,8 +152,10 @@ export class Dashboard implements OnInit {
       this.caloriasConsumidas.set(res.totalCaloriasConsumidas);
       this.caloriasQueimadas.set(res.totalCaloriasGastas);
       this.caloriasCalculadas.set(res.caloriasCalculadas);
+      this.totalAguaDiaria.set(res.totalAguaMl);
       this.refeicoesDeHoje.set(res.refeicoes);
       this.exerciciosDeHoje.set(res.exercicios);
+      this.registrosAguaDeHoje.set(res.registrosAgua || []);
     });
   }
 
@@ -147,6 +163,8 @@ export class Dashboard implements OnInit {
     this.graficoService.obterGraficoSemanal(this.autenticacao.obterId(), this.dataSelecionada()).subscribe((res: any) => {
       this.dadosGraficoSemanal.set(res.pontos);
       this.dashboardInsightsSemanal.set(res.insights);
+      this.totalAguaSemanal.set(res.totalAguaMl);
+      this.mediaAguaSemanal.set(res.mediaAguaDiaria);
     });
   }
 
@@ -154,6 +172,8 @@ export class Dashboard implements OnInit {
     this.graficoService.obterGraficoMensal(this.autenticacao.obterId(), this.dataSelecionada()).subscribe((res: any) => {
       this.dadosGraficoMensal.set(res.pontos);
       this.dashboardInsightsMensal.set(res.insights);
+      this.totalAguaMensal.set(res.totalAguaMl);
+      this.mediaAguaMensal.set(res.mediaAguaDiaria);
     });
   }
 
@@ -173,6 +193,17 @@ export class Dashboard implements OnInit {
       if (result.isConfirmed) {
         this.atividadeFisicaService.excluir(id).subscribe(() => {
           Swal.fire('Excluído!', 'Seu exercício foi removido.', 'success');
+          this.obterGraficoDiario();
+        });
+      }
+    });
+  }
+
+  excluirAgua(id: number) {
+    Swal.fire({ title: 'Excluir registro de água?', text: "Esta ação não pode ser desfeita.", icon: 'warning', showCancelButton: true, confirmButtonColor: '#10b981', cancelButtonColor: '#ef4444', confirmButtonText: 'Sim, excluir!' }).then((result) => {
+      if (result.isConfirmed) {
+        this.aguaService.excluir(id).subscribe(() => {
+          Swal.fire('Excluído!', 'O registro de água foi removido.', 'success');
           this.obterGraficoDiario();
         });
       }

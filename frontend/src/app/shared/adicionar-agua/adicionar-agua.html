@@ -1,0 +1,33 @@
+@if(mostrarModal()){
+<div class="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm animate-fade-in flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-md p-8 shadow-2xl relative animate-fade-in">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="text-2xl font-black text-slate-800">Registrar Água</h3>
+            <button (click)="fecharModal()" class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors font-bold">✕</button>
+        </div>
+
+        <div class="space-y-6">
+            <div class="text-center py-6">
+                <span class="text-6xl mb-4 block">💧</span>
+                <p class="text-slate-500 text-sm">Quanto você bebeu agora?</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <button (click)="adicionarPreDefinido(200)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-4 rounded-2xl transition-all font-bold text-sm">200ml</button>
+                <button (click)="adicionarPreDefinido(350)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-4 rounded-2xl transition-all font-bold text-sm">350ml</button>
+                <button (click)="adicionarPreDefinido(500)" class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-4 rounded-2xl transition-all font-bold text-sm">500ml</button>
+            </div>
+
+            <div class="relative">
+                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Quantidade Personalizada (ml)</label>
+                <input type="number" [(ngModel)]="quantidade" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 font-bold text-slate-700 focus:border-blue-400 focus:bg-white outline-none transition-all" placeholder="Ex: 250">
+            </div>
+
+            <button (click)="salvar()" [disabled]="!quantidade || quantidade <= 0 || salvando()" class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white p-5 rounded-3xl shadow-lg shadow-blue-200 transition-all font-black uppercase tracking-widest text-sm flex items-center justify-center space-x-2">
+                <span *ngIf="!salvando()">Confirmar Registro</span>
+                <span *ngIf="salvando()">Registrando...</span>
+            </button>
+        </div>
+    </div>
+</div>
+}

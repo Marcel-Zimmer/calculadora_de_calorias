@@ -30,6 +30,7 @@
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IRefeicaoRepository, RefeicaoRepository>();
+            services.AddScoped<IRegistroAguaRepository, RegistroAguaRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 

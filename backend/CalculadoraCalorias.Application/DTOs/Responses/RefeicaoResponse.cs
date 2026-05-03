@@ -10,8 +10,10 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public int TotalCaloriasConsumidas { get; set; }
         public int TotalCaloriasGastas {  get; set; }
         public int CaloriasCalculadas { get; set; }
+        public int TotalAguaMl { get; set; }
         public List<RefeicaoDTO> Refeicoes {  get; set; } = [];
         public List<ExercicioDTO> Exercicios { get; set; } = [];
+        public List<RegistroAguaResponse> RegistrosAgua { get; set; } = [];
     }
 
     public class GraficoPontoResponse
@@ -20,6 +22,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public int CaloriasConsumidas { get; set; }
         public int CaloriasGastas { get; set; }
         public int SaldoCalorico { get; set; }
+        public int AguaMl { get; set; }
         public string Data { get; set; } = string.Empty;
     }
 
@@ -39,6 +42,8 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public int TotalCaloriasConsumidas { get; set; }
         public int TotalCaloriasGastas { get; set; }
         public int CaloriasCalculadas { get; set; }
+        public int TotalAguaMl { get; set; }
+        public int MediaAguaDiaria { get; set; }
         public List<GraficoPontoResponse> Pontos { get; set; } = [];
         public DashboardInsightsResponse? Insights { get; set; }
     }
