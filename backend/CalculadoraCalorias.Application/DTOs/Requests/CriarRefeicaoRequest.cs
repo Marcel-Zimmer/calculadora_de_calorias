@@ -6,10 +6,6 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
 {
     public class CriarRefeicaoRequest
     {
-        [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
-        [Range(1, long.MaxValue, ErrorMessage = "ID do usuário inválido.")]
-        public long UsuarioId { get; set; }
-
         [MaxLength(100, ErrorMessage = "O apelido deve ter no máximo 100 caracteres.")]
         public string? Apelido { get; set; } 
 

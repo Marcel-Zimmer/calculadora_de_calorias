@@ -31,10 +31,10 @@ namespace CalculadoraCalorias.Api.Controllers
         }
 
         [HttpGet]
-        [Route("obter-todos/{idUsuario}")]
-        public async Task<IActionResult> ObterTodosPorId([FromRoute] int idUsuario)
+        [Route("obter-todos")]
+        public async Task<IActionResult> ObterTodos()
         {
-            return ProcessarResultado(await _atividadeFisicaAppService.ObterTodosPorId(idUsuario));
+            return ProcessarResultado(await _atividadeFisicaAppService.ObterTodos());
         }
 
         [HttpGet]

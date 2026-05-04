@@ -12,20 +12,19 @@ namespace CalculadoraCalorias.Application.Features
         IAtividadeFisicaService _atividadeFisicaService,
         IRegistroFisicoService _registroFisicoService,
         IPerfilBiometricoService _perfilBiometricoService,
-        IRegistroAguaService _registroAguaService) : IGraficoAppService
+        IRegistroAguaService _registroAguaService,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IGraficoAppService
     {
        
-        public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId, DateOnly? data = null)
+        public async Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(DateOnly? data = null)
         {
-            if(usuarioId == 0) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
-
-            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(UsuarioId);
             if (registroFisico == null) return Resultado<RefeicaoGraficoDiarioResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
 
             var dataFiltro = data ?? FusoHorario.ObterDataHojeBrasilia();
-            var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(usuarioId, data);
-            var atividades = await _atividadeFisicaService.ObterDiariasPorUsuarioId(usuarioId, data);
-            var registrosAgua = await _registroAguaService.ObterDiariosPorUsuarioId(usuarioId, data);
+            var refeicoes = await _refeicaoService.ObterDiariasPorUsuarioId(UsuarioId, data);
+            var atividades = await _atividadeFisicaService.ObterDiariasPorUsuarioId(UsuarioId, data);
+            var registrosAgua = await _registroAguaService.ObterDiariosPorUsuarioId(UsuarioId, data);
 
             var totalConsumido = refeicoes?.Sum(x => x.Calorias ?? 0) ?? 0;
             var totalGasto = atividades?.Sum(y => y.CaloriasEstimadas ?? 0) ?? 0;
@@ -52,14 +51,14 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<RefeicaoGraficoDiarioResponse>.Success(informacoesDiarias);
         }
 
-        public async Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long idUsuario, DateOnly? data = null)
+        public async Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(DateOnly? data = null)
         {
             var dataRef = data?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
             int diff = (7 + (dataRef.DayOfWeek - DayOfWeek.Monday)) % 7;
             var inicioSemana = DateOnly.FromDateTime(dataRef.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
-            var dados = await ObterDadosPorPeriodo(idUsuario, inicioSemana, fimSemana, true);
+            var dados = await ObterDadosPorPeriodo(inicioSemana, fimSemana, true);
             var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
 
             var totalAgua = dados.Pontos.Sum(p => p.AguaMl);
@@ -79,13 +78,13 @@ namespace CalculadoraCalorias.Application.Features
             });
         }
 
-        public async Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long idUsuario, DateOnly? data = null)
+        public async Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(DateOnly? data = null)
         {
             var dataRef = data ?? DateOnly.FromDateTime(DateTime.Today);
             var inicioMes = new DateOnly(dataRef.Year, dataRef.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
-            var dados = await ObterDadosPorPeriodo(idUsuario, inicioMes, fimMes, false);
+            var dados = await ObterDadosPorPeriodo(inicioMes, fimMes, false);
             var insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
 
             var totalAgua = dados.Pontos.Sum(p => p.AguaMl);
@@ -128,25 +127,25 @@ namespace CalculadoraCalorias.Application.Features
             };
         }
 
-        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId, DateOnly? data = null)
+        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(DateOnly? data = null)
         {
             var dataRef = data?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
             int diff = (7 + (dataRef.DayOfWeek - DayOfWeek.Monday)) % 7;
             var inicioSemana = DateOnly.FromDateTime(dataRef.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
-            var dados = await ObterDadosPorPeriodo(usuarioId, inicioSemana, fimSemana, true);
+            var dados = await ObterDadosPorPeriodo(inicioSemana, fimSemana, true);
             dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
             return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
         }
 
-        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(long usuarioId, DateOnly? data = null)
+        public async Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(DateOnly? data = null)
         {
             var dataRef = data ?? DateOnly.FromDateTime(DateTime.Today);
             var inicioMes = new DateOnly(dataRef.Year, dataRef.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
-            var dados = await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false);
+            var dados = await ObterDadosPorPeriodo(inicioMes, fimMes, false);
             dados.Insights = CalcularInsights(dados.Pontos, dados.MetaCaloricaDiaria, dados.TaxaMetabolicaBasal);
             
             // Novos Insights de Consumo Mensal
@@ -215,13 +214,13 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<EstatisticasDetalhadasResponse>.Success(dados);
         }
 
-        public async Task<Resultado<EstatisticasPesoResponse>> ObterEstatisticasPeso(long usuarioId)
+        public async Task<Resultado<EstatisticasPesoResponse>> ObterEstatisticasPeso()
         {
-            var historico = await _registroFisicoService.ObterHistorico(usuarioId);
+            var historico = await _registroFisicoService.ObterHistorico(UsuarioId);
             if (historico == null || historico.Count == 0)
                 return Resultado<EstatisticasPesoResponse>.Failure(TipoDeErro.NotFound, "Nenhum registro de peso encontrado.");
 
-            var perfil = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
+            var perfil = await _perfilBiometricoService.ObterPorIdUsuario(UsuarioId);
 
             var historicoAgrupado = historico
                 .GroupBy(h => h.DataRegistro.Date)
@@ -267,12 +266,12 @@ namespace CalculadoraCalorias.Application.Features
             });
         }
 
-        private async Task<EstatisticasDetalhadasResponse> ObterDadosPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim, bool usarNomeDia)
+        private async Task<EstatisticasDetalhadasResponse> ObterDadosPorPeriodo(DateOnly inicio, DateOnly fim, bool usarNomeDia)
         {
-            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
-            var refeicoes = await _refeicaoService.ObterPorPeriodo(usuarioId, inicio, fim);
-            var atividades = await _atividadeFisicaService.ObterPorPeriodo(usuarioId, inicio, fim);
-            var registrosAgua = await _registroAguaService.ObterPorPeriodo(usuarioId, inicio, fim);
+            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(UsuarioId);
+            var refeicoes = await _refeicaoService.ObterPorPeriodo(UsuarioId, inicio, fim);
+            var atividades = await _atividadeFisicaService.ObterPorPeriodo(UsuarioId, inicio, fim);
+            var registrosAgua = await _registroAguaService.ObterPorPeriodo(UsuarioId, inicio, fim);
 
             var pontos = new List<GraficoPontoResponse>();
             var cultura = new CultureInfo("pt-BR");

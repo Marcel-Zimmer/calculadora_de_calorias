@@ -14,18 +14,19 @@ namespace CalculadoraCalorias.Application.Features
         IUsuarioService _usuarioService, 
         IRefeicaoService _refeicaoService, 
         IUnitOfWork _unitOfWork, 
-        FilaEstimativaIa _filaEstimativaIa) : IRefeicaoAppService
+        FilaEstimativaIa _filaEstimativaIa,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IRefeicaoAppService
     {
         public async Task<Resultado<Refeicao>> Adicionar(CriarRefeicaoRequest requisicao)
         {
-            if(!await _usuarioService.ValidarExistencia(requisicao.UsuarioId)) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
+            if(!await _usuarioService.ValidarExistencia(UsuarioId)) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
 
             Refeicao? refeicao;
 
             if (requisicao.CodigoRefeicaoModelo.HasValue)
             {
                 refeicao = await _refeicaoService.AdicionarBaseadoEmModelo(
-                    requisicao.UsuarioId, 
+                    UsuarioId, 
                     requisicao.CodigoRefeicaoModelo.Value, 
                     requisicao.PesoEmGramas, 
                     requisicao.Tipo, 
@@ -34,7 +35,7 @@ namespace CalculadoraCalorias.Application.Features
             else if (requisicao.CaloriasManuais.HasValue && !string.IsNullOrWhiteSpace(requisicao.AlimentoManual))
             {
                 refeicao = await _refeicaoService.AdicionarManual(
-                    requisicao.UsuarioId,
+                    UsuarioId,
                     requisicao.Apelido,
                     requisicao.AlimentoManual,
                     requisicao.CaloriasManuais.Value,
@@ -68,7 +69,7 @@ namespace CalculadoraCalorias.Application.Features
                     await requisicao.Imagem.CopyToAsync(stream);
                 }
 
-                refeicao = await _refeicaoService.Adicionar(requisicao.UsuarioId, requisicao.Apelido, requisicao.PesoEmGramas, requisicao.Tipo, requisicao.Data, guidArquivo);
+                refeicao = await _refeicaoService.Adicionar(UsuarioId, requisicao.Apelido, requisicao.PesoEmGramas, requisicao.Tipo, requisicao.Data, guidArquivo);
             }
 
             if (refeicao == null) return Resultado<Refeicao>.Failure(TipoDeErro.SystemFailure, "erro ao processar a refeição");
@@ -102,9 +103,9 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<bool>.Success(true);
         }
 
-        public async Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null)
+        public async Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(TipoRefeicaoEnum? tipo = null)
         {
-            var modelos = await _refeicaoService.ObterModelosFrequentes(usuarioId, tipo);
+            var modelos = await _refeicaoService.ObterModelosFrequentes(UsuarioId, tipo);
             var response = modelos.Select(x => new RefeicaoModeloResponse
             {
                 Id = x.Id,

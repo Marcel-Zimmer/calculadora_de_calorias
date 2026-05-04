@@ -9,10 +9,10 @@ namespace CalculadoraCalorias.Application.Interfaces
     {
         public Task<Resultado<AtividadeFisicaResponse>> Simular(CriarEstimativaAtividadeFisicaRequest requisicao);
         Task<Resultado<AtividadeFisicaResponse>> EstimarGastoCalorico(CriarEstimativaAtividadeFisicaRequest requisicao);
-        Task<Resultado<List<AtividadeFisicaResponse>>> ObterTodosPorId(int idUsuario);
+        Task<Resultado<List<AtividadeFisicaResponse>>> ObterTodos();
         Task<Resultado> Excluir(int id);
         Task<Resultado<AtividadeFisicaResponse>> ObterPorID(int id);
-        Task<Resultado<object>> Atualizar(AtualizarAtividadeFisicaRequest requisicao);
+        Task<Resultado<AtividadeFisicaResponse>> Atualizar(AtualizarAtividadeFisicaRequest requisicao);
         Task<Resultado<AtividadeFisicaResponse>> Adicionar(CriarAtividadeFisicaRequest requisicao);
     }
 }

@@ -10,7 +10,11 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
 {
-    public class RegistroFisicoAppService(IRegistroFisicoService registroFisicoService, RegistroFisicoMapper registroFisicoMapper, IUnitOfWork unitOfWork) : IRegistroFisicoAppService
+    public class RegistroFisicoAppService(
+        IRegistroFisicoService registroFisicoService, 
+        RegistroFisicoMapper registroFisicoMapper, 
+        IUnitOfWork unitOfWork,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IRegistroFisicoAppService
     {
         private readonly IRegistroFisicoService _registroFisicoService = registroFisicoService;
         private readonly RegistroFisicoMapper _mapperRegistroFisico = registroFisicoMapper;
@@ -18,7 +22,7 @@ namespace CalculadoraCalorias.Application.Features
 
         public async Task<Resultado<CriarRegistroFisicoResponse>> Adicionar(CriarRegistroFisicoRequest requisicao)
         {
-            var registroFisico = await _registroFisicoService.Adicionar(requisicao.UsuarioId,
+            var registroFisico = await _registroFisicoService.Adicionar(UsuarioId,
                                                                        requisicao.PesoKg,
                                                                        requisicao.MetaCaloricaDiaria,
                                                                        null);
@@ -32,18 +36,18 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registroFisico));
         }
 
-        public async Task<Resultado<CriarRegistroFisicoResponse>> Atualizar(long usuarioId, CriarRegistroFisicoRequest requisicao)
+        public async Task<Resultado<CriarRegistroFisicoResponse>> Atualizar(CriarRegistroFisicoRequest requisicao)
         {
-            var registro = await _registroFisicoService.Atualizar(usuarioId, requisicao.PesoKg, requisicao.MetaCaloricaDiaria);
+            var registro = await _registroFisicoService.Atualizar(UsuarioId, requisicao.PesoKg, requisicao.MetaCaloricaDiaria);
             if (registro == null) return Resultado<CriarRegistroFisicoResponse>.Failure(TipoDeErro.NotFound, "Registro físico não encontrado");
 
             await _unitOfWork.CommitAsync();
             return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registro));
         }
 
-        public async Task<Resultado<CriarRegistroFisicoResponse>> ObterUltimoPorUsuarioId(long usuarioId)
+        public async Task<Resultado<CriarRegistroFisicoResponse>> ObterUltimo()
         {
-            var registro = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            var registro = await _registroFisicoService.ObterPorIdUsuario(UsuarioId);
             if (registro == null) return Resultado<CriarRegistroFisicoResponse>.Failure(TipoDeErro.NotFound, "Registro físico não encontrado");
 
             return Resultado<CriarRegistroFisicoResponse>.Success(_mapperRegistroFisico.EntidadeParaResponse(registro));

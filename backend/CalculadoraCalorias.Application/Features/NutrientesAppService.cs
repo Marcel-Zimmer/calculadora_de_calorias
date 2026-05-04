@@ -8,42 +8,41 @@ namespace CalculadoraCalorias.Application.Features
 {
     public class NutrientesAppService(
         IRefeicaoService _refeicaoService, 
-        IRegistroFisicoService _registroFisicoService) : INutrientesAppService
+        IRegistroFisicoService _registroFisicoService,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), INutrientesAppService
     {
-        public async Task<Resultado<NutrientesResponse>> ObterNutrientesDiario(long usuarioId, DateTime? data = null)
+        public async Task<Resultado<NutrientesResponse>> ObterNutrientesDiario(DateTime? data = null)
         {
             var dataReferencia = data ?? DateTime.Today;
             var dataFormatada = DateOnly.FromDateTime(dataReferencia);
-            return await CalcularRelatorioNutrientes(usuarioId, dataFormatada, dataFormatada, "diario");
+            return await CalcularRelatorioNutrientes(dataFormatada, dataFormatada, "diario");
         }
 
-        public async Task<Resultado<NutrientesResponse>> ObterNutrientesSemanal(long usuarioId, DateTime? data = null)
+        public async Task<Resultado<NutrientesResponse>> ObterNutrientesSemanal(DateTime? data = null)
         {
             var dataReferencia = data ?? DateTime.Today;
             int diff = (7 + (dataReferencia.DayOfWeek - DayOfWeek.Monday)) % 7;
             var inicioSemana = DateOnly.FromDateTime(dataReferencia.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
-            return await CalcularRelatorioNutrientes(usuarioId, inicioSemana, fimSemana, "semanal");
+            return await CalcularRelatorioNutrientes(inicioSemana, fimSemana, "semanal");
         }
 
-        public async Task<Resultado<NutrientesResponse>> ObterNutrientesMensal(long usuarioId, DateTime? data = null)
+        public async Task<Resultado<NutrientesResponse>> ObterNutrientesMensal(DateTime? data = null)
         {
             var dataReferencia = data ?? DateTime.Today;
             var inicioMes = new DateOnly(dataReferencia.Year, dataReferencia.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
-            return await CalcularRelatorioNutrientes(usuarioId, inicioMes, fimMes, "mensal");
+            return await CalcularRelatorioNutrientes(inicioMes, fimMes, "mensal");
         }
 
-        private async Task<Resultado<NutrientesResponse>> CalcularRelatorioNutrientes(long usuarioId, DateOnly inicio, DateOnly fim, string periodo)
+        private async Task<Resultado<NutrientesResponse>> CalcularRelatorioNutrientes(DateOnly inicio, DateOnly fim, string periodo)
         {
-            if (usuarioId == 0) return Resultado<NutrientesResponse>.Failure(TipoDeErro.SystemFailure, "Id de usuário inválido");
-
-            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(UsuarioId);
             if (registroFisico == null) return Resultado<NutrientesResponse>.Failure(TipoDeErro.SystemFailure, "Registro fisico null");
 
-            var refeicoes = await _refeicaoService.ObterPorPeriodo(usuarioId, inicio, fim);
+            var refeicoes = await _refeicaoService.ObterPorPeriodo(UsuarioId, inicio, fim);
             
             var metaCaloricaBase = (double)(registroFisico.MetaCaloricaDiaria ?? 0);
 

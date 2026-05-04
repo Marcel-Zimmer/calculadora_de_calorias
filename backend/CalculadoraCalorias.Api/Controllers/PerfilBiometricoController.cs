@@ -16,16 +16,16 @@ namespace CalculadoraCalorias.Api.Controllers
             return ProcessarResultado(await _perfilBiometricoAppService.Adicionar(requisicao));
         }
 
-        [HttpGet("usuario/{usuarioId}")]
-        public async Task<IActionResult> ObterPorUsuarioId(long usuarioId)
+        [HttpGet]
+        public async Task<IActionResult> Obter()
         {
-            return ProcessarResultado(await _perfilBiometricoAppService.ObterPorUsuarioId(usuarioId));
+            return ProcessarResultado(await _perfilBiometricoAppService.Obter());
         }
 
-        [HttpPut("usuario/{usuarioId}")]
-        public async Task<IActionResult> Atualizar(long usuarioId, [FromBody] CriarPerfilBiometricoRequest requisicao)
+        [HttpPut]
+        public async Task<IActionResult> Atualizar([FromBody] CriarPerfilBiometricoRequest requisicao)
         {
-            return ProcessarResultado(await _perfilBiometricoAppService.Atualizar(usuarioId, requisicao));
+            return ProcessarResultado(await _perfilBiometricoAppService.Atualizar(requisicao));
         }
     }
 }

@@ -5,10 +5,6 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
 {
     public class CriarEstimativaAtividadeFisicaRequest
     {
-        [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
-        [Range(1, long.MaxValue, ErrorMessage = "ID do usuário inválido.")]
-        public long UsuarioId { get; set; }
-
         public int KilometragemPercorrida { get; set; }
 
         [Required(ErrorMessage = "O tipo de exercicio deve ser informado.")]
@@ -20,10 +16,6 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
 
     public class CriarAtividadeFisicaRequest
     {
-        [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
-        [Range(1, long.MaxValue, ErrorMessage = "O ID do usuário deve ser um valor positivo.")]
-        public long UsuarioId { get; set; }
-
         [Required(ErrorMessage = "A quantidade de calorias é obrigatória.")]
         [Range(0.1, double.MaxValue, ErrorMessage = "A quantidade de calorias deve ser maior que zero.")]
         public decimal CaloriasEstimadas { get; set; }

@@ -54,6 +54,8 @@ builder.Services.AddAuthentication(x =>
 
 // 1. Serviços
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<CalculadoraCalorias.Core.Domain.Interfaces.IContextoHttpService, CalculadoraCalorias.Api.Services.ContextoHttpService>();
 builder.Services.AddApplication();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

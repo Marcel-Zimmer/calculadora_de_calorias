@@ -9,7 +9,5 @@
     public partial class PerfilBiometricoMapper
     {
         public partial CriarPerfilBiometricoResponse EntidadeParaResponse(PerfilBiometrico usuario);
-
-        public partial PerfilBiometrico RequestToEntity(CriarPerfilBiometricoRequest request);
     }
 }

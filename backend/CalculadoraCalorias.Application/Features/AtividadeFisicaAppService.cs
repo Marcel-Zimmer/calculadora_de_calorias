@@ -12,45 +12,32 @@ namespace CalculadoraCalorias.Application.Features
     public class AtividadeFisicaAppService(
         IAtividadeFisicaService _atividadeFisicaService,
         AtividadeFisicaMapper _atividadeFisicaMapper, 
-        IUnitOfWork _unitOfWork) : IAtividadeFisicaAppService
+        IUnitOfWork _unitOfWork,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IAtividadeFisicaAppService
     {
 
 
         public async Task<Resultado<AtividadeFisicaResponse>> Simular(CriarEstimativaAtividadeFisicaRequest requisicao)
         {
-            var atividade = await _atividadeFisicaService.Simular(requisicao.UsuarioId,
+            var atividade = await _atividadeFisicaService.Simular(UsuarioId,
                                                                         requisicao.Tipo,
                                                                         requisicao.KilometragemPercorrida,
                                                                         requisicao.TempoDeExercicio);
+
+            if (atividade == null) return Resultado<AtividadeFisicaResponse>.Failure(TipoDeErro.SystemFailure, "Erro ao simular atividade");
 
             return Resultado<AtividadeFisicaResponse>.Success(_atividadeFisicaMapper.EntidadeParaResponse(atividade));
         }
 
         public async Task<Resultado<AtividadeFisicaResponse>> EstimarGastoCalorico(CriarEstimativaAtividadeFisicaRequest requisicao)
         {
-            //var atividade = await _atividadeFisicaService.Adicionar(requisicao.UsuarioId,
-            //                                                            requisicao.Tipo,
-            //                                                            requisicao.KilometragemPercorrida,
-            //                                                            requisicao.TempoDeExercicio);
-
-            //if (atividade == null)
-            //{
-            //    return Resultado<AtividadeFisicaResponse>.Failure(TipoDeErro.None, "erro ao criar");
-            //}
-
-            //await _unitOfWork.CommitAsync();
-            return Resultado<AtividadeFisicaResponse>.Success(_atividadeFisicaMapper.EntidadeParaResponse(null));
+            return Resultado<AtividadeFisicaResponse>.Failure(TipoDeErro.None, "Não implementado");
         }
 
-        public async Task<Resultado<List<AtividadeFisicaResponse>>> ObterTodosPorId(int idUsuario)
+        public async Task<Resultado<List<AtividadeFisicaResponse>>> ObterTodos()
         {
-            if (idUsuario == 0)
-            {
-                return Resultado<List<AtividadeFisicaResponse>>.Failure(TipoDeErro.Validation, "id do usuario não foi informado");
-            }
-            return Resultado<List<AtividadeFisicaResponse>>.Success(
-                                                                    _atividadeFisicaMapper.EntidadesParaResponse(
-                                                                    await _atividadeFisicaService.ObterTodosPorId(idUsuario)));
+            var atividades = await _atividadeFisicaService.ObterTodosPorId((int)UsuarioId);
+            return Resultado<List<AtividadeFisicaResponse>>.Success(_atividadeFisicaMapper.EntidadesParaResponse(atividades));
         }
 
         public async Task<Resultado> Excluir(int id)
@@ -70,12 +57,12 @@ namespace CalculadoraCalorias.Application.Features
             if (id == 0) return Resultado<AtividadeFisicaResponse>.Failure(TipoDeErro.Validation, "id não foi informado");
 
             var atividade = await _atividadeFisicaService.ObterPorId(id);
-            if (atividade == null) Resultado<AtividadeFisicaResponse>.Failure(TipoDeErro.NotFound, "Registro não encontrado");
+            if (atividade == null) return Resultado<AtividadeFisicaResponse>.Failure(TipoDeErro.NotFound, "Registro não encontrado");
 
             return Resultado<AtividadeFisicaResponse>.Success(_atividadeFisicaMapper.EntidadeParaResponse(atividade));
         }
 
-        public async Task<Resultado<object>> Atualizar(AtualizarAtividadeFisicaRequest requisicao)
+        public async Task<Resultado<AtividadeFisicaResponse>> Atualizar(AtualizarAtividadeFisicaRequest requisicao)
         {
             var atividade = await _atividadeFisicaService.Atualizar(requisicao.Id,
                                                                         requisicao.Tipo,
@@ -93,7 +80,7 @@ namespace CalculadoraCalorias.Application.Features
 
         public async Task<Resultado<AtividadeFisicaResponse>> Adicionar(CriarAtividadeFisicaRequest requisicao)
         {
-            var atividade = await _atividadeFisicaService.Adicionar(requisicao.UsuarioId,
+            var atividade = await _atividadeFisicaService.Adicionar(UsuarioId,
                                                                         requisicao.CaloriasEstimadas,
                                                                         requisicao.Tipo,
                                                                         requisicao.TempoDeExercicio,

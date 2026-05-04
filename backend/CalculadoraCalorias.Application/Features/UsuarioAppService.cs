@@ -18,7 +18,8 @@ namespace CalculadoraCalorias.Application.Features
         ITokenService tokenService,
         IRefreshTokenService refreshTokenService,
         IPerfilBiometricoService perfilBiometricoService,
-        IRegistroFisicoService registroFisicoService) : IUsuarioAppService
+        IRegistroFisicoService registroFisicoService,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IUsuarioAppService
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
         private readonly UsuarioMapper _mapperUsuario = usuarioMapper;
@@ -86,8 +87,8 @@ namespace CalculadoraCalorias.Application.Features
                 return Resultado<TokenResponse>.Failure(TipoDeErro.Unauthorized, "Token inválido");
             }
 
-            var usuarioId = long.Parse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            var storedRefreshToken = await _refreshTokenService.ObterParaAtualizar(refreshToken,usuarioId);
+            var usuarioIdFromToken = long.Parse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var storedRefreshToken = await _refreshTokenService.ObterParaAtualizar(refreshToken,usuarioIdFromToken);
 
             if (storedRefreshToken == null || !storedRefreshToken.EstaAtivo)
             {
@@ -97,17 +98,17 @@ namespace CalculadoraCalorias.Application.Features
             storedRefreshToken.Revogado = true;
 
             var novosTokens = _tokenService.GerarTokens(principal.Claims);
-            await SalvarRefreshToken(usuarioId, novosTokens.RefreshToken);
+            await SalvarRefreshToken(usuarioIdFromToken, novosTokens.RefreshToken);
             
             await _unitOfWork.CommitAsync();
 
             return Resultado<TokenResponse>.Success(novosTokens);
         }
 
-        public async Task<Resultado<bool>> AtualizarSenha(long usuarioId, string novaSenha)
+        public async Task<Resultado<bool>> AtualizarSenha(string novaSenha)
         {
             var senhaHash = BCrypt.Net.BCrypt.HashPassword(novaSenha);
-            var usuario = await _usuarioService.AtualizarSenha(usuarioId, senhaHash);
+            var usuario = await _usuarioService.AtualizarSenha(UsuarioId, senhaHash);
 
             if (usuario == null) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Usuário não encontrado");
 
