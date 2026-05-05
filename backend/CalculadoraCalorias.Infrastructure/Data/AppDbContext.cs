@@ -1,9 +1,11 @@
 ﻿using CalculadoraCalorias.Core.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalculadoraCalorias.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<long>, long>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

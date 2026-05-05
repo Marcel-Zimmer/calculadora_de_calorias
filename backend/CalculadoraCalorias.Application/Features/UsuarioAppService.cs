@@ -6,6 +6,7 @@ using CalculadoraCalorias.Core.Domain.Common;
 using CalculadoraCalorias.Core.Domain.Entities;
 using CalculadoraCalorias.Core.Domain.Enums;
 using CalculadoraCalorias.Core.Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -19,7 +20,8 @@ namespace CalculadoraCalorias.Application.Features
         IRefreshTokenService refreshTokenService,
         IPerfilBiometricoService perfilBiometricoService,
         IRegistroFisicoService registroFisicoService,
-        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IUsuarioAppService
+        IContextoHttpService contextoHttpService,
+        UserManager<ApplicationUser> userManager) : AppServiceBase(contextoHttpService), IUsuarioAppService
     {
         private readonly IUsuarioService _usuarioService = usuarioService;
         private readonly UsuarioMapper _mapperUsuario = usuarioMapper;
@@ -28,6 +30,7 @@ namespace CalculadoraCalorias.Application.Features
         private readonly IRefreshTokenService _refreshTokenService = refreshTokenService;
         private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
         private readonly IRegistroFisicoService _registroFisicoService = registroFisicoService;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
         public async Task<Resultado<CriarUsuarioResponse>> Registrar(RegistroUsuarioRequest requisicao)
         {
@@ -36,8 +39,20 @@ namespace CalculadoraCalorias.Application.Features
                 return Resultado<CriarUsuarioResponse>.Failure(TipoDeErro.Conflict, "Email informado já está em uso");
             }
 
-            var senhaHash = BCrypt.Net.BCrypt.HashPassword(requisicao.Senha);
-            var usuario = await _usuarioService.CriarUsuario(requisicao.Nome, requisicao.Email, senhaHash, RoleEnum.Usuario);
+            var applicationUser = new ApplicationUser
+            {
+                UserName = requisicao.Email,
+                Email = requisicao.Email
+            };
+
+            var identityResult = await _userManager.CreateAsync(applicationUser, requisicao.Senha);
+
+            if (!identityResult.Succeeded)
+            {
+                return Resultado<CriarUsuarioResponse>.Failure(TipoDeErro.Validation, string.Join(", ", identityResult.Errors.Select(e => e.Description)));
+            }
+
+            var usuario = await _usuarioService.CriarUsuario(requisicao.Nome, requisicao.Email, RoleEnum.Usuario);
 
             var perfil = await _perfilBiometricoService.Adicionar(usuario.Id,
                                                      requisicao.DataNascimento,
@@ -58,13 +73,19 @@ namespace CalculadoraCalorias.Application.Features
 
         public async Task<Resultado<LoginUsarioResponse>> Login(LoginUsuarioRequest requisicao)
         {
-            var usuario = await _usuarioService.ObterPorEmail(requisicao.Email);
-            if (usuario == null) {
+            var applicationUser = await _userManager.FindByEmailAsync(requisicao.Email);
+            if (applicationUser == null) {
                 return Resultado<LoginUsarioResponse>.Failure(TipoDeErro.Unauthorized, "login ou senha incorreto");
             }
-            var senhasIguais = BCrypt.Net.BCrypt.Verify(requisicao.Senha, usuario.Senha);
-            if (!senhasIguais) {
+
+            var passwordValid = await _userManager.CheckPasswordAsync(applicationUser, requisicao.Senha);
+            if (!passwordValid) {
                 return Resultado<LoginUsarioResponse>.Failure(TipoDeErro.Unauthorized, "login ou senha incorreto");
+            }
+
+            var usuario = await _usuarioService.ObterPorEmail(requisicao.Email);
+            if (usuario == null) {
+                return Resultado<LoginUsarioResponse>.Failure(TipoDeErro.Unauthorized, "usuário não encontrado no domínio");
             }
 
             var tokens = _tokenService.GerarTokens(usuario);
@@ -107,12 +128,20 @@ namespace CalculadoraCalorias.Application.Features
 
         public async Task<Resultado<bool>> AtualizarSenha(string novaSenha)
         {
-            var senhaHash = BCrypt.Net.BCrypt.HashPassword(novaSenha);
-            var usuario = await _usuarioService.AtualizarSenha(UsuarioId, senhaHash);
-
+            var usuario = await _usuarioService.ObterPorId(UsuarioId);
             if (usuario == null) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Usuário não encontrado");
 
-            await _unitOfWork.CommitAsync();
+            var applicationUser = await _userManager.FindByEmailAsync(usuario.Email);
+            if (applicationUser == null) return Resultado<bool>.Failure(TipoDeErro.NotFound, "Credenciais não encontradas");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
+            var result = await _userManager.ResetPasswordAsync(applicationUser, token, novaSenha);
+
+            if (!result.Succeeded)
+            {
+                return Resultado<bool>.Failure(TipoDeErro.Validation, string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
             return Resultado<bool>.Success(true);
         }
 

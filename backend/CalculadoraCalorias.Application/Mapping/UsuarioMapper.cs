@@ -10,7 +10,6 @@
     {
         [MapperIgnoreTarget(nameof(CriarUsuarioResponse.Role))]
         [MapperIgnoreSource(nameof(Usuario.Role))]
-        [MapperIgnoreSource(nameof(Usuario.Senha))]
         [MapperIgnoreSource(nameof(Usuario.RegistroFisico))]
         [MapperIgnoreSource(nameof(Usuario.PerfilBiometrico))]
         [MapperIgnoreSource(nameof(Usuario.Ativo))]
@@ -18,7 +17,6 @@
 
         [MapperIgnoreTarget(nameof(LoginUsarioResponse.AccessToken))]
         [MapperIgnoreTarget(nameof(LoginUsarioResponse.RefreshToken))]
-        [MapperIgnoreSource(nameof(Usuario.Senha))]
         [MapperIgnoreSource(nameof(Usuario.RegistroFisico))]
         [MapperIgnoreSource(nameof(Usuario.PerfilBiometrico))]
         [MapperIgnoreSource(nameof(Usuario.Ativo))]
