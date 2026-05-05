@@ -11,5 +11,6 @@ namespace CalculadoraCalorias.Application.Interfaces
         Task<Resultado<LoginUsarioResponse>> Login(LoginUsuarioRequest requisicao);
         Task<Resultado<TokenResponse>> RefreshToken(string accessToken, string refreshToken);
         Task<Resultado<bool>> AtualizarSenha(string novaSenha);
+        Task<Resultado<bool>> EsqueciSenha(string email);
     }
 }

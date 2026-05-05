@@ -30,4 +30,11 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
         [MinLength(6, ErrorMessage = "A senha deve ter no mínimo 6 caracteres.")]
         public required string Senha { get; set; }
     }
+
+    public class EsqueciSenhaRequest
+    {
+        [Required(ErrorMessage = "O e-mail é obrigatório.")]
+        [EmailAddress(ErrorMessage = "Formato de e-mail inválido.")]
+        public required string Email { get; set; }
+    }
 }

@@ -26,4 +26,8 @@ export class UsuarioService {
     });
   }
 
+  esqueciSenha(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/esqueci-senha`, { email });
+  }
+
 }

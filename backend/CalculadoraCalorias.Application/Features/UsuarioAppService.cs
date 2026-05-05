@@ -145,6 +145,20 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<bool>.Success(true);
         }
 
+        public async Task<Resultado<bool>> EsqueciSenha(string email)
+        {
+            var applicationUser = await _userManager.FindByEmailAsync(email);
+            
+            // Por segurança, não informamos se o e-mail existe ou não
+            if (applicationUser != null)
+            {
+                // Aqui no futuro enviariamos um e-mail com o link
+                // var token = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
+            }
+
+            return Resultado<bool>.Success(true);
+        }
+
         private async Task SalvarRefreshToken(long usuarioId, string token)
         {
             var refreshToken = new RefreshToken

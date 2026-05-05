@@ -28,10 +28,15 @@
         <div class="space-y-1">
           <div class="flex justify-between items-center px-1">
             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Senha</label>
+            <button (click)="mostrarEsqueciSenha.set(true)" type="button" class="text-[10px] font-bold text-emerald-600 uppercase hover:underline">
+              Esqueci a senha
+            </button>
           </div>
           <input name="senha" type="password" placeholder="••••••••" [(ngModel)]="senha" (keyup.enter)="login()"
             class="w-full bg-slate-50 border border-slate-400 rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all">
         </div>
+
+        <app-esqueci-senha [(mostrarModal)]="mostrarEsqueciSenha"></app-esqueci-senha>
 
         @if (mensagemErro()) {
         <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-xl animate-fade-in shadow-sm">

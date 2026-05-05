@@ -43,5 +43,12 @@ namespace CalculadoraCalorias.Api.Controllers
         {
             return ProcessarResultado(await _usuarioAppService.AtualizarSenha(novaSenha));
         }
+
+        [HttpPost("esqueci-senha")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EsqueciSenha([FromBody] EsqueciSenhaRequest requisicao)
+        {
+            return ProcessarResultado(await _usuarioAppService.EsqueciSenha(requisicao.Email));
+        }
     }
 }

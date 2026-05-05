@@ -5,10 +5,11 @@ import { UsuarioService } from '../../core/services/usuario.service';
 import { Carregamento } from "../../shared/carregamento/carregamento";
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
 import { Router } from '@angular/router';
+import { EsqueciSenhaComponent } from '../../shared/esqueci-senha/esqueci-senha';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, Carregamento],
+  imports: [FormsModule, Carregamento, EsqueciSenhaComponent],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -22,6 +23,7 @@ export class Login {
   senha = signal<string>('');
   estaLogado = signal<boolean>(false);
   mensagemErro = signal<string | null>(null);
+  mostrarEsqueciSenha = signal<boolean>(false);
 
   login() {
     this.mensagemErro.set(null);
