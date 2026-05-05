@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VereditoResponse } from '../../core/services/nutrientes.service';
+import { VereditoResponse } from '../../core/models/nutrientes.interface';
 
 @Component({
   selector: 'app-bs-card-perfil-anabolico',

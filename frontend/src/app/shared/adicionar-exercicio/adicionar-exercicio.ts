@@ -51,10 +51,10 @@ export class AdicionarExercicio {
     const tempoFormatado = tempoReal ? `${tempoReal}:00` : '00:00:00';
 
     const request = {
-      Tipo: Number(this.tipoExercicio()),
-      DataDoExercicio: this.dataExercicio(),
-      TempoDeExercicio: tempoFormatado,
-      CaloriasEstimadas: this.calorias() || 0
+      tipo: Number(this.tipoExercicio()),
+      dataDoExercicio: this.dataExercicio(),
+      tempoDeExercicio: tempoFormatado,
+      caloriasEstimadas: this.calorias() || 0
     };
 
     this.atividadeFisicaService.adicionar(request).subscribe({

@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import { CriarRegistroFisicoRequest, RegistroFisicoResponse } from '../models/registro-fisico.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +12,19 @@ export class RegistroFisicoService {
   
   private readonly baseUrl = `${environment.apiUrl}/RegistroFisico`; 
 
-  obterUltimo() {
-    return this.http.get(`${this.baseUrl}/ultimo`);
+  obterUltimo(): Observable<RegistroFisicoResponse> {
+    return this.http.get<RegistroFisicoResponse>(`${this.baseUrl}/ultimo`);
   }
 
-  adicionar(registro: any) {
-    return this.http.post(this.baseUrl, registro);
+  adicionar(registro: CriarRegistroFisicoRequest): Observable<RegistroFisicoResponse> {
+    return this.http.post<RegistroFisicoResponse>(this.baseUrl, registro);
   }
 
-  atualizar(registro: any) {
-    return this.http.put(`${this.baseUrl}`, registro);
+  atualizar(registro: CriarRegistroFisicoRequest): Observable<RegistroFisicoResponse> {
+    return this.http.put<RegistroFisicoResponse>(`${this.baseUrl}`, registro);
   }
 
-  excluir(id: number) {
+  excluir(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 }

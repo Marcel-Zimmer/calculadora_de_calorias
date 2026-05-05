@@ -52,8 +52,8 @@ export class AdicionarPesoComponent {
 
     this.carregando.set(true);
     const payload = {
-      pesoKg: this.peso(),
-      metaCaloricaDiaria: this.metaCalorica()
+      pesoKg: this.peso()!,
+      metaCaloricaDiaria: this.metaCalorica() ?? undefined
     };
 
     this.registroFisicoService.adicionar(payload).subscribe({

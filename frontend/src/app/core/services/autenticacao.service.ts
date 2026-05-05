@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LoginUsuarioResponse } from '../models/usuario.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class AutenticacaoService {
     return localStorage.getItem('meu_refresh_token');
   }
 
-  renovarToken(): Observable<any> {
+  renovarToken(): Observable<LoginUsuarioResponse> {
     const accessToken = this.obterAccessToken();
     const refreshToken = this.obterRefreshToken();
 
@@ -49,10 +50,12 @@ export class AutenticacaoService {
       return throwError(() => 'Tokens não encontrados');
     }
 
-    return this.http.post<any>(`${this.baseUrl}/refresh-token`, { accessToken, refreshToken }).pipe(
-      tap((resposta: any) => {
-        localStorage.setItem('meu_token_jwt', resposta.accessToken);
-        localStorage.setItem('meu_refresh_token', resposta.refreshToken);
+    return this.http.post<LoginUsuarioResponse>(`${this.baseUrl}/refresh-token`, { accessToken, refreshToken }).pipe(
+      tap((resposta: LoginUsuarioResponse) => {
+        if (resposta.accessToken && resposta.refreshToken) {
+          localStorage.setItem('meu_token_jwt', resposta.accessToken);
+          localStorage.setItem('meu_refresh_token', resposta.refreshToken);
+        }
       }),
       catchError(erro => {
         this.fazerLogout();

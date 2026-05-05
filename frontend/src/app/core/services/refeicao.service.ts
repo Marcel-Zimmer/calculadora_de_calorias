@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import { RefeicaoModeloResponse } from '../models/refeicao.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,16 +12,16 @@ export class RefeicaoService {
 
   private readonly baseUrl = `${environment.apiUrl}/Refeicao`;
 
-  adicionar(refeicao: FormData) {
+  adicionar(refeicao: FormData): Observable<any> {
     return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
   }
 
-  obterModelosFrequentes(tipo?: number) {
+  obterModelosFrequentes(tipo?: number): Observable<RefeicaoModeloResponse[]> {
     let params = new HttpParams();
     if (tipo) {
       params = params.set('tipo', tipo.toString());
     }
-    return this.http.get<any[]>(`${this.baseUrl}/modelos-frequentes`, { params });
+    return this.http.get<RefeicaoModeloResponse[]>(`${this.baseUrl}/modelos-frequentes`, { params });
   }
   obterMapaRefeicoes(): Record<number, any> {
     return {

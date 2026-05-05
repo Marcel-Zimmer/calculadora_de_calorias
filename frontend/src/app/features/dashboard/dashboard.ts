@@ -14,7 +14,8 @@ import { AtividadeFisicaService } from '../../core/services/atividade-fisica.ser
 import { AguaService } from '../../core/services/agua.service';
 import Swal from 'sweetalert2';
 import { NotificacaoService } from '../../core/services/notificacao.service';
-import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { BsGraficoHistoricoMensalComponent } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { DadoHistorico } from '../../core/models/grafico.interface';
 import { BsGraficoMediaSemanalComponent } from '../../shared/bs-grafico-media-semanal/bs-grafico-media-semanal';
 import { BsCardConsistenciaComponent } from '../../shared/bs-card-consistencia/bs-card-consistencia';
 import { BsCardEquilibrioEnergeticoComponent } from '../../shared/bs-card-equilibrio-energetico/bs-card-equilibrio-energetico';

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NutrientesService, NutrientesResponse } from '../../core/services/nutrientes.service';
+import { NutrientesService } from '../../core/services/nutrientes.service';
+import { NutrienteDetalhe, NutrientesResponse } from '../../core/models/nutrientes.interface';
 import { AutenticacaoService } from '../../core/services/autenticacao.service';
 import { BsCardNutrientesComponent } from '../../shared/bs-card-nutrientes/bs-card-nutrientes';
 import { NutrientesEnum } from '../../core/models/nutrientes.enum';
@@ -39,7 +40,7 @@ export class EstatisticasNutrientesComponent implements OnInit {
     const d = this.dados();
     if (!d || !d.detalhes) return [];
 
-    return d.detalhes.map(item => {
+    return d.detalhes.map((item: NutrienteDetalhe) => {
         const info = this.mapaNutrientes[item.tipo];
         return {
             ...info,
