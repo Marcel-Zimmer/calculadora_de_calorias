@@ -65,7 +65,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         private decimal CalcularCalorias()
         {
             decimal metCalculado = ObterMetPelaVelocidade();
-            return metCalculado * (decimal)PesoSnapshot * (decimal)TempoExercicio.TotalHours;
+            return metCalculado * (PesoSnapshot ?? 0) * (decimal)TempoExercicio.TotalHours;
         }
 
         public void Atualizar(int tipo, TimeSpan tempoDeExercicio, decimal caloriasEstimadas)

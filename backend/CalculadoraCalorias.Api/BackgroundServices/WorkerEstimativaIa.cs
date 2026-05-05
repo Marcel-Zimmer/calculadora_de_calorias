@@ -73,20 +73,27 @@ namespace CalculadoraCalorias.Api.BackgroundServices
                         // Chamada à LLM
                         var estimativaCalorica = await llmService.SimularCaloriasRefeicao(imagemBytes, refeicao.Peso);
 
-                        refeicao.AtualizarEstimativa(
-                            estimativaCalorica.Alimento ?? "alimento não identificado", 
-                            estimativaCalorica.Calorias, 
-                            estimativaCalorica.Proteinas,
-                            estimativaCalorica.Carboidratos, 
-                            estimativaCalorica.Gorduras, 
-                            estimativaCalorica.Acucares, 
-                            estimativaCalorica.Fibras);
+                        if (estimativaCalorica != null)
+                        {
+                            refeicao.AtualizarEstimativa(
+                                estimativaCalorica.Alimento ?? "alimento não identificado", 
+                                estimativaCalorica.Calorias, 
+                                estimativaCalorica.Proteinas,
+                                estimativaCalorica.Carboidratos, 
+                                estimativaCalorica.Gorduras, 
+                                estimativaCalorica.Acucares, 
+                                estimativaCalorica.Fibras);
 
-                        await unitOfWork.CommitAsync();
+                            await unitOfWork.CommitAsync();
 
-                        // Notificar o Frontend
-                        await _hubContext.Clients.Group(refeicao.UsuarioId.ToString())
-                            .SendAsync("RefeicaoProcessada", refeicao.Id, stoppingToken);
+                            // Notificar o Frontend
+                            await _hubContext.Clients.Group(refeicao.UsuarioId.ToString())
+                                .SendAsync("RefeicaoProcessada", refeicao.Id, stoppingToken);
+                        }
+                        else
+                        {
+                            _logger.LogWarning($"A LLM retornou nulo para a Refeição ID: {request.RefeicaoId}");
+                        }
 
                         // Limpeza
                         try { if (File.Exists(caminhoFisicoCompleto)) File.Delete(caminhoFisicoCompleto); }

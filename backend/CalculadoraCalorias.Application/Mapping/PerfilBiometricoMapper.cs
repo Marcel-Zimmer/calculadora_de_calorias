@@ -8,6 +8,7 @@
     [Mapper]
     public partial class PerfilBiometricoMapper
     {
+        [MapperIgnoreSource(nameof(PerfilBiometrico.Usuario))]
         public partial CriarPerfilBiometricoResponse EntidadeParaResponse(PerfilBiometrico usuario);
     }
 }
