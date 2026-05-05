@@ -10,15 +10,15 @@ export class PerfilBiometricoService {
   
   private readonly baseUrl = `${environment.apiUrl}/PerfilBiometrico`; 
 
-  obterPorUsuarioId(usuarioId: number) {
-    return this.http.get(`${this.baseUrl}/usuario/${usuarioId}`);
+  obter() {
+    return this.http.get(`${this.baseUrl}`);
   }
 
   adicionar(perfil: any) {
     return this.http.post(this.baseUrl, perfil);
   }
 
-  atualizar(usuarioId: number, perfil: any) {
-    return this.http.put(`${this.baseUrl}/usuario/${usuarioId}`, perfil);
+  atualizar(perfil: any) {
+    return this.http.put(`${this.baseUrl}`, perfil);
   }
 }

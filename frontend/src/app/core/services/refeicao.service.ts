@@ -14,12 +14,12 @@ export class RefeicaoService {
     return this.http.post(`${this.baseUrl}/adicionar`, refeicao);
   }
 
-  obterModelosFrequentes(usuarioId: number, tipo?: number) {
+  obterModelosFrequentes(tipo?: number) {
     let params = new HttpParams();
     if (tipo) {
       params = params.set('tipo', tipo.toString());
     }
-    return this.http.get<any[]>(`${this.baseUrl}/modelos-frequentes/${usuarioId}`, { params });
+    return this.http.get<any[]>(`${this.baseUrl}/modelos-frequentes`, { params });
   }
   obterMapaRefeicoes(): Record<number, any> {
     return {

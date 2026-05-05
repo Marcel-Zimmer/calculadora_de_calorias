@@ -44,7 +44,7 @@ export class PerfilComponent implements OnInit {
   }
 
   carregarPerfil() {
-    this.perfilService.obterPorUsuarioId(this.autenticacao.obterId()).subscribe((res: any) => {
+    this.perfilService.obter().subscribe((res: any) => {
       if (res) {
         this.perfilId.set(res.id);
         this.dataNascimento.set(res.dataNascimento.split('T')[0]);
@@ -57,7 +57,7 @@ export class PerfilComponent implements OnInit {
   }
 
   carregarRegistroFisico() {
-    this.registroFisicoService.obterUltimoPorUsuarioId(this.autenticacao.obterId()).subscribe((res: any) => {
+    this.registroFisicoService.obterUltimo().subscribe((res: any) => {
       if (res) {
         this.registroFisicoId.set(res.id);
         this.pesoKg.set(res.pesoKg);
@@ -68,7 +68,6 @@ export class PerfilComponent implements OnInit {
 
   salvarPerfilBiometrico() {
     const dados = {
-      usuarioId: this.autenticacao.obterId(),
       dataNascimento: this.dataNascimento(),
       genero: Number(this.genero()),
       alturaCm: Number(this.alturaCm()),
@@ -77,7 +76,7 @@ export class PerfilComponent implements OnInit {
     };
 
     const obs = this.perfilId() > 0 
-      ? this.perfilService.atualizar(this.autenticacao.obterId(), { ...dados, id: this.perfilId() })
+      ? this.perfilService.atualizar({ ...dados, id: this.perfilId() })
       : this.perfilService.adicionar(dados);
 
     obs.subscribe(() => {
@@ -88,13 +87,12 @@ export class PerfilComponent implements OnInit {
 
   salvarRegistroFisico() {
     const dados = {
-      usuarioId: this.autenticacao.obterId(),
       pesoKg: Number(this.pesoKg()),
       metaCaloricaDiaria: Number(this.metaCaloricaDiaria())
     };
 
     const obs = this.registroFisicoId() > 0
-      ? this.registroFisicoService.atualizar(this.autenticacao.obterId(), dados)
+      ? this.registroFisicoService.atualizar(dados)
       : this.registroFisicoService.adicionar(dados);
 
     obs.subscribe(() => {

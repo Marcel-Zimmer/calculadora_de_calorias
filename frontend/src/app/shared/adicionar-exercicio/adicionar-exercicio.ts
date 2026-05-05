@@ -51,7 +51,6 @@ export class AdicionarExercicio {
     const tempoFormatado = tempoReal ? `${tempoReal}:00` : '00:00:00';
 
     const request = {
-      UsuarioId: this.autenticacao.obterId(),
       Tipo: Number(this.tipoExercicio()),
       DataDoExercicio: this.dataExercicio(),
       TempoDeExercicio: tempoFormatado,

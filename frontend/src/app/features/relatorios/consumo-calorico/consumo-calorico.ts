@@ -40,10 +40,9 @@ export class ConsumoCaloricoComponent implements OnInit {
   ngOnInit(): void {}
 
   carregarEstatisticas() {
-    const userId = this.autenticacao.obterId();
     const obs = this.periodoEstatisticas() === 'semanal' 
-      ? this.graficoService.obterEstatisticasSemanais(userId, this.dataSelecionada())
-      : this.graficoService.obterEstatisticasMensais(userId, this.dataSelecionada());
+      ? this.graficoService.obterEstatisticasSemanais(this.dataSelecionada())
+      : this.graficoService.obterEstatisticasMensais(this.dataSelecionada());
 
     obs.subscribe((res: any) => {
       if (res.distribuicaoRefeicoes) {

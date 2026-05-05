@@ -92,7 +92,7 @@ export class AdicionarRefeicao {
   });
 
   carregarModelos(tipo?: number) {
-    this.refeicaoService.obterModelosFrequentes(this.autenticacao.obterId(), tipo).subscribe({
+    this.refeicaoService.obterModelosFrequentes(tipo).subscribe({
       next: (modelos) => this.modelosFrequentes.set(modelos),
       error: (err) => console.error('Erro ao carregar modelos', err)
     });
@@ -126,8 +126,6 @@ export class AdicionarRefeicao {
     // Garantir ponto como separador decimal para o Peso
     const peso = this.pesoRefeicao();
     novaRefeicao.append("PesoEmGramas", peso !== null ? peso.toString().replace(',', '.') : "");
-    
-    novaRefeicao.append("UsuarioId", this.autenticacao.obterId().toString());
     
     if (this.modoEntrada() === 'modelo' && this.idModeloSelecionado()) {
       novaRefeicao.append("CodigoRefeicaoModelo", this.idModeloSelecionado()!.toString());

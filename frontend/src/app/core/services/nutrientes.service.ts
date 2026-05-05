@@ -63,20 +63,20 @@ export class NutrientesService {
     };
   }
 
-  obterNutrientesDiario(usuarioId: number, data?: string): Observable<NutrientesResponse> {
-    let url = `${this.baseUrl}/diario/${usuarioId}`;
+  obterNutrientesDiario(data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/diario`;
     if (data) url += `?data=${data}`;
     return this.http.get<NutrientesResponse>(url);
   }
 
-  obterNutrientesSemanal(usuarioId: number, data?: string): Observable<NutrientesResponse> {
-    let url = `${this.baseUrl}/semanal/${usuarioId}`;
+  obterNutrientesSemanal(data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/semanal`;
     if (data) url += `?data=${data}`;
     return this.http.get<NutrientesResponse>(url);
   }
 
-  obterNutrientesMensal(usuarioId: number, data?: string): Observable<NutrientesResponse> {
-    let url = `${this.baseUrl}/mensal/${usuarioId}`;
+  obterNutrientesMensal(data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/mensal`;
     if (data) url += `?data=${data}`;
     return this.http.get<NutrientesResponse>(url);
   }

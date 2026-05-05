@@ -10,16 +10,16 @@ export class RegistroFisicoService {
   
   private readonly baseUrl = `${environment.apiUrl}/RegistroFisico`; 
 
-  obterUltimoPorUsuarioId(usuarioId: number) {
-    return this.http.get(`${this.baseUrl}/usuario/${usuarioId}`);
+  obterUltimo() {
+    return this.http.get(`${this.baseUrl}/ultimo`);
   }
 
   adicionar(registro: any) {
     return this.http.post(this.baseUrl, registro);
   }
 
-  atualizar(usuarioId: number, registro: any) {
-    return this.http.put(`${this.baseUrl}/usuario/${usuarioId}`, registro);
+  atualizar(registro: any) {
+    return this.http.put(`${this.baseUrl}`, registro);
   }
 
   excluir(id: number) {

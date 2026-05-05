@@ -10,40 +10,40 @@ export class GraficoService {
   
   private readonly baseUrl = `${environment.apiUrl}/Grafico`; 
 
-  obterGraficoDiario(usuarioId: number, data?: string) {
-    let url = `${this.baseUrl}/dashboard-diario/${usuarioId}`;
+  obterGraficoDiario(data?: string) {
+    let url = `${this.baseUrl}/dashboard-diario`;
     if (data) {
       url += `?data=${data}`;
     }
     return this.http.get(url);
   }
 
-  obterGraficoSemanal(usuarioId: number, data?: string) {
-    let url = `${this.baseUrl}/dashboard-semanal/${usuarioId}`;
+  obterGraficoSemanal(data?: string) {
+    let url = `${this.baseUrl}/dashboard-semanal`;
     if (data) url += `?data=${data}`;
     return this.http.get(url);
   }
 
-  obterGraficoMensal(usuarioId: number, data?: string) {
-    let url = `${this.baseUrl}/dashboard-mensal/${usuarioId}`;
+  obterGraficoMensal(data?: string) {
+    let url = `${this.baseUrl}/dashboard-mensal`;
     if (data) url += `?data=${data}`;
     return this.http.get(url);
   }
 
-  obterEstatisticasSemanais(usuarioId: number, data?: string) {
-    let url = `${this.baseUrl}/estatisticas-semanais/${usuarioId}`;
+  obterEstatisticasSemanais(data?: string) {
+    let url = `${this.baseUrl}/estatisticas-semanais`;
     if (data) url += `?data=${data}`;
     return this.http.get(url);
   }
 
-  obterEstatisticasMensais(usuarioId: number, data?: string) {
-    let url = `${this.baseUrl}/estatisticas-mensais/${usuarioId}`;
+  obterEstatisticasMensais(data?: string) {
+    let url = `${this.baseUrl}/estatisticas-mensais`;
     if (data) url += `?data=${data}`;
     return this.http.get(url);
   }
 
-  obterEstatisticasPeso(usuarioId: number) {
-    return this.http.get(`${this.baseUrl}/estatisticas-peso/${usuarioId}`);
+  obterEstatisticasPeso() {
+    return this.http.get(`${this.baseUrl}/estatisticas-peso`);
   }
 
 }

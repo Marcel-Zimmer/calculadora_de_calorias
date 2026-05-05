@@ -59,11 +59,11 @@ export class NutrientesComponent implements OnInit {
     let obs;
 
     if (this.periodo() === 'diario') {
-      obs = this.nutrientesService.obterNutrientesDiario(userId, data);
+      obs = this.nutrientesService.obterNutrientesDiario(data);
     } else if (this.periodo() === 'semanal') {
-      obs = this.nutrientesService.obterNutrientesSemanal(userId, data);
+      obs = this.nutrientesService.obterNutrientesSemanal(data);
     } else {
-      obs = this.nutrientesService.obterNutrientesMensal(userId, data);
+      obs = this.nutrientesService.obterNutrientesMensal(data);
     }
 
     obs.subscribe({

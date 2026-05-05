@@ -32,8 +32,7 @@ export class AdicionarPesoComponent {
   }
 
   carregarUltimosDados() {
-    const userId = this.autenticacao.obterId();
-    this.registroFisicoService.obterUltimoPorUsuarioId(userId).subscribe((res: any) => {
+    this.registroFisicoService.obterUltimo().subscribe((res: any) => {
       if (res) {
         this.peso.set(res.pesoKg);
         this.metaCalorica.set(res.metaCaloricaDiaria);
@@ -53,7 +52,6 @@ export class AdicionarPesoComponent {
 
     this.carregando.set(true);
     const payload = {
-      usuarioId: this.autenticacao.obterId(),
       pesoKg: this.peso(),
       metaCaloricaDiaria: this.metaCalorica()
     };

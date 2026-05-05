@@ -38,8 +38,7 @@ export class AcompanhamentoPesoComponent implements OnInit {
   }
 
   carregarEstatisticas() {
-    const userId = this.autenticacao.obterId();
-    this.graficoService.obterEstatisticasPeso(userId).subscribe((res: any) => {
+    this.graficoService.obterEstatisticasPeso().subscribe((res: any) => {
       this.dadosPeso.set(res);
     });
   }
