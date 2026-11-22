@@ -54,6 +54,9 @@ namespace CalculadoraCalorias.Application.Features
 
             var usuario = await _usuarioService.CriarUsuario(requisicao.Nome, requisicao.Email, RoleEnum.Usuario);
 
+            // Garante que o Usuario receba um ID do banco antes de usar como FK
+            await _unitOfWork.CommitAsync();
+
             var perfil = await _perfilBiometricoService.Adicionar(usuario.Id,
                                                      requisicao.DataNascimento,
                                                      requisicao.Genero,
