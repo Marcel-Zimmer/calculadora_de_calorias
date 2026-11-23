@@ -1,10 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export interface DadoHistorico {
-  legenda: string | number;
-  valor: number;
-}
+import { DadoHistorico } from '../../core/models/grafico.interface';
 
 @Component({
   selector: 'app-bs-grafico-media-semanal',

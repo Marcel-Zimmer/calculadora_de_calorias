@@ -15,70 +15,70 @@ namespace CalculadoraCalorias.Api.Controllers
         }
 
         [HttpGet]
-        [Route("dashboard-diario/{usuarioId}")]
-        public async Task<IActionResult> GraficoDiario(long usuarioId, [FromQuery] string? data = null)
+        [Route("dashboard-diario")]
+        public async Task<IActionResult> GraficoDiario([FromQuery] string? data = null)
         {
             DateOnly? dataFiltro = null;
             if (!string.IsNullOrEmpty(data) && DateOnly.TryParse(data, out var d))
             {
                 dataFiltro = d;
             }
-            return ProcessarResultado(await _graficoAppService.GraficoDiario(usuarioId, dataFiltro));
+            return ProcessarResultado(await _graficoAppService.GraficoDiario(dataFiltro));
         }
 
         [HttpGet]
-        [Route("dashboard-semanal/{usuarioId}")]
-        public async Task<IActionResult> GraficoSemanal(long usuarioId, [FromQuery] string? data = null)
+        [Route("dashboard-semanal")]
+        public async Task<IActionResult> GraficoSemanal([FromQuery] string? data = null)
         {
             DateOnly? dataFiltro = null;
             if (!string.IsNullOrEmpty(data) && DateOnly.TryParse(data, out var d))
             {
                 dataFiltro = d;
             }
-            return ProcessarResultado(await _graficoAppService.GraficoSemanal(usuarioId, dataFiltro));
+            return ProcessarResultado(await _graficoAppService.GraficoSemanal(dataFiltro));
         }
 
         [HttpGet]
-        [Route("dashboard-mensal/{usuarioId}")]
-        public async Task<IActionResult> GraficoMensal(long usuarioId, [FromQuery] string? data = null)
+        [Route("dashboard-mensal")]
+        public async Task<IActionResult> GraficoMensal([FromQuery] string? data = null)
         {
             DateOnly? dataFiltro = null;
             if (!string.IsNullOrEmpty(data) && DateOnly.TryParse(data, out var d))
             {
                 dataFiltro = d;
             }
-            return ProcessarResultado(await _graficoAppService.GraficoMensal(usuarioId, dataFiltro));
+            return ProcessarResultado(await _graficoAppService.GraficoMensal(dataFiltro));
         }
 
         [HttpGet]
-        [Route("estatisticas-semanais/{usuarioId}")]
-        public async Task<IActionResult> EstatisticasSemanais(long usuarioId, [FromQuery] string? data = null)
+        [Route("estatisticas-semanais")]
+        public async Task<IActionResult> EstatisticasSemanais([FromQuery] string? data = null)
         {
             DateOnly? dataFiltro = null;
             if (!string.IsNullOrEmpty(data) && DateOnly.TryParse(data, out var d))
             {
                 dataFiltro = d;
             }
-            return ProcessarResultado(await _graficoAppService.EstatisticasSemanais(usuarioId, dataFiltro));
+            return ProcessarResultado(await _graficoAppService.EstatisticasSemanais(dataFiltro));
         }
 
         [HttpGet]
-        [Route("estatisticas-mensais/{usuarioId}")]
-        public async Task<IActionResult> EstatisticasMensais(long usuarioId, [FromQuery] string? data = null)
+        [Route("estatisticas-mensais")]
+        public async Task<IActionResult> EstatisticasMensais([FromQuery] string? data = null)
         {
             DateOnly? dataFiltro = null;
             if (!string.IsNullOrEmpty(data) && DateOnly.TryParse(data, out var d))
             {
                 dataFiltro = d;
             }
-            return ProcessarResultado(await _graficoAppService.EstatisticasMensais(usuarioId, dataFiltro));
+            return ProcessarResultado(await _graficoAppService.EstatisticasMensais(dataFiltro));
         }
 
         [HttpGet]
-        [Route("estatisticas-peso/{usuarioId}")]
-        public async Task<IActionResult> EstatisticasPeso(long usuarioId)
+        [Route("estatisticas-peso")]
+        public async Task<IActionResult> EstatisticasPeso()
         {
-            return ProcessarResultado(await _graficoAppService.ObterEstatisticasPeso(usuarioId));
+            return ProcessarResultado(await _graficoAppService.ObterEstatisticasPeso());
         }
     }
 }

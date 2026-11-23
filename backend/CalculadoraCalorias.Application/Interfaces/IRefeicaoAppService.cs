@@ -11,6 +11,6 @@ namespace CalculadoraCalorias.Application.Interfaces
         public Task<Resultado<Refeicao>> Adicionar(CriarRefeicaoRequest requisicao);
         public Task<Resultado<bool>> Excluir(long id);
         public Task<Resultado<bool>> AtualizarApelido(long id, string apelido);
-        public Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(long usuarioId, TipoRefeicaoEnum? tipo = null);
+        public Task<Resultado<List<RefeicaoModeloResponse>>> ObterModelosFrequentes(TipoRefeicaoEnum? tipo = null);
     }
 }

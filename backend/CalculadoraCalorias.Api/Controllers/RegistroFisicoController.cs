@@ -17,16 +17,17 @@ namespace CalculadoraCalorias.Api.Controllers
             return ProcessarResultado(await _registroFisicoAppService.Adicionar(requisicao));
         }
 
-        [HttpGet("usuario/{usuarioId}")]
-        public async Task<IActionResult> ObterUltimoPorUsuarioId(long usuarioId)
+        [HttpGet]
+        [Route("ultimo")]
+        public async Task<IActionResult> ObterUltimo()
         {
-            return ProcessarResultado(await _registroFisicoAppService.ObterUltimoPorUsuarioId(usuarioId));
+            return ProcessarResultado(await _registroFisicoAppService.ObterUltimo());
         }
 
-        [HttpPut("usuario/{usuarioId}")]
-        public async Task<IActionResult> Atualizar(long usuarioId, [FromBody] CriarRegistroFisicoRequest requisicao)
+        [HttpPut]
+        public async Task<IActionResult> Atualizar([FromBody] CriarRegistroFisicoRequest requisicao)
         {
-            return ProcessarResultado(await _registroFisicoAppService.Atualizar(usuarioId, requisicao));
+            return ProcessarResultado(await _registroFisicoAppService.Atualizar(requisicao));
         }
 
         [HttpDelete("{id}")]

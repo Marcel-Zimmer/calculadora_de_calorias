@@ -8,8 +8,8 @@ namespace CalculadoraCalorias.Application.Interfaces
     public interface IRegistroFisicoAppService
     {
         public Task<Resultado<CriarRegistroFisicoResponse>> Adicionar(CriarRegistroFisicoRequest requisicao);
-        public Task<Resultado<CriarRegistroFisicoResponse>> ObterUltimoPorUsuarioId(long usuarioId);
-        public Task<Resultado<CriarRegistroFisicoResponse>> Atualizar(long usuarioId, CriarRegistroFisicoRequest requisicao);
+        public Task<Resultado<CriarRegistroFisicoResponse>> ObterUltimo();
+        public Task<Resultado<CriarRegistroFisicoResponse>> Atualizar(CriarRegistroFisicoRequest requisicao);
         public Task<Resultado<bool>> Excluir(long id);
     }
 }

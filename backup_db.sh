@@ -14,6 +14,6 @@ mkdir -p $BACKUP_DIR
 docker exec -e PGPASSWORD='Senha123@' $DB_CONTAINER pg_dump -U $DB_USER $DB_NAME > $BACKUP_DIR/db_backup_$DATE.sql
 
 # Opcional: Remover backups com mais de 7 dias para não encher o disco
-find $BACKUP_DIR -type f -name "*.sql" -mtime +7 -delete
+#find $BACKUP_DIR -type f -name "*.sql" -mtime +7 -delete
 
 echo "Backup realizado com sucesso em $DATE"

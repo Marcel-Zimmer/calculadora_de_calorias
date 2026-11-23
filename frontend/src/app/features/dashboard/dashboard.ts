@@ -14,7 +14,8 @@ import { AtividadeFisicaService } from '../../core/services/atividade-fisica.ser
 import { AguaService } from '../../core/services/agua.service';
 import Swal from 'sweetalert2';
 import { NotificacaoService } from '../../core/services/notificacao.service';
-import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { BsGraficoHistoricoMensalComponent } from '../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { DadoHistorico } from '../../core/models/grafico.interface';
 import { BsGraficoMediaSemanalComponent } from '../../shared/bs-grafico-media-semanal/bs-grafico-media-semanal';
 import { BsCardConsistenciaComponent } from '../../shared/bs-card-consistencia/bs-card-consistencia';
 import { BsCardEquilibrioEnergeticoComponent } from '../../shared/bs-card-equilibrio-energetico/bs-card-equilibrio-energetico';
@@ -147,7 +148,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoDiario() {
-    this.graficoService.obterGraficoDiario(this.autenticacao.obterId(), this.dataSelecionada()).subscribe((res: any) => {
+    this.graficoService.obterGraficoDiario(this.dataSelecionada()).subscribe((res: any) => {
       this.metaCalorias.set(res.metaCaloricaDiaria);
       this.caloriasConsumidas.set(res.totalCaloriasConsumidas);
       this.caloriasQueimadas.set(res.totalCaloriasGastas);
@@ -160,7 +161,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoSemanal() {
-    this.graficoService.obterGraficoSemanal(this.autenticacao.obterId(), this.dataSelecionada()).subscribe((res: any) => {
+    this.graficoService.obterGraficoSemanal(this.dataSelecionada()).subscribe((res: any) => {
       this.dadosGraficoSemanal.set(res.pontos);
       this.dashboardInsightsSemanal.set(res.insights);
       this.totalAguaSemanal.set(res.totalAguaMl);
@@ -169,7 +170,7 @@ export class Dashboard implements OnInit {
   }
 
   obterGraficoMensal() {
-    this.graficoService.obterGraficoMensal(this.autenticacao.obterId(), this.dataSelecionada()).subscribe((res: any) => {
+    this.graficoService.obterGraficoMensal(this.dataSelecionada()).subscribe((res: any) => {
       this.dadosGraficoMensal.set(res.pontos);
       this.dashboardInsightsMensal.set(res.insights);
       this.totalAguaMensal.set(res.totalAguaMl);

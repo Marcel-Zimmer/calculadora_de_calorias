@@ -1,11 +1,13 @@
 ﻿namespace CalculadoraCalorias.Infrastructure
 
 {
+    using CalculadoraCalorias.Core.Domain.Entities;
     using CalculadoraCalorias.Core.Domain.Interfaces;
     using CalculadoraCalorias.Core.Domain.Services;
     using CalculadoraCalorias.Infrastructure.Data;
     using CalculadoraCalorias.Infrastructure.Repository;
     using CalculadoraCalorias.Infrastructure.Services;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +25,19 @@
                         errorCodesToAdd: null);
                 }));
 
+            services.AddIdentity<ApplicationUser, IdentityRole<long>>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddScoped<IPasswordHasher<ApplicationUser>, CustomPasswordHasher>();
+
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IPerfilBiometricoRepository, PerfilBiometricoRepository>();
             services.AddScoped<IRegistroFisicoRepository, RegistroFisicoRepository>();
@@ -33,6 +48,10 @@
             services.AddScoped<IRegistroAguaRepository, RegistroAguaRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddHttpClient<ILlmService, OpenAiLlmService>(client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(3);
+            });
 
             return services;
         }

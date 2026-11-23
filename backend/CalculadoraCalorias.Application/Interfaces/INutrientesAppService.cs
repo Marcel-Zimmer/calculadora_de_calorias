@@ -6,8 +6,8 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface INutrientesAppService
     {
-        Task<Resultado<NutrientesResponse>> ObterNutrientesDiario(long usuarioId, System.DateTime? data = null);
-        Task<Resultado<NutrientesResponse>> ObterNutrientesSemanal(long usuarioId, System.DateTime? data = null);
-        Task<Resultado<NutrientesResponse>> ObterNutrientesMensal(long usuarioId, System.DateTime? data = null);
+        Task<Resultado<NutrientesResponse>> ObterNutrientesDiario(System.DateTime? data = null);
+        Task<Resultado<NutrientesResponse>> ObterNutrientesSemanal(System.DateTime? data = null);
+        Task<Resultado<NutrientesResponse>> ObterNutrientesMensal(System.DateTime? data = null);
     }
 }

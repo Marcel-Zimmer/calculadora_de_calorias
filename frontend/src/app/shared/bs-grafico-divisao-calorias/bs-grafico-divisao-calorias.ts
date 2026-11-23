@@ -1,6 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MacrosResponse } from '../../core/services/nutrientes.service';
+import { MacrosResponse } from '../../core/models/nutrientes.interface';
 
 @Component({
   selector: 'app-bs-grafico-divisao-calorias',

@@ -3,48 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { NutrientesEnum } from '../models/nutrientes.enum';
-
-export interface NutrienteDetalhe {
-  tipo: number;
-  nome: string;
-  valor: number;
-  meta: number;
-  isLimite: boolean;
-}
-
-export interface MacrosResponse {
-  caloriasProteinas: number;
-  caloriasCarboidratos: number;
-  caloriasGorduras: number;
-  totalCalorias: number;
-  percentualProteinas: number;
-  percentualCarboidratos: number;
-  percentualGorduras: number;
-}
-
-export interface VereditoResponse {
-  titulo: string;
-  descricao: string;
-  icone: string;
-  corCss: string;
-}
-
-export interface NutrientesResponse {
-  periodo: string;
-  metaProteinas: number;
-  consumoProteinas: number;
-  metaCarboidratos: number;
-  consumoCarboidratos: number;
-  metaGorduras: number;
-  consumoGorduras: number;
-  metaFibras: number;
-  consumoFibras: number;
-  limiteAcucares: number;
-  consumoAcucares: number;
-  detalhes: NutrienteDetalhe[];
-  macros?: MacrosResponse;
-  veredito?: VereditoResponse;
-}
+import { NutrientesResponse } from '../models/nutrientes.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -63,20 +22,20 @@ export class NutrientesService {
     };
   }
 
-  obterNutrientesDiario(usuarioId: number, data?: string): Observable<NutrientesResponse> {
-    let url = `${this.baseUrl}/diario/${usuarioId}`;
+  obterNutrientesDiario(data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/diario`;
     if (data) url += `?data=${data}`;
     return this.http.get<NutrientesResponse>(url);
   }
 
-  obterNutrientesSemanal(usuarioId: number, data?: string): Observable<NutrientesResponse> {
-    let url = `${this.baseUrl}/semanal/${usuarioId}`;
+  obterNutrientesSemanal(data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/semanal`;
     if (data) url += `?data=${data}`;
     return this.http.get<NutrientesResponse>(url);
   }
 
-  obterNutrientesMensal(usuarioId: number, data?: string): Observable<NutrientesResponse> {
-    let url = `${this.baseUrl}/mensal/${usuarioId}`;
+  obterNutrientesMensal(data?: string): Observable<NutrientesResponse> {
+    let url = `${this.baseUrl}/mensal`;
     if (data) url += `?data=${data}`;
     return this.http.get<NutrientesResponse>(url);
   }

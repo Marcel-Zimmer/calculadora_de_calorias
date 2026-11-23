@@ -7,11 +7,11 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IGraficoAppService
     {
-        Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(long usuarioId, DateOnly? data = null);
-        Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(long usuarioId, DateOnly? data = null);
-        Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(long usuarioId, DateOnly? data = null);
-        Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(long usuarioId, DateOnly? data = null);
-        Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(long usuarioId, DateOnly? data = null);
-        Task<Resultado<EstatisticasPesoResponse>> ObterEstatisticasPeso(long usuarioId);
+        Task<Resultado<RefeicaoGraficoDiarioResponse>> GraficoDiario(DateOnly? data = null);
+        Task<Resultado<GraficoPeriodoResponse>> GraficoMensal(DateOnly? data = null);
+        Task<Resultado<GraficoPeriodoResponse>> GraficoSemanal(DateOnly? data = null);
+        Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasSemanais(DateOnly? data = null);
+        Task<Resultado<EstatisticasDetalhadasResponse>> EstatisticasMensais(DateOnly? data = null);
+        Task<Resultado<EstatisticasPesoResponse>> ObterEstatisticasPeso();
     }
 }

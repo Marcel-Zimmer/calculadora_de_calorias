@@ -6,10 +6,10 @@ namespace CalculadoraCalorias.Application.Interfaces
 {
     public interface IRegistroAguaAppService
     {
-        Task<Resultado<RegistroAguaResponse>> Adicionar(long usuarioId, CriarRegistroAguaRequest request);
-        Task<Resultado<List<RegistroAguaResponse>>> ObterDiarios(long usuarioId, DateOnly? data = null);
-        Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasSemanais(long usuarioId, DateOnly? data = null);
-        Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasMensais(long usuarioId, DateOnly? data = null);
+        Task<Resultado<RegistroAguaResponse>> Adicionar(CriarRegistroAguaRequest request);
+        Task<Resultado<List<RegistroAguaResponse>>> ObterDiarios(DateOnly? data = null);
+        Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasSemanais(DateOnly? data = null);
+        Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasMensais(DateOnly? data = null);
         Task<Resultado<bool>> Excluir(long id);
     }
 }

@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UsuarioLogin } from '../models/usuario.model';
+import { LoginUsuarioResponse, UsuarioLogin, UsuarioRegistro } from '../models/usuario.interface';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,15 +12,15 @@ export class UsuarioService {
   
   private readonly baseUrl = `${environment.apiUrl}/Usuario`; 
 
-  fazerLogin(usuario: UsuarioLogin) {
-    return this.http.post(`${this.baseUrl}/login`, usuario);
+  fazerLogin(usuario: UsuarioLogin): Observable<LoginUsuarioResponse> {
+    return this.http.post<LoginUsuarioResponse>(`${this.baseUrl}/login`, usuario);
   }
 
-  registrar(usuario: any) {
+  registrar(usuario: UsuarioRegistro): Observable<any> {
     return this.http.post(`${this.baseUrl}/registrar`, usuario);
   }
 
-  atualizarSenha(novaSenha: string) {
+  atualizarSenha(novaSenha: string): Observable<any> {
     return this.http.put(`${this.baseUrl}/atualizar-senha`, JSON.stringify(novaSenha), {
       headers: { 'Content-Type': 'application/json' }
     });

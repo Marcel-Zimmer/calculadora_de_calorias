@@ -9,14 +9,15 @@ namespace CalculadoraCalorias.Core.Domain.Entities
                                 DateTime dataRegistro,
                                 decimal pesoKg,
                                 decimal imcCalculado,
-                                decimal taxaMetabolicaBasal)
+                                decimal taxaMetabolicaBasal,
+                                decimal? gastoEnergeticoTotal = null)
         {
             UsuarioId = usuarioId;
             DataRegistro = dataRegistro;
             PesoKg = pesoKg;
             ImcCalculado = imcCalculado;
             TaxaMetabolicaBasal = taxaMetabolicaBasal;
-
+            GastoEnergeticoTotal = gastoEnergeticoTotal;
         }
 
         public long Id { get; private set; }
@@ -25,6 +26,7 @@ namespace CalculadoraCalorias.Core.Domain.Entities
         public decimal PesoKg { get; private set; }
         public decimal ImcCalculado { get; private set; }
         public decimal TaxaMetabolicaBasal {  get; private set; }
+        public decimal? GastoEnergeticoTotal { get; private set; }
         public decimal? MetaCaloricaDiaria { get; private set; }
         public virtual Usuario? Usuario { get; private set; }
 
@@ -32,13 +34,21 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             MetaCaloricaDiaria = meta;
         }
 
-        public void Atualizar(decimal pesoKg, decimal imcCalculado, decimal taxaMetabolicaBasal, decimal? metaCaloricaDiaria)
+        public void Atualizar(decimal pesoKg, decimal imcCalculado, decimal taxaMetabolicaBasal, decimal? metaCaloricaDiaria, decimal? gastoEnergeticoTotal = null)
         {
             PesoKg = pesoKg;
             ImcCalculado = imcCalculado;
             TaxaMetabolicaBasal = taxaMetabolicaBasal;
+            GastoEnergeticoTotal = gastoEnergeticoTotal;
             MetaCaloricaDiaria = metaCaloricaDiaria;
             DataRegistro = DateTime.UtcNow;
+        }
+
+        public void RecalcularMetricas(decimal imcCalculado, decimal taxaMetabolicaBasal, decimal gastoEnergeticoTotal)
+        {
+            ImcCalculado = imcCalculado;
+            TaxaMetabolicaBasal = taxaMetabolicaBasal;
+            GastoEnergeticoTotal = gastoEnergeticoTotal;
         }
     }
 }

@@ -78,7 +78,6 @@ export class EditarPesoComponent {
     // Assim, se ele editar um peso de HOJE, basta postar o novo.
     
     const payload = {
-      usuarioId: this.autenticacao.obterId(),
       pesoKg: this.novoPeso(),
       // Manteremos a lógica de criação para simplificar, já que o gráfico filtra o último do dia
     };

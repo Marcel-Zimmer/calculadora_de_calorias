@@ -10,15 +10,21 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 
 namespace CalculadoraCalorias.Application.Features
 {
-    public class PerfilBiometricoAppService(IPerfilBiometricoService perfilBiometricoService, PerfilBiometricoMapper perfilBiometrico, IUnitOfWork unitOfWork) : IPerfilBiometricoAppService
+    public class PerfilBiometricoAppService(
+        IPerfilBiometricoService perfilBiometricoService,
+        IRegistroFisicoService registroFisicoService,
+        PerfilBiometricoMapper perfilBiometrico, 
+        IUnitOfWork unitOfWork,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IPerfilBiometricoAppService
     {
         private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
+        private readonly IRegistroFisicoService _registroFisicoService = registroFisicoService;
         private readonly PerfilBiometricoMapper _mapperPerfilBiometrico = perfilBiometrico;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<Resultado<CriarPerfilBiometricoResponse>> Adicionar(CriarPerfilBiometricoRequest requisicao)
         {
-            var perfil = await _perfilBiometricoService.Adicionar(requisicao.UsuarioId, 
+            var perfil = await _perfilBiometricoService.Adicionar(UsuarioId, 
                                                                      requisicao.DataNascimento, 
                                                                      requisicao.Genero, 
                                                                      requisicao.AlturaCm, 
@@ -29,9 +35,9 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
         }
 
-        public async Task<Resultado<CriarPerfilBiometricoResponse>> Atualizar(long usuarioId, CriarPerfilBiometricoRequest requisicao)
+        public async Task<Resultado<CriarPerfilBiometricoResponse>> Atualizar(CriarPerfilBiometricoRequest requisicao)
         {
-            var perfil = await _perfilBiometricoService.Atualizar(usuarioId,
+            var perfil = await _perfilBiometricoService.Atualizar(UsuarioId,
                                                                  requisicao.DataNascimento,
                                                                  requisicao.Genero,
                                                                  requisicao.AlturaCm,
@@ -40,13 +46,15 @@ namespace CalculadoraCalorias.Application.Features
 
             if (perfil == null) return Resultado<CriarPerfilBiometricoResponse>.Failure(TipoDeErro.NotFound, "Perfil não encontrado");
 
+            await _registroFisicoService.RecalcularUltimoRegistroPorPerfil(UsuarioId, perfil);
+
             await _unitOfWork.CommitAsync();
             return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));
         }
 
-        public async Task<Resultado<CriarPerfilBiometricoResponse>> ObterPorUsuarioId(long usuarioId)
+        public async Task<Resultado<CriarPerfilBiometricoResponse>> Obter()
         {
-            var perfil = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
+            var perfil = await _perfilBiometricoService.ObterPorIdUsuario(UsuarioId);
             if (perfil == null) return Resultado<CriarPerfilBiometricoResponse>.Failure(TipoDeErro.NotFound, "Perfil não encontrado");
 
             return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));

@@ -5,7 +5,8 @@ import { AutenticacaoService } from '../../../core/services/autenticacao.service
 import { BsCardMediaItemComponent } from '../../../shared/bs-card-media-item/bs-card-media-item';
 import { BsCardMaiorIngestaoComponent } from '../../../shared/bs-card-maior-ingestao/bs-card-maior-ingestao';
 import { BsGraficoMediaSemanalComponent } from '../../../shared/bs-grafico-media-semanal/bs-grafico-media-semanal';
-import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { BsGraficoHistoricoMensalComponent } from '../../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { DadoHistorico } from '../../../core/models/grafico.interface';
 import { BsCardConsistenciaComponent } from '../../../shared/bs-card-consistencia/bs-card-consistencia';
 
 @Component({

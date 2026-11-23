@@ -32,8 +32,7 @@ export class AtualizarMetaComponent {
   }
 
   carregarPerfil() {
-    const userId = this.autenticacao.obterId();
-    this.perfilService.obterPorUsuarioId(userId).subscribe((res: any) => {
+    this.perfilService.obter().subscribe((res: any) => {
       this.perfilAtual.set(res);
       this.objetivoSelecionado.set(res.objetivo);
     });
@@ -52,8 +51,7 @@ export class AtualizarMetaComponent {
       objetivo: Number(this.objetivoSelecionado())
     };
 
-    const userId = this.autenticacao.obterId();
-    this.perfilService.atualizar(userId, payload).subscribe({
+    this.perfilService.atualizar(payload).subscribe({
       next: () => {
         this.carregando.set(false);
         Swal.fire({

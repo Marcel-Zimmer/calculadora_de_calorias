@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UsuarioLogin } from '../models/usuario.model';
 import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import { AtividadeFisicaResponse, CriarAtividadeFisicaRequest } from '../models/atividade-fisica.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,8 @@ export class AtividadeFisicaService {
   
   private readonly baseUrl = `${environment.apiUrl}/AtividadeFisica`; 
   
-  adicionar(atividade: any) {
-    return this.http.post(`${this.baseUrl}`, atividade);
+  adicionar(atividade: CriarAtividadeFisicaRequest): Observable<AtividadeFisicaResponse> {
+    return this.http.post<AtividadeFisicaResponse>(`${this.baseUrl}`, atividade);
   }
 
   obterMapaExercicios(): Record<number, any> {
@@ -32,11 +33,11 @@ export class AtividadeFisicaService {
     return Object.values(this.obterMapaExercicios());
   }
 
-  excluir(id: number) {
+  excluir(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  atualizar(atividade: any) {
+  atualizar(atividade: any): Observable<any> {
     return this.http.put(`${this.baseUrl}`, atividade);
   }
 

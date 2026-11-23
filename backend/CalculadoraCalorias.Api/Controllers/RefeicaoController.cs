@@ -20,10 +20,10 @@ namespace CalculadoraCalorias.Api.Controllers
         }
 
         [HttpGet]
-        [Route("modelos-frequentes/{usuarioId}")]
-        public async Task<IActionResult> ObterModelosFrequentes([FromRoute] long usuarioId, [FromQuery] TipoRefeicaoEnum? tipo)
+        [Route("modelos-frequentes")]
+        public async Task<IActionResult> ObterModelosFrequentes([FromQuery] TipoRefeicaoEnum? tipo)
         {
-            return ProcessarResultado(await _refeicaoAppService.ObterModelosFrequentes(usuarioId, tipo));
+            return ProcessarResultado(await _refeicaoAppService.ObterModelosFrequentes(tipo));
         }
 
         [HttpDelete("{id}")]

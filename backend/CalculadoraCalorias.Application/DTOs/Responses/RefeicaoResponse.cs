@@ -39,6 +39,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
     {
         public decimal MetaCaloricaDiaria { get; set; }
         public decimal TaxaMetabolicaBasal { get; set; }
+        public decimal GastoEnergeticoTotal { get; set; }
         public int TotalCaloriasConsumidas { get; set; }
         public int TotalCaloriasGastas { get; set; }
         public int CaloriasCalculadas { get; set; }
@@ -86,6 +87,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
     {
         public decimal MetaCaloricaDiaria { get; set; }
         public decimal TaxaMetabolicaBasal { get; set; }
+        public decimal GastoEnergeticoTotal { get; set; }
         public int TotalConsumido { get; set; }
         public int TotalGasto { get; set; }
         public int MediaConsumoDiario { get; set; }

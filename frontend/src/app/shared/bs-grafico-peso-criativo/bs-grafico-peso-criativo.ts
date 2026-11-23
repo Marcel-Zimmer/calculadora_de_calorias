@@ -1,12 +1,6 @@
 import { Component, input, computed, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export interface PontoPeso {
-  id?: number;
-  data: string;
-  legenda: string;
-  peso: number;
-}
+import { PesoPontoResponse } from '../../core/models/grafico.interface';
 
 @Component({
   selector: 'app-bs-grafico-peso-criativo',
@@ -57,8 +51,8 @@ export interface PontoPeso {
   `]
 })
 export class BsGraficoPesoCriativoComponent {
-  dados = input.required<PontoPeso[]>();
-  pontoSelecionado = output<PontoPeso>();
+  dados = input.required<PesoPontoResponse[]>();
+  pontoSelecionado = output<PesoPontoResponse>();
 
   // --- Lógica Horizontal (Desktop/Tablet) ---
   caminhoSvg = computed(() => {

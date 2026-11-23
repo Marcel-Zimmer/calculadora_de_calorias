@@ -2,19 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-
-export interface RegistroAguaRequest {
-  quantidadeMl: number;
-  data?: string;
-  hora?: string;
-}
-
-export interface RegistroAguaResponse {
-  id: number;
-  quantidadeMl: number;
-  data: string;
-  hora: string;
-}
+import { EstatisticasAguaResponse, RegistroAguaRequest, RegistroAguaResponse } from '../models/agua.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -35,20 +23,20 @@ export class AguaService {
     return this.http.get<RegistroAguaResponse[]>(`${this.apiUrl}/diario`, { params });
   }
 
-  obterEstatisticasSemanais(data?: string): Observable<any> {
+  obterEstatisticasSemanais(data?: string): Observable<EstatisticasAguaResponse> {
     let params: Record<string, string> = {};
     if (data) {
       params['data'] = data;
     }
-    return this.http.get<any>(`${this.apiUrl}/estatisticas/semanal`, { params });
+    return this.http.get<EstatisticasAguaResponse>(`${this.apiUrl}/estatisticas/semanal`, { params });
   }
 
-  obterEstatisticasMensais(data?: string): Observable<any> {
+  obterEstatisticasMensais(data?: string): Observable<EstatisticasAguaResponse> {
     let params: Record<string, string> = {};
     if (data) {
       params['data'] = data;
     }
-    return this.http.get<any>(`${this.apiUrl}/estatisticas/mensal`, { params });
+    return this.http.get<EstatisticasAguaResponse>(`${this.apiUrl}/estatisticas/mensal`, { params });
   }
 
   excluir(id: number): Observable<boolean> {

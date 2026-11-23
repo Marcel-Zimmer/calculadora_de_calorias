@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed, input, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NutrientesService, NutrientesResponse } from '../../../core/services/nutrientes.service';
+import { NutrientesService } from '../../../core/services/nutrientes.service';
+import { NutrientesResponse } from '../../../core/models/nutrientes.interface';
 import { AutenticacaoService } from '../../../core/services/autenticacao.service';
 import { BsCardNutrientesComponent } from '../../../shared/bs-card-nutrientes/bs-card-nutrientes';
 import { NutrientesEnum } from '../../../core/models/nutrientes.enum';
@@ -59,11 +60,11 @@ export class NutrientesComponent implements OnInit {
     let obs;
 
     if (this.periodo() === 'diario') {
-      obs = this.nutrientesService.obterNutrientesDiario(userId, data);
+      obs = this.nutrientesService.obterNutrientesDiario(data);
     } else if (this.periodo() === 'semanal') {
-      obs = this.nutrientesService.obterNutrientesSemanal(userId, data);
+      obs = this.nutrientesService.obterNutrientesSemanal(data);
     } else {
-      obs = this.nutrientesService.obterNutrientesMensal(userId, data);
+      obs = this.nutrientesService.obterNutrientesMensal(data);
     }
 
     obs.subscribe({

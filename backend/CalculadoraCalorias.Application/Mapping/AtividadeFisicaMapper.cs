@@ -9,6 +9,9 @@
     public partial class AtividadeFisicaMapper
 
     {
+        [MapperIgnoreSource(nameof(AtividadeFisica.PesoSnapshot))]
+        [MapperIgnoreSource(nameof(AtividadeFisica.VelocidadeMedia))]
+        [MapperIgnoreSource(nameof(AtividadeFisica.Usuario))]
         public partial AtividadeFisicaResponse EntidadeParaResponse(AtividadeFisica usuario);
         public partial List<AtividadeFisicaResponse> EntidadesParaResponse(List<AtividadeFisica> atividades);
 

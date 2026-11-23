@@ -16,24 +16,24 @@ namespace CalculadoraCalorias.Api.Controllers
         }
 
         [HttpGet]
-        [Route("diario/{usuarioId}")]
-        public async Task<IActionResult> ObterNutrientesDiario(long usuarioId, [FromQuery] System.DateTime? data = null)
+        [Route("diario")]
+        public async Task<IActionResult> ObterNutrientesDiario([FromQuery] System.DateTime? data = null)
         {
-            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesDiario(usuarioId, data));
+            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesDiario(data));
         }
 
         [HttpGet]
-        [Route("semanal/{usuarioId}")]
-        public async Task<IActionResult> ObterNutrientesSemanal(long usuarioId, [FromQuery] System.DateTime? data = null)
+        [Route("semanal")]
+        public async Task<IActionResult> ObterNutrientesSemanal([FromQuery] System.DateTime? data = null)
         {
-            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesSemanal(usuarioId, data));
+            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesSemanal(data));
         }
 
         [HttpGet]
-        [Route("mensal/{usuarioId}")]
-        public async Task<IActionResult> ObterNutrientesMensal(long usuarioId, [FromQuery] System.DateTime? data = null)
+        [Route("mensal")]
+        public async Task<IActionResult> ObterNutrientesMensal([FromQuery] System.DateTime? data = null)
         {
-            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesMensal(usuarioId, data));
+            return ProcessarResultado(await _nutrientesAppService.ObterNutrientesMensal(data));
         }
     }
 }

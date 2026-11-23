@@ -8,9 +8,9 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
 {
     private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
 
-    public async Task<Usuario> CriarUsuario(string nome, string email, string senha, RoleEnum? role)
+    public async Task<Usuario> CriarUsuario(string nome, string email, RoleEnum? role)
     {
-        var usuario = await _usuarioRepository.Adicionar(new Usuario(nome, email, null, senha));
+        var usuario = await _usuarioRepository.Adicionar(new Usuario(nome, email, role));
 
         return usuario;
     }
@@ -30,13 +30,9 @@ public class UsuarioService(IUsuarioRepository usuarioRepository) : IUsuarioServ
         return await _usuarioRepository.ObterPorEmail(email);
     }
 
-    public async Task<Usuario?> AtualizarSenha(long usuarioId, string novaSenhaHash)
+    public async Task<Usuario?> ObterPorId(long usuarioId)
     {
-        var usuario = await _usuarioRepository.ObterPorId(usuarioId);
-        if (usuario == null) return null;
-
-        usuario.AtualizarSenha(novaSenhaHash);
-        return usuario;
+        return await _usuarioRepository.ObterPorId(usuarioId);
     }
 }
 

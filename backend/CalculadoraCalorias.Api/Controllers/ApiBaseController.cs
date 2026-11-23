@@ -1,11 +1,12 @@
 ﻿using CalculadoraCalorias.Core.Domain.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace CalculadoraCalorias.Api.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ApiBaseController : ControllerBase
     {
         protected long UsuarioId => long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");

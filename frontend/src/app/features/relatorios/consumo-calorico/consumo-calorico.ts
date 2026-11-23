@@ -7,7 +7,8 @@ import { BsCardMaiorIngestaoComponent } from '../../../shared/bs-card-maior-inge
 import { BsGraficoMediaPorSemanaComponent } from '../../../shared/bs-grafico-media-por-semana/bs-grafico-media-por-semana';
 import { BsGraficoMaioresConsumosComponent } from '../../../shared/bs-grafico-maiores-consumos/bs-grafico-maiores-consumos';
 import { BsGraficoMediaSemanalComponent } from '../../../shared/bs-grafico-media-semanal/bs-grafico-media-semanal';
-import { BsGraficoHistoricoMensalComponent, DadoHistorico } from '../../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { BsGraficoHistoricoMensalComponent } from '../../../shared/bs-grafico-historico-mensal/bs-grafico-historico-mensal';
+import { DadoHistorico } from '../../../core/models/grafico.interface';
 import { BsGraficoDistribuicaoItensComponent } from '../../../shared/bs-grafico-distribuicao-itens/bs-grafico-distribuicao-itens';
 
 @Component({
@@ -40,10 +41,9 @@ export class ConsumoCaloricoComponent implements OnInit {
   ngOnInit(): void {}
 
   carregarEstatisticas() {
-    const userId = this.autenticacao.obterId();
     const obs = this.periodoEstatisticas() === 'semanal' 
-      ? this.graficoService.obterEstatisticasSemanais(userId, this.dataSelecionada())
-      : this.graficoService.obterEstatisticasMensais(userId, this.dataSelecionada());
+      ? this.graficoService.obterEstatisticasSemanais(this.dataSelecionada())
+      : this.graficoService.obterEstatisticasMensais(this.dataSelecionada());
 
     obs.subscribe((res: any) => {
       if (res.distribuicaoRefeicoes) {

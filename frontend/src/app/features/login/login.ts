@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { UsuarioLogin } from '../../core/models/usuario.model';
+import { UsuarioLogin } from '../../core/models/usuario.interface';
 import { FormsModule } from '@angular/forms';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { Carregamento } from "../../shared/carregamento/carregamento";

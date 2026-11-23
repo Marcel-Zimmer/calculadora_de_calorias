@@ -9,14 +9,15 @@ namespace CalculadoraCalorias.Application.Features
 {
     public class RegistroAguaAppService(
         IRegistroAguaService _service,
-        IRegistroFisicoService _registroFisicoService) : IRegistroAguaAppService
+        IRegistroFisicoService _registroFisicoService,
+        IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IRegistroAguaAppService
     {
-        public async Task<Resultado<RegistroAguaResponse>> Adicionar(long usuarioId, CriarRegistroAguaRequest request)
+        public async Task<Resultado<RegistroAguaResponse>> Adicionar(CriarRegistroAguaRequest request)
         {
             var data = request.Data ?? FusoHorario.ObterDataHojeBrasilia();
             var hora = request.Hora ?? TimeOnly.FromDateTime(FusoHorario.ObterDataHoraBrasilia());
 
-            var registro = await _service.Adicionar(usuarioId, request.QuantidadeMl, data, hora);
+            var registro = await _service.Adicionar(UsuarioId, request.QuantidadeMl, data, hora);
 
             return Resultado<RegistroAguaResponse>.Success(new RegistroAguaResponse
             {
@@ -27,9 +28,9 @@ namespace CalculadoraCalorias.Application.Features
             });
         }
 
-        public async Task<Resultado<List<RegistroAguaResponse>>> ObterDiarios(long usuarioId, DateOnly? data = null)
+        public async Task<Resultado<List<RegistroAguaResponse>>> ObterDiarios(DateOnly? data = null)
         {
-            var registros = await _service.ObterDiariosPorUsuarioId(usuarioId, data);
+            var registros = await _service.ObterDiariosPorUsuarioId(UsuarioId, data);
 
             var response = registros.Select(r => new RegistroAguaResponse
             {
@@ -42,34 +43,34 @@ namespace CalculadoraCalorias.Application.Features
             return Resultado<List<RegistroAguaResponse>>.Success(response);
         }
 
-        public async Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasSemanais(long usuarioId, DateOnly? data = null)
+        public async Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasSemanais(DateOnly? data = null)
         {
             var dataRef = data?.ToDateTime(TimeOnly.MinValue) ?? DateTime.Today;
             int diff = (7 + (dataRef.DayOfWeek - DayOfWeek.Monday)) % 7;
             var inicioSemana = DateOnly.FromDateTime(dataRef.AddDays(-1 * diff));
             var fimSemana = inicioSemana.AddDays(6);
 
-            var stats = await ObterDadosPorPeriodo(usuarioId, inicioSemana, fimSemana, true);
+            var stats = await ObterDadosPorPeriodo(inicioSemana, fimSemana, true);
             return Resultado<EstatisticasAguaResponse>.Success(stats);
         }
 
-        public async Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasMensais(long usuarioId, DateOnly? data = null)
+        public async Task<Resultado<EstatisticasAguaResponse>> ObterEstatisticasMensais(DateOnly? data = null)
         {
             var dataRef = data ?? DateOnly.FromDateTime(DateTime.Today);
             var inicioMes = new DateOnly(dataRef.Year, dataRef.Month, 1);
             var fimMes = inicioMes.AddMonths(1).AddDays(-1);
 
-            var stats = await ObterDadosPorPeriodo(usuarioId, inicioMes, fimMes, false);
+            var stats = await ObterDadosPorPeriodo(inicioMes, fimMes, false);
             return Resultado<EstatisticasAguaResponse>.Success(stats);
         }
 
-        private async Task<EstatisticasAguaResponse> ObterDadosPorPeriodo(long usuarioId, DateOnly inicio, DateOnly fim, bool usarNomeDia)
+        private async Task<EstatisticasAguaResponse> ObterDadosPorPeriodo(DateOnly inicio, DateOnly fim, bool usarNomeDia)
         {
-            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(usuarioId);
+            var registroFisico = await _registroFisicoService.ObterPorIdUsuario(UsuarioId);
             var peso = registroFisico?.PesoKg ?? 70m; // Padrão 70kg se não houver registro
             var metaAgua = (int)(peso * 35); // 35ml por kg
 
-            var registros = await _service.ObterPorPeriodo(usuarioId, inicio, fim);
+            var registros = await _service.ObterPorPeriodo(UsuarioId, inicio, fim);
 
             var pontos = new List<AguaPontoResponse>();
             var cultura = new CultureInfo("pt-BR");

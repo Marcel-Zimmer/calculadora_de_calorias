@@ -5,10 +5,6 @@ namespace CalculadoraCalorias.Application.DTOs.Requests
 {
     public class CriarPerfilBiometricoRequest
     {
-        [Required(ErrorMessage = "O ID do usuário é obrigatório.")]
-        [Range(1, long.MaxValue, ErrorMessage = "ID do usuário inválido.")]
-        public long UsuarioId { get; set; }
-
         [Required(ErrorMessage = "A data de nascimento é obrigatória.")]
         [DataType(DataType.Date)]
         public DateTime DataNascimento { get; set; }

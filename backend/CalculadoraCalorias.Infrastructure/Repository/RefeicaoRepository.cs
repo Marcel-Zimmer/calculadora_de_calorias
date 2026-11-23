@@ -94,5 +94,14 @@ namespace CalculadoraCalorias.Infrastructure.Repository
                 PesoOriginal = x.UltimaRefeicao.Peso
             }).ToList();
         }
+
+        public async Task<List<Refeicao>> ObterPendentesProcessamentoAsync()
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(x => x.StatusProcessamento == StatusProcessamentoEnum.EnviadoParaFila)
+                .OrderBy(x => x.Id)
+                .ToListAsync();
+        }
     }
 }

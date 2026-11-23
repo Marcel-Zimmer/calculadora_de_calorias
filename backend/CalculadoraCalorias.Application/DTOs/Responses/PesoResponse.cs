@@ -17,6 +17,7 @@ namespace CalculadoraCalorias.Application.DTOs.Responses
         public double VariacaoTotal { get; set; }
         public double ImcAtual { get; set; }
         public double TmbAtual { get; set; }
+        public double GetAtual { get; set; }
         public string Objetivo { get; set; } = string.Empty;
         public int ObjetivoId { get; set; }
         public List<PesoPontoResponse> Historico { get; set; } = [];

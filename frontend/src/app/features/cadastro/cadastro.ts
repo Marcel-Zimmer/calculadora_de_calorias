@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../core/services/usuario.service';
 import { Carregamento } from "../../shared/carregamento/carregamento";
-import { UsuarioRegistro } from '../../core/models/usuario.model';
+import { UsuarioRegistro } from '../../core/models/usuario.interface';
 
 @Component({
   selector: 'app-cadastro',

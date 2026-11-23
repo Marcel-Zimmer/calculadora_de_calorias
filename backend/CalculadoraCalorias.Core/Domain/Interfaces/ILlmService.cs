@@ -4,7 +4,10 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
 {
     public interface ILlmService
     {
-        Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(byte[] imagemBase64, double pesoEmGramas);
-
+        Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(
+            byte[] imagemBytes,
+            double pesoEmGramas,
+            string mimeType = "image/jpeg",
+            CancellationToken cancellationToken = default);
     }
 }

@@ -56,6 +56,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=CalculadoraCaloriasDb;Username=usuario;Password=Senha123@;
       - Gemini__ApiKey=${GEMINI_API_KEY}
+      - OpenAI__ApiKey=${OPENAI_API_KEY}
     volumes:
       - ./backend/CalculadoraCalorias.Api/wwwroot/uploads:/app/wwwroot/uploads
 
