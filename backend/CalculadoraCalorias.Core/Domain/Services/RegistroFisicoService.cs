@@ -22,12 +22,13 @@ public class RegistroFisicoService : IRegistroFisicoService
         var perfilBiometrico = perfil ?? await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
         var imcCalculado = CalcularImc(perfilBiometrico?.AlturaCm, pesoKg);
         var taxaMetabolica = CalcularTaxaMetabolicaBasal(perfilBiometrico, pesoKg);
+        var gastoEnergeticoTotal = CalcularGastoEnergeticoTotal(perfilBiometrico, taxaMetabolica);
 
-        if(imcCalculado == 0 || taxaMetabolica == 0) 
+        if (imcCalculado <= 0 || taxaMetabolica <= 0) 
         {
             return null;
         }
-        var registroFisico = new RegistroFisico(usuarioId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica);
+        var registroFisico = new RegistroFisico(usuarioId, DateTime.UtcNow, pesoKg, imcCalculado, taxaMetabolica, gastoEnergeticoTotal);
 
         if (metaCaloricaDiaria != null && metaCaloricaDiaria != 0m) {
             registroFisico.AdicionarMetaCalorica((decimal)metaCaloricaDiaria);
@@ -38,30 +39,30 @@ public class RegistroFisicoService : IRegistroFisicoService
 
     private static decimal CalcularImc(int? altura, decimal pesoKg)
     {
-        if (altura == null || altura <= 0) return 0;
+        if (altura == null || altura <= 0 || pesoKg <= 0) return 0;
 
         decimal alturaMetros = (int)altura / 100m;
         return pesoKg / (alturaMetros * alturaMetros);
-
     }
 
+    // Fórmula de Mifflin-St Jeor (TMB pura, sem fator de atividade)
     private static decimal CalcularTaxaMetabolicaBasal(PerfilBiometrico? perfil, decimal pesoKg)
     {
-        if(perfil == null) return 0;
+        if (perfil == null || pesoKg <= 0 || perfil.AlturaCm <= 0) return 0;
 
-        decimal tmbCalculado;
         int idade = perfil.ObterIdade();
+        decimal tmbCalculado = perfil.Genero == GeneroEnum.Masculino
+            ? (10m * pesoKg) + (6.25m * perfil.AlturaCm) - (5m * idade) + 5m
+            : (10m * pesoKg) + (6.25m * perfil.AlturaCm) - (5m * idade) - 161m;
 
-        if (perfil.Genero == GeneroEnum.Masculino)
-        {
+        return Math.Max(0, tmbCalculado);
+    }
 
-            tmbCalculado = (10m * pesoKg) + (6.25m * perfil.AlturaCm) - (5m * idade) + 5m;
-        }
-        else { 
-            tmbCalculado = (10 * pesoKg) + ((decimal)6.25 * perfil.AlturaCm) - (5 * idade) - 161;
-        }
-
-        return perfil.ObterFatorAtividade() * tmbCalculado;    
+    // Gasto Energético Total estimado (GET = TMB × Fator de Atividade)
+    private static decimal CalcularGastoEnergeticoTotal(PerfilBiometrico? perfil, decimal tmb)
+    {
+        if (perfil == null || tmb <= 0) return 0;
+        return tmb * perfil.ObterFatorAtividade();
     }
 
     public async Task<RegistroFisico?> ObterPorIdUsuario(long idUsuario)
@@ -82,9 +83,25 @@ public class RegistroFisicoService : IRegistroFisicoService
         var perfilBiometrico = await _perfilBiometricoService.ObterPorIdUsuario(usuarioId);
         var imcCalculado = CalcularImc(perfilBiometrico?.AlturaCm, pesoKg);
         var taxaMetabolica = CalcularTaxaMetabolicaBasal(perfilBiometrico, pesoKg);
+        var gastoEnergeticoTotal = CalcularGastoEnergeticoTotal(perfilBiometrico, taxaMetabolica);
 
-        registro.Atualizar(pesoKg, imcCalculado, taxaMetabolica, metaCaloricaDiaria);
+        registro.Atualizar(pesoKg, imcCalculado, taxaMetabolica, metaCaloricaDiaria, gastoEnergeticoTotal);
         return registro;
+    }
+
+    public async Task RecalcularUltimoRegistroPorPerfil(long usuarioId, PerfilBiometrico perfil)
+    {
+        var registro = await _registroFisicoRepository.ObterPorIdUsuario(usuarioId);
+        if (registro == null || registro.PesoKg <= 0) return;
+
+        var imcCalculado = CalcularImc(perfil.AlturaCm, registro.PesoKg);
+        var taxaMetabolica = CalcularTaxaMetabolicaBasal(perfil, registro.PesoKg);
+        var gastoEnergeticoTotal = CalcularGastoEnergeticoTotal(perfil, taxaMetabolica);
+
+        if (imcCalculado > 0 && taxaMetabolica > 0)
+        {
+            registro.RecalcularMetricas(imcCalculado, taxaMetabolica, gastoEnergeticoTotal);
+        }
     }
 
     public async Task<bool> Excluir(long id)

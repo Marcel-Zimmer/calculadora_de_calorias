@@ -14,6 +14,7 @@ namespace CalculadoraCalorias.Core.Domain.Interfaces
         Task<RegistroFisico?> Atualizar(long usuarioId,
                                             decimal pesoKg,
                                             decimal? MetaCaloricaDiaria);
+        Task RecalcularUltimoRegistroPorPerfil(long usuarioId, PerfilBiometrico perfil);
         Task<bool> Excluir(long id);
     }
 }

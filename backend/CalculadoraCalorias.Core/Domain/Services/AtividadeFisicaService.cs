@@ -17,7 +17,14 @@ public class AtividadeFisicaService(
         {
             return null;
         }
-        var registroFisicoAtual = usuarioCompleto.RegistroFisico.OrderBy(x => x.DataRegistro).First();
+        var registroFisicoAtual = usuarioCompleto.RegistroFisico
+            .OrderByDescending(x => x.DataRegistro)
+            .FirstOrDefault();
+
+        if (registroFisicoAtual == null)
+        {
+            return null;
+        }
 
         AtividadeFisica teste = new AtividadeFisica(usuarioId, (int)tipoExercicio, registroFisicoAtual.PesoKg, tempoDeExercicio, kilometragemPercorrida);
        

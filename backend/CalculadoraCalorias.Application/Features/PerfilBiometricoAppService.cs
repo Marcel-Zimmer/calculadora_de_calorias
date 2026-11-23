@@ -11,12 +11,14 @@ using CalculadoraCalorias.Core.Domain.Interfaces;
 namespace CalculadoraCalorias.Application.Features
 {
     public class PerfilBiometricoAppService(
-        IPerfilBiometricoService perfilBiometricoService, 
+        IPerfilBiometricoService perfilBiometricoService,
+        IRegistroFisicoService registroFisicoService,
         PerfilBiometricoMapper perfilBiometrico, 
         IUnitOfWork unitOfWork,
         IContextoHttpService contextoHttpService) : AppServiceBase(contextoHttpService), IPerfilBiometricoAppService
     {
         private readonly IPerfilBiometricoService _perfilBiometricoService = perfilBiometricoService;
+        private readonly IRegistroFisicoService _registroFisicoService = registroFisicoService;
         private readonly PerfilBiometricoMapper _mapperPerfilBiometrico = perfilBiometrico;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
@@ -43,6 +45,8 @@ namespace CalculadoraCalorias.Application.Features
                                                                  requisicao.Objetivo);
 
             if (perfil == null) return Resultado<CriarPerfilBiometricoResponse>.Failure(TipoDeErro.NotFound, "Perfil não encontrado");
+
+            await _registroFisicoService.RecalcularUltimoRegistroPorPerfil(UsuarioId, perfil);
 
             await _unitOfWork.CommitAsync();
             return Resultado<CriarPerfilBiometricoResponse>.Success(_mapperPerfilBiometrico.EntidadeParaResponse(perfil));

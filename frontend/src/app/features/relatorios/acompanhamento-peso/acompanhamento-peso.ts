@@ -62,7 +62,13 @@ export class AcompanhamentoPesoComponent implements OnInit {
       { icone: iconeMeta, corCss: corMeta, titulo: 'Meta Ativa', valor: objDesc || 'Não Definido', isText: true, legenda: 'Objetivo' },
       { icone: '📈', corCss: 'bg-blue-50 text-blue-600', titulo: 'Variação', valor: dados.variacaoTotal ?? dados.VariacaoTotal, legenda: 'Total kg' },
       { icone: '📏', corCss: 'bg-indigo-50 text-indigo-600', titulo: 'IMC Atual', valor: dados.imcAtual ?? dados.ImcAtual, legenda: 'Massa Corp.' },
-      { icone: '⚡', corCss: 'bg-amber-50 text-amber-600', titulo: 'TMB', valor: dados.tmbAtual ?? dados.TmbAtual, legenda: 'kcal/dia' }
+      {
+        icone: '⚡',
+        corCss: 'bg-amber-50 text-amber-600',
+        titulo: 'TMB',
+        valor: dados.tmbAtual ?? dados.TmbAtual,
+        legenda: (dados.getAtual ?? dados.GetAtual) ? `GET: ${Math.round(dados.getAtual ?? dados.GetAtual)} kcal` : 'kcal/dia'
+      }
     ];
   });
 

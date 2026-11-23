@@ -299,6 +299,9 @@ namespace CalculadoraCalorias.Infrastructure.Migrations
                     b.Property<DateTime>("DataRegistro")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal?>("GastoEnergeticoTotal")
+                        .HasColumnType("numeric");
+
                     b.Property<decimal>("ImcCalculado")
                         .HasColumnType("numeric");
 

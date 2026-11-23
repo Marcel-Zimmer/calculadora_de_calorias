@@ -126,6 +126,7 @@ export interface EstatisticasPesoResponse {
     variacaoTotal: number;
     imcAtual: number;
     tmbAtual: number;
+    getAtual?: number;
     objetivo: string;
     objetivoId: number;
     historico: PesoPontoResponse[];
