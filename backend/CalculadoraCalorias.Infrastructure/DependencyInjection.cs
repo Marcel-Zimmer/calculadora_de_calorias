@@ -48,6 +48,10 @@
             services.AddScoped<IRegistroAguaRepository, RegistroAguaRepository>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddHttpClient<ILlmService, OpenAiLlmService>(client =>
+            {
+                client.Timeout = TimeSpan.FromMinutes(3);
+            });
 
             return services;
         }

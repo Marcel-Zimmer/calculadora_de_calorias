@@ -71,6 +71,11 @@ namespace CalculadoraCalorias.Core.Domain.Entities
             StatusProcessamento = StatusProcessamentoEnum.Concluido;
         }
 
+        public void MarcarComoErro()
+        {
+            StatusProcessamento = StatusProcessamentoEnum.Erro;
+        }
+
         public void AtualizarApelido(string apelido)
         {
             Apelido = apelido;

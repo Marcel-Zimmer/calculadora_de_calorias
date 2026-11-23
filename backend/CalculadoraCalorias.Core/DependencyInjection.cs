@@ -12,7 +12,6 @@ namespace CalculadoraCalorias.Core
             services.AddScoped<IPerfilBiometricoService, PerfilBiometricoService>();
             services.AddScoped<IRegistroFisicoService, RegistroFisicoService>();
             services.AddScoped<IAtividadeFisicaService, AtividadeFisicaService>();
-            services.AddScoped<ILlmService, LlmService>();
             services.AddScoped<IRefeicaoService, RefeicaoService>();
             services.AddScoped<IRegistroAguaService, RegistroAguaService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();

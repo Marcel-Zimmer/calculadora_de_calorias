@@ -16,7 +16,11 @@ namespace CalculadoraCalorias.Core.Domain.Services
             _configuration = configuration;
         }
 
-        public async Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(byte[] imagemBase64, double pesoEmGramas)
+        public async Task<EstimativaFeitaPorLlmDTO?> SimularCaloriasRefeicao(
+            byte[] imagemBytes,
+            double pesoEmGramas,
+            string mimeType = "image/jpeg",
+            CancellationToken cancellationToken = default)
         {
             var apiKey = _configuration["Gemini:ApiKey"];
             if (string.IsNullOrEmpty(apiKey))
@@ -28,7 +32,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
 
             var response = await client.Models.GenerateContentAsync(
                 model: "gemini-3-flash-preview",
-                contents: ObterContentsParaLLM(imagemBase64, pesoEmGramas)
+                contents: ObterContentsParaLLM(imagemBytes, pesoEmGramas, mimeType)
             );
 
             var jsonResposta = response?.Candidates?[0]?.Content?.Parts?[0].Text;
@@ -45,7 +49,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
 
         }
 
-        private static List<Content> ObterContentsParaLLM(byte[] imagemBase64, double pesoEmGramas)
+        private static List<Content> ObterContentsParaLLM(byte[] imagemBase64, double pesoEmGramas, string mimeType)
         {
             return
                 [
@@ -59,7 +63,7 @@ namespace CalculadoraCalorias.Core.Domain.Services
                             {
                                 InlineData = new Blob
                                 {
-                                    MimeType = "image/jpeg",
+                                    MimeType = mimeType,
                                     Data = imagemBase64
                                 }
                             }
